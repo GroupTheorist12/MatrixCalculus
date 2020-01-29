@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Collections;
 
-namespace MathematicalAlgorithmsDotNetCore
+namespace MatrixCalculus
 {
     class TestRunner<T> where T : struct
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace MathematicalAlgorithmsDotNetCore
+namespace MatrixCalculus
 {
     public class HtmlOutputMethods
     {

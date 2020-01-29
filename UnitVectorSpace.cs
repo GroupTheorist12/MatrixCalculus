@@ -30,5 +30,12 @@ namespace MatrixCalculus
                 return (UnitVector)this[e];
             }
         }
+
+        public string ToLatex()
+        {
+            string ret = string.Empty;
+
+            return ret;
+        }
     }
 }
