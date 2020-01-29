@@ -10,7 +10,11 @@ namespace MatrixCalculus
 {
     public class UnitVector : List<int>
     {
+        
         public string Name{get;} 
+        private string m_LatexName = string.Empty;
+        public string LatexName{get {return m_LatexName;}} 
+        
         public int Order{get;}
         public RowColumn IsRowOrColumn { get; set; }
 
@@ -31,6 +35,7 @@ namespace MatrixCalculus
 
             }
 
+            m_LatexName = "e_{" + iVal.ToString() + "}";
             for(int i = 0; i < this.Order; i++)
             {
                 this.Add(0);
@@ -68,9 +73,9 @@ namespace MatrixCalculus
             string ret = string.Empty;
 
             string fill =
-            "\\begin{pmatrix}" +
+            "\\begin{bmatrix}" +
             "FILL_ME_UP_SIR" +
-            "\\end{pmatrix}";
+            "\\end{bmatrix}";
 
 
             string vType = (this.IsRowOrColumn == RowColumn.Column) ? "\\\\" : "&&\\!";
@@ -87,6 +92,19 @@ namespace MatrixCalculus
             return fill.Replace("FILL_ME_UP_SIR", sb.ToString());
         }
 
+        public string ToLatex(string TheType)
+        {
+            string ret = this.ToLatex();
+            StringBuilder sb = new StringBuilder();
+
+            switch(TheType)
+            {
+                case "F":
+                    ret = this.LatexName + " = " + this.ToLatex();
+                    break;
+            }
+            return ret;
+        }
 
     }
 }
