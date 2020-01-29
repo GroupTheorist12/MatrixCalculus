@@ -22,6 +22,8 @@ namespace MatrixCalculus
         {
             htTestFuncs["ColumnVector"] = new TestRunner<int>(() => Test_RealVector_ColumnVector());
             htTestFuncs["UnitVector_UnitVector"] = new TestRunner<int>(() => Test_UnitVector_UnitVector());
+            htTestFuncs["UnitVectorSpace_UnitVectorSpace"] = new TestRunner<int>(() => Test_UnitVectorSpace_UnitVectorSpace());
+            
 
         }
 
@@ -39,6 +41,15 @@ namespace MatrixCalculus
         {
             UnitVector uv = new UnitVector("e1", 3);
             HtmlOutputMethods.WriteLatexToHtmlAndLaunch(uv.ToLatex("F"), "Test_UnitVector_UnitVector.html");
+
+            return 0;
+
+        }
+
+        public static int Test_UnitVectorSpace_UnitVectorSpace()
+        {
+            UnitVectorSpace uvs = new UnitVectorSpace(3);
+            HtmlOutputMethods.WriteLatexToHtmlAndLaunch(uvs.ToLatex(), "Test_UnitVectorSpace_UnitVectorSpace.html");
 
             return 0;
 
