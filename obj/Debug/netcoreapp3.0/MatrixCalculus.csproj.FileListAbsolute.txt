@@ -1,0 +1,11 @@
+c:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\MatrixCalculus.exe
+C:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\MatrixCalculus.deps.json
+C:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\MatrixCalculus.runtimeconfig.json
+C:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\MatrixCalculus.runtimeconfig.dev.json
+c:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\MatrixCalculus.dll
+c:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\MatrixCalculus.pdb
+c:\Math\MatrixCalculus\obj\Debug\netcoreapp3.0\MatrixCalculus.csprojAssemblyReference.cache
+c:\Math\MatrixCalculus\obj\Debug\netcoreapp3.0\MatrixCalculus.AssemblyInfoInputs.cache
+c:\Math\MatrixCalculus\obj\Debug\netcoreapp3.0\MatrixCalculus.AssemblyInfo.cs
+c:\Math\MatrixCalculus\obj\Debug\netcoreapp3.0\MatrixCalculus.dll
+c:\Math\MatrixCalculus\obj\Debug\netcoreapp3.0\MatrixCalculus.pdb
