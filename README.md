@@ -7,8 +7,4 @@
       <p>
         It is assumed the user knows how to clone a repository from github and run code in VS Code.
       </p>
-      <p>
-       The documentation and API can be found on the website below.
-      </p>
-      
       <a href="https://grouptheorist12.github.io/MatrixCalculusSite/">Matrix Calculus Web Site</a>
