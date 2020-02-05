@@ -34,6 +34,21 @@ namespace MatrixCalculus
             }
         }
 
+        public RealVector OneVector()
+        {
+            RealVector rv = new RealVector();
+            StringBuilder sb = new StringBuilder();
+            rv.IsInteger = true;
+            string latex = @"\displaystyle\sum_{i=1}^{PLEASE_REP_ME}{e_i} = ";
+            for(int i = 0; i < this.Order; i++)
+            {
+                UnitVector uv = this[i];
+                rv.Add(uv[i]);
+            }
+
+            rv.FullRep = latex.Replace("PLEASE_REP_ME", this.Order.ToString()) + rv.ToLatex();
+            return rv;
+        }
         public string ToLatex()
         {
             string ret = string.Empty;

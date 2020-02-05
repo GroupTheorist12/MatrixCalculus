@@ -17,17 +17,20 @@ namespace MatrixCalculus
     public class RealVector : List<double>
     {
         public RowColumn IsRowOrColumn { get; set; }
+        public string FullRep{get;set;}
         public RealVector()
         {
             this.IsRowOrColumn = RowColumn.Column;
+            IsInteger = false;
         }
 
         public RealVector(RowColumn rc)
         {
             this.IsRowOrColumn = rc;
-
+            IsInteger = false;
         }
 
+        public bool IsInteger {get;set;}
         public double Norm()
         {
             return Math.Sqrt(DotProduct(this, this));
@@ -37,6 +40,7 @@ namespace MatrixCalculus
         {
             return v / Math.Sqrt(DotProduct(v, v));
         }
+
 
 
         public static RealVector operator *(double value, RealVector v)
@@ -144,14 +148,28 @@ namespace MatrixCalculus
             return ret;
         }
 
+        public string ToLatex(string Rep)
+        {
+            string ret = ToLatex();
+            switch(Rep)
+            {
+                default:
+                    break;
+                case "F":
+                    ret = FullRep;    
+                    break;
+            }
+
+            return ret;
+        }
         public string ToLatex()
         {
             string ret = string.Empty;
 
             string fill =
-            "\\begin{pmatrix}" +
+            "\\begin{bmatrix}" +
             "FILL_ME_UP_SIR" +
-            "\\end{pmatrix}";
+            "\\end{bmatrix}";
 
 
             string vType = (this.IsRowOrColumn == RowColumn.Column) ? "\\\\" : "&&\\!";
@@ -159,12 +177,25 @@ namespace MatrixCalculus
             int i = 0;
             for (i = 0; i < this.Count - 1; i++)
             {
-                sb.AppendFormat("{0:0.0000}{1}", this[i], vType);
+                if(!IsInteger)
+                {
+                    sb.AppendFormat("{0:0.0000}{1}", this[i], vType);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}{1}", this[i], vType);
+    
+                }
             }
 
-
-            sb.AppendFormat("{0:0.0000}", this[i]);
-
+            if(!IsInteger)
+            {
+                sb.AppendFormat("{0:0.0000}", this[i]);
+            }
+            else
+            {
+                sb.AppendFormat("{0}", this[i]);
+            }
             return fill.Replace("FILL_ME_UP_SIR", sb.ToString());
         }
     }

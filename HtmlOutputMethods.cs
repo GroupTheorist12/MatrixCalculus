@@ -132,6 +132,75 @@ sVg
             return sGraph.Replace("REPLACE_ME_WITH_TEXT", Latex);
         }
 
+        public static string ToHtmlWithMathJaxEquation(string Latex)
+        {
+            string sGraph = @"
+      <html>
+      <head>
+      <title></title>
+      <meta charset=""utf-8"" />
+<script type='text/javascript' async
+  src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'>
+</script>
+<script type='text/x-mathjax-config'>
+  MathJax.Hub.Register.StartupHook('End', function()
+  {
+    var x = document.getElementById('pLatex');
+    x.style.display = 'block';
+  });
+</script>
+
+      </ head>
+      <body>
+      <p id='pLatex' style='height: 300px; width: 300px;display:none'>
+\begin{equation}      
+       REPLACE_ME_WITH_TEXT
+\end{equation}      
+      </p>
+      </body>
+      </html>
+      ";
+
+            return sGraph.Replace("REPLACE_ME_WITH_TEXT", Latex);
+        }
+
+        public static string ToHtmlWithMathJaxEquationText(string Latex, string Text)
+        {
+            string sGraph = @"
+      <html>
+      <head>
+      <title></title>
+      <meta charset=""utf-8"" />
+<script type='text/javascript' async
+  src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'>
+</script>
+<script type='text/x-mathjax-config'>
+  MathJax.Hub.Register.StartupHook('End', function()
+  {
+    var x = document.getElementById('pLatex');
+    x.style.display = 'block';
+  });
+</script>
+
+      </ head>
+      <body>
+      <p>
+      REPLACE_ME_WITH_TEXT
+      </p>
+      <p id='pLatex' style='height: 300px; width: 300px;display:none'>
+\begin{equation}      
+       REPLACE_ME_WITH_LATEX
+\end{equation}      
+      </p>
+      </body>
+      </html>
+      ";
+
+            string ret = sGraph.Replace("REPLACE_ME_WITH_LATEX", Latex).Replace("REPLACE_ME_WITH_TEXT", Text);
+            return ret;
+        }
+
+
         public static void OpenBrowser(string url)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -167,6 +236,16 @@ sVg
             string path = Directory.GetCurrentDirectory() + "/html/";
             string fil = Path.Combine(path, FileName);
             string text = HtmlOutputMethods.ToHtmlWithMathJaxInline(Latex);
+
+            System.IO.File.WriteAllText(fil, text);
+            OpenBrowser(fil);
+        }
+
+        public static void WriteLatexEqToHtmlAndLaunch(string Latex, string FileName)
+        {
+            string path = Directory.GetCurrentDirectory() + "/html/";
+            string fil = Path.Combine(path, FileName);
+            string text = HtmlOutputMethods.ToHtmlWithMathJaxEquation(Latex);
 
             System.IO.File.WriteAllText(fil, text);
             OpenBrowser(fil);

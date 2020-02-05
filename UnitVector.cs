@@ -62,23 +62,33 @@ namespace MatrixCalculus
 
         }
 
+
         public static ElementaryMatrix operator*(UnitVector e1, UnitVector e2)
         {
-            ElementaryMatrix em = new ElementaryMatrix(e1.Order, e1.Order);
+            ElementaryMatrix em = null;
+            RowColumn rc = e2.IsRowOrColumn;
 
+            e2.IsRowOrColumn = RowColumn.Row; //transpose
+
+            string emName = "E" + e1.Name[1].ToString() + e2.Name[1].ToString(); 
+            em = new ElementaryMatrix(e1.Order, e2.Order, emName);
+            em.FullRep = em.LatexName + " = " + e1.ToLatex() + e2.ToLatex() + " = " + em.ToLatex();
+
+            e2.IsRowOrColumn = rc; //set back to what it was
             return em;
         }
+
+        
         public string ToLatex()
         {
             string ret = string.Empty;
 
+            string vType = (this.IsRowOrColumn == RowColumn.Column) ? "\\\\" : "&";
             string fill =
             "\\begin{bmatrix}" +
             "FILL_ME_UP_SIR" +
             "\\end{bmatrix}";
 
-
-            string vType = (this.IsRowOrColumn == RowColumn.Column) ? "\\\\" : "&&\\!";
             StringBuilder sb = new StringBuilder();
             int i = 0;
             for (i = 0; i < this.Count - 1; i++)
@@ -88,7 +98,6 @@ namespace MatrixCalculus
 
 
             sb.AppendFormat("{0}", this[i]);
-
             return fill.Replace("FILL_ME_UP_SIR", sb.ToString());
         }
 
