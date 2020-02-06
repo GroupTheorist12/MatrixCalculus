@@ -64,6 +64,22 @@ namespace MatrixCalculus
             }
 
         }
+
+        public ElementaryMatrix(int value)
+        {
+            this.Rows = 1;
+            this.Columns = 1;
+            InternalRep = new int[this.Rows, this.Columns];
+            this.Name = "E";
+            this.FullRep = string.Empty;
+            
+            Zero();
+
+            this[0,0] = value;
+        }
+
+        public static implicit operator int(ElementaryMatrix em) => em[0, 0];
+        public static explicit operator ElementaryMatrix(int value) => new ElementaryMatrix(value);        
         public ElementaryMatrix(int rows, int columns, string Name)
         {
 
@@ -91,10 +107,6 @@ namespace MatrixCalculus
             {   
                 Zero();
 
-                if(value != 1)
-                {
-                    throw new Exception("Value must be one");
-                }
                 InternalRep[r, c] = value;
             }
         }

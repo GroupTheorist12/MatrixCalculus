@@ -63,10 +63,35 @@ namespace MatrixCalculus
         }
 
 
+        public static int DotProduct(UnitVector v1, UnitVector v2)
+        {
+            int ret = 0;
+
+            if (v1.Count != v2.Count)
+            {
+                throw new Exception("Vectors must be equal in length");
+            }
+
+            for (int i = 0; i < v1.Count; i++)
+            {
+                ret += (v1[i] * v2[i]);
+            }
+            return ret;
+        }
+
+        public static int operator &(UnitVector e1, UnitVector e2)
+        {
+            return DotProduct(e1, e2);
+        }
         public static ElementaryMatrix operator*(UnitVector e1, UnitVector e2)
         {
             ElementaryMatrix em = null;
             RowColumn rc = e2.IsRowOrColumn;
+
+            if(e1.IsRowOrColumn == RowColumn.Row) //Dot product
+            {
+                return (ElementaryMatrix)DotProduct(e1, e2);
+            }
 
             e2.IsRowOrColumn = RowColumn.Row; //transpose
 
