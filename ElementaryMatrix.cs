@@ -63,8 +63,13 @@ namespace MatrixCalculus
                 throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices. Could not parse indices.");
             }
 
+            Major = oI1;
+            Minor = oI2;
         }
 
+
+        public int Major{get; private set;} //left most subscript indices
+        public int Minor{get; private set;} //right most subscript indices
         public ElementaryMatrix(int value)
         {
             this.Rows = 1;
@@ -72,7 +77,8 @@ namespace MatrixCalculus
             InternalRep = new int[this.Rows, this.Columns];
             this.Name = "E";
             this.FullRep = string.Empty;
-            
+            Major = 0;
+            Minor = 0;
             Zero();
 
             this[0,0] = value;
