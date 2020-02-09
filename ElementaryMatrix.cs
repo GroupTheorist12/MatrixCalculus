@@ -10,11 +10,11 @@ namespace MatrixCalculus
     public class ElementaryMatrix
     {
         private int[,] InternalRep = null;
-        public string FullRep{get;set;}
+        public string FullRep { get; set; }
 
-        public string Name{get;}
+        public string Name { get; }
         private string m_LatexName;
-        public string LatexName{get{return m_LatexName;}}
+        public string LatexName { get { return m_LatexName; } }
 
         public int Rows = 0;
         public int Columns = 0;
@@ -33,7 +33,7 @@ namespace MatrixCalculus
 
         private void Init()
         {
-            if(this.Name[0] != 'E')
+            if (this.Name[0] != 'E')
             {
                 throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices");
             }
@@ -43,13 +43,13 @@ namespace MatrixCalculus
 
             try
             {
-                if(!int.TryParse(this.Name[1].ToString(), out oI1))
+                if (!int.TryParse(this.Name[1].ToString(), out oI1))
                 {
                     throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 1 bad.");
 
                 }
 
-                if(!int.TryParse(this.Name[2].ToString(), out oI2))
+                if (!int.TryParse(this.Name[2].ToString(), out oI2))
                 {
                     throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 2 bad");
 
@@ -58,7 +58,7 @@ namespace MatrixCalculus
                 this[oI1 - 1, oI2 - 1] = 1;
                 m_LatexName = @"E_{" + (oI1).ToString() + (oI2).ToString() + "}";
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices. Could not parse indices.");
             }
@@ -68,8 +68,8 @@ namespace MatrixCalculus
         }
 
 
-        public int Major{get; private set;} //left most subscript indices
-        public int Minor{get; private set;} //right most subscript indices
+        public int Major { get; private set; } //left most subscript indices
+        public int Minor { get; private set; } //right most subscript indices
         public ElementaryMatrix(int value)
         {
             this.Rows = 1;
@@ -81,11 +81,11 @@ namespace MatrixCalculus
             Minor = 0;
             Zero();
 
-            this[0,0] = value;
+            this[0, 0] = value;
         }
 
         public static implicit operator int(ElementaryMatrix em) => em[0, 0];
-        public static explicit operator ElementaryMatrix(int value) => new ElementaryMatrix(value);        
+        public static explicit operator ElementaryMatrix(int value) => new ElementaryMatrix(value);
         public ElementaryMatrix(int rows, int columns, string Name)
         {
 
@@ -94,11 +94,11 @@ namespace MatrixCalculus
             InternalRep = new int[this.Rows, this.Columns];
             this.Name = Name;
             this.FullRep = string.Empty;
-            
+
             Zero();
             Init();
         }
-        
+
         public int this[int r, int c]
         {
             get
@@ -109,14 +109,37 @@ namespace MatrixCalculus
                 }
                 return (InternalRep[r, c]);
             }
-            set 
-            {   
+            set
+            {
                 Zero();
 
                 InternalRep[r, c] = value;
             }
         }
 
+        public static UnitVector operator*(ElementaryMatrix em, UnitVector uv)
+        {
+            UnitVector ret = new UnitVector(0);
+            ret.Clear();
+            if (uv.Order != em.Rows)
+            {
+                throw new Exception("Vector length must be same as number of columns and rows of matrix");
+            }
+
+            for (int i = 0; i < em.Rows; i++)
+            {
+                int SumOfRow = 0;
+                for (int j = 0; j < em.Columns; j++)
+                {
+                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                }
+
+                ret.Add(SumOfRow);
+            }
+
+            return ret;
+        
+        }
         public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();
@@ -147,10 +170,10 @@ namespace MatrixCalculus
         {
             string ret = ToLatex();
 
-            switch(Rep)
+            switch (Rep)
             {
                 case "F":
-                    if(FullRep != string.Empty) //Set outside current object
+                    if (FullRep != string.Empty) //Set outside current object
                     {
                         ret = FullRep;
                     }
@@ -160,7 +183,7 @@ namespace MatrixCalculus
                     }
                     break;
                 default:
-                    break;    
+                    break;
             }
 
             return ret;

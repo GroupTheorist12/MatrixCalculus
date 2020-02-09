@@ -62,6 +62,13 @@ namespace MatrixCalculus
 
         }
 
+        public UnitVector(int value)
+        {
+            this.Name = "e";
+            this.Order = 1;
+            this.IsRowOrColumn = RowColumn.Column;
+            this.Add(value);
+        }
 
         public static int DotProduct(UnitVector v1, UnitVector v2)
         {
@@ -79,19 +86,84 @@ namespace MatrixCalculus
             return ret;
         }
 
-        public static int operator &(UnitVector e1, UnitVector e2)
+        //Kronecker Delta
+        public static int KroneckerDelta(int ind1, int ind2)
         {
-            return DotProduct(e1, e2);
+            return (ind1 == ind2) ? 1 : 0;
         }
+
+        public static bool operator ==(UnitVector e1, UnitVector e2)
+        {
+            if(e1.Order != e2.Order)
+            {
+                throw new Exception("Unit vector orders not the same");
+            }
+            return (e1.Name == e2.Name);
+        }
+        public static bool operator !=(UnitVector e1, UnitVector e2)
+        {
+            if(e1.Order != e2.Order)
+            {
+                throw new Exception("Unit vector orders not the same");
+            }
+            return e1.Name != e2.Name;
+        }
+
+        public static implicit operator int(UnitVector uv) => uv[0];
+        public static explicit operator UnitVector(int value) => new UnitVector(value);        
+
+        public static UnitVector operator*(int value, UnitVector uv)
+        {
+            UnitVector uvOut = new UnitVector(0);
+            uvOut.Clear();
+            for(int i = 0; i < uv.Count; i++)
+            {
+                uvOut.Add(value * uv[i]); 
+            }
+            return uvOut;
+        }
+
+        public static UnitVector operator*( UnitVector uv, int value)
+        {
+            UnitVector uvOut = new UnitVector(0);
+            uvOut.Clear();
+            for(int i = 0; i < uv.Count; i++)
+            {
+                uvOut.Add(uv[i] * value); 
+            }
+            return uvOut;
+        }
+
+        /*
+        public static UnitVector operator*(ElementaryMatrix em, UnitVector uv)
+        {
+            UnitVector uvOut = null;
+            //using following realtionships
+            //Eij * er = ei * e'j * er 
+            // = &jr * ei where & is the Kronecker Delta
+            UnitVectorSpace uvp = new UnitVectorSpace(uv.Order);
+            UnitVector ei = uvp["e" + em.Major.ToString()];
+            UnitVector ej = uvp["e" + em.Minor.ToString()];
+            RowColumn rc = ej.IsRowOrColumn;
+            ej.IsRowOrColumn = RowColumn.Row;
+
+            uvOut = ei * ej * uv;
+            ej.IsRowOrColumn = rc; //Set it back to what it was
+            return uvOut;
+        }
+        */
+
         public static ElementaryMatrix operator*(UnitVector e1, UnitVector e2)
         {
             ElementaryMatrix em = null;
             RowColumn rc = e2.IsRowOrColumn;
 
+            
             if(e1.IsRowOrColumn == RowColumn.Row) //Dot product
             {
                 return (ElementaryMatrix)DotProduct(e1, e2);
             }
+            
 
             e2.IsRowOrColumn = RowColumn.Row; //transpose
 
