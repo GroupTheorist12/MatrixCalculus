@@ -28,6 +28,7 @@ namespace MatrixCalculus
             htTestFuncs["UnitVectorProductTo_ElementaryMatrix"] = new TestRunner<int>(() => Test_UnitVectorProductTo_ElementaryMatrix());
             htTestFuncs["UnitVectorProduct_ToInt"] = new TestRunner<int>(() => Test_UnitVectorProduct_ToInt());
             htTestFuncs["ElementaryMatrix_Multiply_UnitVector"] = new TestRunner<int>(() => Test_ElementaryMatrix_Multiply_UnitVector());
+            htTestFuncs["UnitVector_Multiply_ElementaryMatrix"] = new TestRunner<int>(() => Test_UnitVector_Multiply_ElementaryMatrix());
 
             
                         
@@ -143,6 +144,40 @@ namespace MatrixCalculus
             sb.Append(@" \delta_{2 3}e_1 = " + uvE3.ToLatex());
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_ElementaryMatrix_Multiply_UnitVector.html"); //display Latex via mathjax
+
+
+            return 0;
+
+        }
+
+        public static int Test_UnitVector_Multiply_ElementaryMatrix()
+        {
+            /*
+            e'r * Eij = e'r * ei * e'j = &ri *e'j where & = Kronecker delta
+
+            */
+            StringBuilder sb = new StringBuilder();
+            ElementaryMatrix E12 = new ElementaryMatrix(4, 4, "E12"); // 4 x 4 ElementaryMatrix
+            UnitVector e1 = new UnitVector("e1", 4); //Order four unit vector e1
+            UnitVector e2 = new UnitVector("e2", 4, RowColumn.Row); //Order four row unit vector e2
+            UnitVector er = new UnitVector("e3", 4, RowColumn.Row); //Order four unit row vector e3 our er above
+            /*
+            i = 1, j = 2, r = 3
+            */
+
+            //Test matrix unit vector * Elementary Matrix,  er * Eij
+            UnitVector uvE1 = er * E12;
+            sb.Append(@"e_3E_{12} = " + uvE1.ToLatex() + @"\;");
+            
+            //Test e'r * ei * e'j 
+            UnitVector uvE2 = er * e1 * e2;
+            sb.Append(@"e'_3e_1e'_2 = " + uvE2.ToLatex() + @"\;");
+
+            //Test &ri * e'j
+            UnitVector uvE3 = UnitVector.KroneckerDelta(3,1) * e2;
+            sb.Append(@" \delta_{3 1}e_2 = " + uvE3.ToLatex());
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_UnitVector_Multiply_ElementaryMatrix.html"); //display Latex via mathjax
 
 
             return 0;

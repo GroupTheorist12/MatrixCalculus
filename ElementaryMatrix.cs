@@ -70,7 +70,7 @@ namespace MatrixCalculus
 
         public int Major { get; private set; } //left most subscript indices
         public int Minor { get; private set; } //right most subscript indices
-        public ElementaryMatrix(int value)
+        private ElementaryMatrix(int value)
         {
             this.Rows = 1;
             this.Columns = 1;
@@ -117,10 +117,41 @@ namespace MatrixCalculus
             }
         }
 
+        public static UnitVector operator*(UnitVector uv, ElementaryMatrix em)
+        {
+            UnitVector ret = new UnitVector(0);
+            ret.Clear();
+            if (uv.Order != em.Rows)
+            {
+                throw new Exception("Vector length must be same as number of columns and rows of matrix");
+            }
+
+            for (int i = 0; i < em.Rows; i++)
+            {
+                int SumOfRow = 0;
+                for (int j = 0; j < em.Columns; j++)
+                {
+                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                }
+
+                ret.Add(SumOfRow);
+            }
+
+            return ret;
+        
+        }
+
         public static UnitVector operator*(ElementaryMatrix em, UnitVector uv)
         {
             UnitVector ret = new UnitVector(0);
             ret.Clear();
+
+            //Elementary Matrix private default constructor called from implicit method. It is a value
+            if(em.Name == "E" && em.Rows == 1 && em.Columns == 1)
+            {
+                return em[0, 0] * uv;
+            }
+
             if (uv.Order != em.Rows)
             {
                 throw new Exception("Vector length must be same as number of columns and rows of matrix");
