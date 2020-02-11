@@ -5,33 +5,44 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Collections;
+using System.Reflection;
 
 namespace MatrixCalculus
 {
     public class MethodRunner
     {
-        public static Hashtable htTestFuncs = new Hashtable();
+        private static Hashtable htTestFuncs = new Hashtable();
 
         public static int RunIt(string hashEntry)
         {
-            TestRunner<int> test = (TestRunner<int>)htTestFuncs[hashEntry];
-            return test.Value;
+            MethodInfo mi = (MethodInfo)htTestFuncs[hashEntry];    
+            return (int)mi.Invoke(null, null);
         }
 
         static MethodRunner()
         {
-            htTestFuncs["ColumnVector"] = new TestRunner<int>(() => Test_RealVector_ColumnVector());
-            htTestFuncs["UnitVector_UnitVector"] = new TestRunner<int>(() => Test_UnitVector_UnitVector());
-            htTestFuncs["UnitVectorSpace_UnitVectorSpace"] = new TestRunner<int>(() => Test_UnitVectorSpace_UnitVectorSpace());
-            htTestFuncs["OneVector_OneVector"] = new TestRunner<int>(() => Test_OneVector_OneVector());
-            htTestFuncs["ElementaryMatrix_ElementaryMatrix"] = new TestRunner<int>(() => Test_ElementaryMatrix_ElementaryMatrix());
-            htTestFuncs["UnitVectorProductTo_ElementaryMatrix"] = new TestRunner<int>(() => Test_UnitVectorProductTo_ElementaryMatrix());
-            htTestFuncs["UnitVectorProduct_ToInt"] = new TestRunner<int>(() => Test_UnitVectorProduct_ToInt());
-            htTestFuncs["ElementaryMatrix_Multiply_UnitVector"] = new TestRunner<int>(() => Test_ElementaryMatrix_Multiply_UnitVector());
-            htTestFuncs["UnitVector_Multiply_ElementaryMatrix"] = new TestRunner<int>(() => Test_UnitVector_Multiply_ElementaryMatrix());
-
             
-                        
+            // get all public static methods of MethodRunner type
+            MethodInfo[] methodInfos = typeof(MethodRunner).GetMethods(BindingFlags.Public |
+                                                                BindingFlags.Static);
+            // sort methods by name
+            Array.Sort(methodInfos,
+                    delegate(MethodInfo methodInfo1, MethodInfo methodInfo2)
+                    { return methodInfo1.Name.CompareTo(methodInfo2.Name); });
+
+            // write method names to hash
+            foreach (MethodInfo methodInfo in methodInfos)
+            {
+                if(methodInfo.Name.IndexOf("Test_") == -1)
+                {
+                    continue;
+                }
+
+                string miKey = methodInfo.Name.Replace("Test_", "");
+                Console.WriteLine(miKey);
+
+                htTestFuncs[miKey] = methodInfo;  
+            }                        
                         
 
         }
@@ -165,9 +176,10 @@ namespace MatrixCalculus
             i = 1, j = 2, r = 3
             */
 
+            sb.Append(@"e'_rE_{ij} = e'_re_ie'_j = \delta_{r j}e'j \\");
             //Test matrix unit vector * Elementary Matrix,  er * Eij
             UnitVector uvE1 = er * E12;
-            sb.Append(@"e_3E_{12} = " + uvE1.ToLatex() + @"\;");
+            sb.Append(@"e'_3E_{12} = " + uvE1.ToLatex() + @"\;");
             
             //Test e'r * ei * e'j 
             UnitVector uvE2 = er * e1 * e2;
@@ -175,10 +187,37 @@ namespace MatrixCalculus
 
             //Test &ri * e'j
             UnitVector uvE3 = UnitVector.KroneckerDelta(3,1) * e2;
-            sb.Append(@" \delta_{3 1}e_2 = " + uvE3.ToLatex());
+            sb.Append(@" \delta_{3 1}e_2 = " + uvE3.ToLatex() + @" \tag{1}");
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_UnitVector_Multiply_ElementaryMatrix.html"); //display Latex via mathjax
 
+            return 0;
+
+        }
+
+        //From now on, our comments will use latex syntax
+        public static int Test_ElementaryMatrix_Multiply_ElementaryMatrix()
+        {
+            /*
+                E_{ij}E_{rs} = e_ie'_je_re'_s = \delta_{r j}e'_ie'_s = \delta_{j r}E_{is} \\
+                if\;r = j \\
+                E_{ij}E_{rs} = \delta_{j j}E_{is} = E_{is}
+
+            */
+            StringBuilder sb = new StringBuilder();
+            ElementaryMatrix E12 = new ElementaryMatrix(4, 4, "E13"); // 4 x 4 ElementaryMatrix
+            ElementaryMatrix E13 = new ElementaryMatrix(4, 4, "E32"); // 4 x 4 ElementaryMatrix
+
+            sb.Append(@"E_{ij}E_{rs} = e_ie'_je_re'_s = \delta_{r j}e'_ie'_s = \delta_{j r}E_{is} \\");
+            sb.Append(@"if\;r = j \\");
+            sb.Append(@"E_{ij}E_{rs} = \delta_{j j}E_{is} = E_{is} \\");
+            sb.Append(@"Output\;is: \\");
+            //Test Elementary Matrix * Elementary Matrix
+
+            ElementaryMatrix em = E12 * E13;
+            sb.Append(em.ToLatex("F"));
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_ElementaryMatrix_Multiply_ElementaryMatrix.html"); //display Latex via mathjax
 
             return 0;
 

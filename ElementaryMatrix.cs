@@ -12,7 +12,7 @@ namespace MatrixCalculus
         private int[,] InternalRep = null;
         public string FullRep { get; set; }
 
-        public string Name { get; }
+        public string Name { get; private set;}
         private string m_LatexName;
         public string LatexName { get { return m_LatexName; } }
 
@@ -84,6 +84,19 @@ namespace MatrixCalculus
             this[0, 0] = value;
         }
 
+        private ElementaryMatrix(int Rows, int Columns)
+        {
+            this.Rows = Rows;
+            this.Columns = Columns;
+            InternalRep = new int[this.Rows, this.Columns];
+            this.Name = "E";
+            this.FullRep = string.Empty;
+            Major = 0;
+            Minor = 0;
+            Zero();
+
+        }
+
         public static implicit operator int(ElementaryMatrix em) => em[0, 0];
         public static explicit operator ElementaryMatrix(int value) => new ElementaryMatrix(value);
         public ElementaryMatrix(int rows, int columns, string Name)
@@ -115,6 +128,51 @@ namespace MatrixCalculus
 
                 InternalRep[r, c] = value;
             }
+        }
+
+        public static ElementaryMatrix operator *(ElementaryMatrix a, ElementaryMatrix b)
+        {
+            ElementaryMatrix ret = new ElementaryMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+
+                    for (int k = 0; k < ret.Columns; k++)
+                    {
+
+                        ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
+
+                        if(ret.InternalRep[i, j] == 1)
+                        {
+                            ret.Major = i + 1;
+                            ret.Minor = j + 1;
+                            ret.Name = "E" + ret.Major.ToString(); ret.Minor.ToString();
+                            ret.m_LatexName = @"E_{" + (ret.Major).ToString() + (ret.Minor).ToString() + "}";
+
+                        }
+                    }
+
+                }
+
+
+
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.LatexName + b.LatexName + " = ");
+            sb.Append(a.ToLatex());
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(ret.LatexName + " = ");
+            sb.Append(ret.ToLatex());
+
+            ret.FullRep = sb.ToString();
+
+
+            return ret;
         }
 
         public static UnitVector operator*(UnitVector uv, ElementaryMatrix em)
