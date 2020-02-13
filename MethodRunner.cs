@@ -39,7 +39,7 @@ namespace MatrixCalculus
                 }
 
                 string miKey = methodInfo.Name.Replace("Test_", "");
-                Console.WriteLine(miKey);
+                //Console.WriteLine(miKey);
 
                 htTestFuncs[miKey] = methodInfo;  
             }                        
@@ -223,5 +223,38 @@ namespace MatrixCalculus
 
         }
 
+        public static int Test_Symbols_Tokens()
+        {
+            string FunctionString = "2x^2 + 5x + 7"; 
+            Tokenizer toke = new Tokenizer();
+            List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
+
+            StringBuilder sb = new StringBuilder();
+            int cnt = 0;
+
+            /*
+            for (int i = 0; i < tokes.Count; i++)
+            {
+                Token t = tokes[i];
+
+                sb.Append(t.Type);
+                if (t.Type == "Operator")
+                {
+                    sb.Append(t.Value);
+                }
+
+                Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
+
+            }
+            */
+
+            SymbolList symL = new SymbolList(tokes);
+            foreach(Symbol sym in symL)
+            {
+                Console.WriteLine("{0}", sym.NakedTokenString);
+            }
+
+            return 0;
+        }
     }
 }

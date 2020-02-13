@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace MathematicalAlgrorithms
+namespace MatrixCalculus
 {
 
 
@@ -14,10 +14,12 @@ namespace MathematicalAlgrorithms
     public string Type { get; set; }
     public string Value { get; set;}
 
+    public bool SymbolEnd{get;set;}
     public Token(string t, string v)
     {
       this.Type = t;
       this.Value = v;
+      SymbolEnd = false;
     }
   }
 
@@ -57,12 +59,19 @@ namespace MathematicalAlgrorithms
       return new Regex(@"\)").IsMatch(ch.ToString());
     }
 
-    private void emptyLetterBufferAsVariables()
+    public bool isUnderScore(char ch)
+    {
+      return new Regex(@"\_").IsMatch(ch.ToString());
+    }
+
+    private void emptyLetterBufferAsVariables(bool SymbolEnd = false)
     {
       var l = letterBuffer.Count;
       for (var i = 0; i < l; i++)
       {
-        result.Add(new Token("Variable", letterBuffer[i]));
+        Token t = new Token("Variable", letterBuffer[i]);
+        t.SymbolEnd = SymbolEnd;
+        result.Add(t);
         if (i < l - 1)
         { //there are more Variables left
           result.Add(new Token("Operator", "*"));
@@ -78,6 +87,85 @@ namespace MathematicalAlgrorithms
         result.Add(new Token("Literal", string.Join("", numberBuffer.ToArray())));
         numberBuffer.Clear();
       }
+    }
+
+    public List<Token> tokenizeToSymbol(string str)
+    {
+      result.Clear();
+      letterBuffer.Clear();
+      numberBuffer.Clear();
+
+      for(int i = 0; i < str.Length; i++)
+      {
+        char ch = str[i];
+        if (isDigit(ch))
+        {
+          numberBuffer.Add(ch.ToString());
+        }
+        else if (ch == '.')
+        {
+          numberBuffer.Add(ch.ToString());
+        }
+        else if (isLetter(ch))
+        {
+          if (numberBuffer.Count > 0)
+          {
+            emptyNumberBufferAsLiteral();
+            result.Add(new Token("Operator", "*"));
+          }
+          letterBuffer.Add(ch.ToString());
+        }
+        else if (isOperator(ch))
+        {
+          emptyNumberBufferAsLiteral();
+          emptyLetterBufferAsVariables();
+          if(ch != '^')
+          {
+            result[result.Count - 1].SymbolEnd = true;
+          }
+          result.Add(new Token("Operator", ch.ToString()));
+        }
+        else if (isLeftParenthesis(ch))
+        {
+          if (letterBuffer.Count > 0)
+          {
+            result.Add(new Token("Function", string.Join("", letterBuffer.ToArray())));
+            letterBuffer.Clear();
+          }
+          else if (numberBuffer.Count > 0)
+          {
+            emptyNumberBufferAsLiteral();
+            result.Add(new Token("Operator", "*"));
+          }
+          result.Add(new Token("Left Parenthesis", ch.ToString()));
+        }
+        else if (isRightParenthesis(ch))
+        {
+          emptyLetterBufferAsVariables();
+          emptyNumberBufferAsLiteral();
+          result.Add(new Token("Right Parenthesis", ch.ToString()));
+        }
+        else if (isComma(ch))
+        {
+          emptyNumberBufferAsLiteral();
+          emptyLetterBufferAsVariables();
+          result.Add(new Token("Function Argument Separator", ch.ToString()));
+        }
+      }
+
+      if (numberBuffer.Count > 0)
+      {
+        emptyNumberBufferAsLiteral();
+      }
+      if (letterBuffer.Count > 0)
+      {
+        emptyLetterBufferAsVariables();
+      }
+
+      result[result.Count - 1].SymbolEnd = true;
+
+      return result;
+
     }
 
     public List<Token> tokenize(string str)
