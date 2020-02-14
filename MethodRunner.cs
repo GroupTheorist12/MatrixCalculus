@@ -225,14 +225,14 @@ namespace MatrixCalculus
 
         public static int Test_Symbols_Tokens()
         {
-            string FunctionString = "2x^2 + 5x + 7"; 
+            string FunctionString = "x^0.5"; 
             Tokenizer toke = new Tokenizer();
             List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
 
             StringBuilder sb = new StringBuilder();
             int cnt = 0;
 
-            /*
+            
             for (int i = 0; i < tokes.Count; i++)
             {
                 Token t = tokes[i];
@@ -246,14 +246,24 @@ namespace MatrixCalculus
                 Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
 
             }
-            */
+            
 
+            /*
             SymbolList symL = new SymbolList(tokes);
             foreach(Symbol sym in symL)
             {
                 Console.WriteLine("{0}", sym.NakedTokenString);
+                Console.WriteLine("{0}", sym.TokenString);
             }
+            */
 
+            /*
+            Symbol symA = new Symbol("2x");
+            Symbol symB = new Symbol("5y");
+
+            Symbol symM = symA * symB;
+            Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
+            */
             return 0;
         }
     }
