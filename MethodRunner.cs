@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Collections;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace MatrixCalculus
 {
@@ -225,6 +226,7 @@ namespace MatrixCalculus
 
         public static int Test_Symbols_Tokens()
         {
+            /*
             string FunctionString = "x^0.5"; 
             Tokenizer toke = new Tokenizer();
             List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
@@ -246,7 +248,7 @@ namespace MatrixCalculus
                 Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
 
             }
-            
+            */
 
             /*
             SymbolList symL = new SymbolList(tokes);
@@ -264,6 +266,17 @@ namespace MatrixCalculus
             Symbol symM = symA * symB;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
             */
+            
+            
+            Regex regEx = new Regex( @"[+-]?((\d+(\.\d*)?)|(\.\d+))?\w[xyzt]\^[+-]?((\d+(\.\d*)?)|(\.\d+))" );
+            
+            //regEx = new Regex( @"([a-z]*)\(([^\(\)]+)\)(\^?[+-]?((\d+(\.\d*)?)|(\.\d+))?)", RegexOptions.IgnoreCase );            
+            
+            Match m = regEx.Match( "2x^2", 0 );
+
+            int iiiii = 0;
+            iiiii++;
+
             return 0;
         }
     }
