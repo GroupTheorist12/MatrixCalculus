@@ -16,25 +16,25 @@ namespace MatrixCalculus
 
         public static int RunIt(string hashEntry)
         {
-            MethodInfo mi = (MethodInfo)htTestFuncs[hashEntry];    
+            MethodInfo mi = (MethodInfo)htTestFuncs[hashEntry];
             return (int)mi.Invoke(null, null);
         }
 
         static MethodRunner()
         {
-            
+
             // get all public static methods of MethodRunner type
             MethodInfo[] methodInfos = typeof(MethodRunner).GetMethods(BindingFlags.Public |
                                                                 BindingFlags.Static);
             // sort methods by name
             Array.Sort(methodInfos,
-                    delegate(MethodInfo methodInfo1, MethodInfo methodInfo2)
+                    delegate (MethodInfo methodInfo1, MethodInfo methodInfo2)
                     { return methodInfo1.Name.CompareTo(methodInfo2.Name); });
 
             // write method names to hash
             foreach (MethodInfo methodInfo in methodInfos)
             {
-                if(methodInfo.Name.IndexOf("Test_") == -1)
+                if (methodInfo.Name.IndexOf("Test_") == -1)
                 {
                     continue;
                 }
@@ -42,9 +42,9 @@ namespace MatrixCalculus
                 string miKey = methodInfo.Name.Replace("Test_", "");
                 //Console.WriteLine(miKey);
 
-                htTestFuncs[miKey] = methodInfo;  
-            }                        
-                        
+                htTestFuncs[miKey] = methodInfo;
+            }
+
 
         }
 
@@ -146,13 +146,13 @@ namespace MatrixCalculus
             //Test matrix * unit vector, Eij * er
             UnitVector uvE1 = E12 * er;
             sb.Append(@"E_{12}e_3 = " + uvE1.ToLatex() + @"\;");
-            
+
             //Test e1* e'j * er
             UnitVector uvE2 = e1 * e2 * er;
             sb.Append(@"e_1e'_2e_3 = " + uvE2.ToLatex() + @"\;");
 
             //Test &jr * ei
-            UnitVector uvE3 = UnitVector.KroneckerDelta(2,3) * e1;
+            UnitVector uvE3 = UnitVector.KroneckerDelta(2, 3) * e1;
             sb.Append(@" \delta_{2 3}e_1 = " + uvE3.ToLatex());
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_ElementaryMatrix_Multiply_UnitVector.html"); //display Latex via mathjax
@@ -181,13 +181,13 @@ namespace MatrixCalculus
             //Test matrix unit vector * Elementary Matrix,  er * Eij
             UnitVector uvE1 = er * E12;
             sb.Append(@"e'_3E_{12} = " + uvE1.ToLatex() + @"\;");
-            
+
             //Test e'r * ei * e'j 
             UnitVector uvE2 = er * e1 * e2;
             sb.Append(@"e'_3e_1e'_2 = " + uvE2.ToLatex() + @"\;");
 
             //Test &ri * e'j
-            UnitVector uvE3 = UnitVector.KroneckerDelta(3,1) * e2;
+            UnitVector uvE3 = UnitVector.KroneckerDelta(3, 1) * e2;
             sb.Append(@" \delta_{3 1}e_2 = " + uvE3.ToLatex() + @" \tag{1}");
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_UnitVector_Multiply_ElementaryMatrix.html"); //display Latex via mathjax
@@ -224,31 +224,78 @@ namespace MatrixCalculus
 
         }
 
+        private static void FindVariable(string Expr)
+        {
+            Regex regEx = new Regex(@"[+-]?((\d+(\.\d*)?)|(\.\d+))?\w[xyzt]\^[+-]?((\d+(\.\d*)?)|(\.\d+))");
+
+            Match m = regEx.Match(Expr, 0);
+
+            if (m.Success)
+            {
+                Console.WriteLine("Found power variable times literal");
+                return;
+            }
+
+            regEx = new Regex(@"[xyzt]\^[+-]?((\d+(\.\d*)?)|(\.\d+))");
+            m = regEx.Match(Expr, 0);
+            if (m.Success)
+            {
+                Console.WriteLine("Found naked power variable");
+                return;
+            }
+
+        }
         public static int Test_Symbols_Tokens()
         {
-            /*
-            string FunctionString = "x^0.5"; 
-            Tokenizer toke = new Tokenizer();
-            List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
-
-            StringBuilder sb = new StringBuilder();
-            int cnt = 0;
 
             
-            for (int i = 0; i < tokes.Count; i++)
+            string[] funcs =
             {
-                Token t = tokes[i];
+                "x*x",
+                "2x*x",
+                "x*2x",
+                "x*x^2",
+                "2x^2",
+                "2x*sin(x^2)"
+            };
 
-                sb.Append(t.Type);
-                if (t.Type == "Operator")
+            foreach (string FunctionString in funcs)
+            {
+                //string FunctionString = "x^2+x";
+                Tokenizer toke = new Tokenizer();
+                List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
+
+                StringBuilder sb = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+
+                int cnt = 0;
+
+                /*    
+                for (int i = 0; i < tokes.Count; i++)
                 {
-                    sb.Append(t.Value);
+                    Token t = tokes[i];
+
+                    sb.Append(t.Type);
+                    //sb2.Append((cnt++).ToString() + "\t");
+                    if (t.Type == "Operator")
+                    {
+                        sb.Append(t.Value);
+                    }
+
+                    if(t.SymbolEnd)
+                    {
+                        //Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
+                        //Console.WriteLine("case \"{0}\":", sb.ToString());
+                        //Console.WriteLine("//{0}", sb2.ToString());
+                        //Console.WriteLine("\tbreak;");
+
+                    }
+
                 }
-
-                Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
-
+                */
+                
             }
-            */
+            
 
             /*
             SymbolList symL = new SymbolList(tokes);
@@ -257,25 +304,19 @@ namespace MatrixCalculus
                 Console.WriteLine("{0}", sym.NakedTokenString);
                 Console.WriteLine("{0}", sym.TokenString);
             }
-            */
+            
 
-            /*
+            
             Symbol symA = new Symbol("2x");
-            Symbol symB = new Symbol("5y");
+            Symbol symB = new Symbol("5x");
 
             Symbol symM = symA * symB;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
             */
-            
-            
-            Regex regEx = new Regex( @"[+-]?((\d+(\.\d*)?)|(\.\d+))?\w[xyzt]\^[+-]?((\d+(\.\d*)?)|(\.\d+))" );
-            
-            //regEx = new Regex( @"([a-z]*)\(([^\(\)]+)\)(\^?[+-]?((\d+(\.\d*)?)|(\.\d+))?)", RegexOptions.IgnoreCase );            
-            
-            Match m = regEx.Match( "2x^2", 0 );
 
-            int iiiii = 0;
-            iiiii++;
+
+
+            //FindVariable("2x^2");
 
             return 0;
         }
