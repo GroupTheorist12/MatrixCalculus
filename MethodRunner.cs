@@ -248,7 +248,7 @@ namespace MatrixCalculus
         public static int Test_Symbols_Tokens()
         {
 
-            
+
             string[] funcs =
             {
                 "x*x",
@@ -262,13 +262,11 @@ namespace MatrixCalculus
             foreach (string FunctionString in funcs)
             {
                 //string FunctionString = "x^2+x";
-                Tokenizer toke = new Tokenizer();
-                List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
+                //Tokenizer toke = new Tokenizer();
+                //List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
 
-                StringBuilder sb = new StringBuilder();
-                StringBuilder sb2 = new StringBuilder();
-
-                int cnt = 0;
+                //StringBuilder sb = new StringBuilder();
+                //StringBuilder sb2 = new StringBuilder();
 
                 /*    
                 for (int i = 0; i < tokes.Count; i++)
@@ -293,9 +291,9 @@ namespace MatrixCalculus
 
                 }
                 */
-                
+
             }
-            
+
 
             /*
             SymbolList symL = new SymbolList(tokes);
@@ -317,6 +315,38 @@ namespace MatrixCalculus
 
 
             //FindVariable("2x^2");
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
+            int cnt = 0;
+
+            TokenFactory tf = new TokenFactory();
+            tf.ParseExpression("-2sin(x + 1)/x^2");
+
+            for (int i = 0; i < tf.TokenList.Count; i++)
+            {
+                Token t = tf.TokenList[i];
+
+                sb.Append(t.Type);
+                if (t.Type == "Operator")
+                {
+                    sb.Append(t.Value);
+                }
+
+                Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt, t.Type, t.Value, t.SymbolEnd, sb.ToString());
+                sb2.Append((cnt).ToString() + "\t");
+                cnt++;
+            }
+
+            /*
+            Console.WriteLine(@"{0}", sb.ToString());
+            Console.WriteLine("//{0}", sb2.ToString());
+
+            Symbol symA = new Symbol("x^2");
+            Symbol symB = new Symbol("x");
+
+            Symbol symM = symA * symB;
+            Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
+            */
 
             return 0;
         }

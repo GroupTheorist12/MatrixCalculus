@@ -23,8 +23,9 @@ namespace MatrixCalculus
 
         public Symbol(string exp)
         {
-            Tokenizer tokes = new Tokenizer();
-            this.Tokens = tokes.tokenize(exp);
+            TokenFactory tokes = new TokenFactory();
+            tokes.ParseExpression(exp);
+            this.Tokens = tokes.TokenList;
             IsOperator = false;
         }
         public string NakedTokenString
@@ -63,7 +64,7 @@ namespace MatrixCalculus
 
         private static Symbol Multiply(Symbol a, Symbol b)
         {
-            Symbol combine = new Symbol(a.NakedTokenString + "*" + b.NakedTokenString);
+            Symbol combine = new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);
             Console.WriteLine("{0}", combine.TokenString);
 
             Symbol ret = new Symbol();
@@ -96,7 +97,7 @@ namespace MatrixCalculus
                     }
                     break;
                 case "LiteralOperator*VariableOperator*Variable":
-                    if (combine.Tokens[2].Value == combine.Tokens[4].Value) // x * ax
+                    if (combine.Tokens[2].Value == combine.Tokens[4].Value) // ax * x
                     {
                         ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value + "^2");
                     }
@@ -112,11 +113,36 @@ namespace MatrixCalculus
 
                     if (combine.Tokens[2].Value == combine.Tokens[6].Value)
                     {
-                       ret = new Symbol(rSum.ToString() + combine.Tokens[2].Value + "^2");
+                        ret = new Symbol(rSum.ToString() + combine.Tokens[2].Value + "^2");
                     }
                     else
                     {
                         ret = new Symbol(rSum.ToString() + combine.Tokens[2].Value + combine.Tokens[6].Value);
+                    }
+                    break;
+                case "VariableOperator*VariableOperator^Literal":
+                    //     0	    1	    2	    3	    4
+                    rExp = Rational.Parse(combine.Tokens[4].Value) + 1;
+                    if (combine.Tokens[0].Value == combine.Tokens[2].Value) // x * x^2
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + "^" + rExp.ToString());
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value);
+                    }
+                    break;
+
+                case "VariableOperator^LiteralOperator*Variable":
+                    //  0	    1	    2	    3	    4 
+                    rExp = Rational.Parse(combine.Tokens[2].Value) + 1;
+                    if (combine.Tokens[0].Value == combine.Tokens[4].Value) // x^2 * x
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + "^" + rExp.ToString());
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value);
                     }
                     break;
                 default:

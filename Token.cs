@@ -27,6 +27,8 @@ namespace MatrixCalculus
     {
         public List<Token> TokenList { get; set; }
         public SymbolList symbolList { get; set; }
+        List<string> letterBuffer = new List<string>();
+        List<string> numberBuffer = new List<string>();
 
         public enum CoordinateSystem
         {
@@ -41,42 +43,50 @@ namespace MatrixCalculus
             Subscript
         }
 
-        
+
         public class Coordinates
         {
-          public int Dimension { get; set; }
-          public CoordinateSystem coordinateSystem{get;set;}
-          public string VariableStringValues{get;set;}
-          public Coordinates(CoordinateSystem cs, int dim, string variableStringRep)
-          {
-            this.coordinateSystem = cs;
-            this.Dimension = dim;
+            public int Dimension { get; set; }
+            public CoordinateSystem coordinateSystem { get; set; }
+            public string VariableStringValues { get; set; }
 
-            VariableStringValues = variableStringRep;
-          }
+            public Coordinates(CoordinateSystem cs, int dim, string variableStringRep)
+            {
+                this.coordinateSystem = cs;
+                this.Dimension = dim;
+
+                VariableStringValues = variableStringRep;
+            }
         }
         public Coordinates coordinates { get; set; }
-        
-        
+
+
         public TokenFactory() //default constructor
         {
             coordinates = new Coordinates(CoordinateSystem.x, 1, "x");
+            TokenList = new List<Token>();
+            symbolList = new SymbolList();
         }
 
         public void ParseExpression(string FunctionString)
         {
-            List<string> letterBuffer = new List<string>();
-            List<string> numberBuffer = new List<string>();
 
             int i = 0;
+            TokenList.Clear();
 
             Symbol sym = new Symbol();
 
+            bool InBracket = false;
             Tokenizer tokes = new Tokenizer();
-            while(i < FunctionString.Length)
+            while (i < FunctionString.Length)
             {
                 char ch = FunctionString[i];
-                if (tokes.isDigit(ch))
+                if(ch == '-' && FunctionString[i + 1] != ' ') //negative number. Parser needs space for +-*/
+                {
+                    numberBuffer.Add(ch.ToString());
+
+                }
+                else if (tokes.isDigit(ch))
                 {
                     numberBuffer.Add(ch.ToString());
                 }
@@ -84,10 +94,92 @@ namespace MatrixCalculus
                 {
                     numberBuffer.Add(ch.ToString());
                 }
+                else if (tokes.isLetter(ch))
+                {
+                    if (numberBuffer.Count > 0)
+                    {
+                        emptyNumberBufferAsLiteral();
+                        TokenList.Add(new Token("Operator", "*"));
+                    }
+                    letterBuffer.Add(ch.ToString());
+                }
+                else if (tokes.isOperator(ch))
+                {
+                    emptyNumberBufferAsLiteral();
+                    emptyLetterBufferAsVariables();
+                    char ch2  = FunctionString[i - 1];
+                    if (ch2 == ' ' && !InBracket)//(ch != '^')
+                    {
+                        TokenList[TokenList.Count - 1].SymbolEnd = true;
+                    }
+                    TokenList.Add(new Token("Operator", ch.ToString()));
+                }
+                else if (tokes.isLeftParenthesis(ch))
+                {
+                    InBracket = true;
+                    if (letterBuffer.Count > 0)
+                    {
+                        TokenList.Add(new Token("Function", string.Join("", letterBuffer.ToArray())));
+                        letterBuffer.Clear();
+                    }
+                    else if (numberBuffer.Count > 0)
+                    {
+                        emptyNumberBufferAsLiteral();
+                        TokenList.Add(new Token("Operator", "*"));
+                    }
+                    TokenList.Add(new Token("Left Parenthesis", ch.ToString()));
+                }
+                else if (tokes.isRightParenthesis(ch))
+                {
+                    InBracket = false;
+                    emptyLetterBufferAsVariables();
+                    emptyNumberBufferAsLiteral();
+                    TokenList.Add(new Token("Right Parenthesis", ch.ToString()));
+                }
+                else if (tokes.isComma(ch))
+                {
+                    emptyNumberBufferAsLiteral();
+                    emptyLetterBufferAsVariables();
+                    TokenList.Add(new Token("Function Argument Separator", ch.ToString()));
+                }
+
 
                 i++;
             }
+
+            emptyNumberBufferAsLiteral(true);  
+            emptyLetterBufferAsVariables(true);         
+
+            symbolList  = new SymbolList(this.TokenList); 
         }
+
+        private void emptyNumberBufferAsLiteral(bool SymbolEnd = false)
+        {
+            if (numberBuffer.Count > 0)
+            {
+                Token t = new Token("Literal", string.Join("", numberBuffer.ToArray()));
+                t.SymbolEnd = SymbolEnd;
+                TokenList.Add(t);
+                numberBuffer.Clear();
+            }
+        }
+
+        private void emptyLetterBufferAsVariables(bool SymbolEnd = false)
+        {
+            var l = letterBuffer.Count;
+            for (var i = 0; i < l; i++)
+            {
+                Token t = new Token("Variable", letterBuffer[i]);
+                t.SymbolEnd = SymbolEnd;
+                TokenList.Add(t);
+                if (i < l - 1)
+                { //there are more Variables left
+                    TokenList.Add(new Token("Operator", "*"));
+                }
+            }
+            letterBuffer.Clear();
+        }
+
     }
     public class Tokenizer
     {

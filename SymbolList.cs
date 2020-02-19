@@ -8,6 +8,10 @@ namespace MatrixCalculus
 {
     public class SymbolList : List<Symbol>
     {
+        public SymbolList()
+        {
+            
+        }
         public SymbolList(List<Token> tokens)        
         {
             bool SymbolEnd = false;
