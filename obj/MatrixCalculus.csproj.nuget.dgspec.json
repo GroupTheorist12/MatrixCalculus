@@ -39,6 +39,12 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "dependencies": {
+            "AWSSDK.DynamoDBv2": {
+              "target": "Package",
+              "version": "[3.3.105.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
