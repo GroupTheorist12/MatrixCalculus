@@ -1,0 +1,300 @@
+case "VariableOperator*Variable":
+//	0	1	2 x*x
+	break;
+case "VariableOperator*LiteralOperator*Variable":
+//	0	1	2	3	4 x*2*x
+	break;
+case "VariableOperator*VariableOperator^Literal":
+//	0	1	2	3	4 x*x^2
+	break;
+case "VariableOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 x*2*x^2
+	break;
+case "VariableOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 x*2*x^2
+	break;
+case "VariableOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5 x*sin(x)
+	break;
+case "VariableOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7 x*sin(x)^2
+	break;
+case "VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7 x*2*sin(x)
+	break;
+case "VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 x*2*sin(x)^2
+	break;
+case "VariableOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 x*(x+1)^2
+	break;
+case "LiteralOperator*VariableOperator*Variable":
+//	0	1	2	3	4 2*x*x
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 2*x*2*x
+	break;
+case "LiteralOperator*VariableOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 2*x*x^2
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 2*x*2*x^2
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 2*x*2*x^2
+	break;
+case "LiteralOperator*VariableOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7 2*x*sin(x)
+	break;
+case "LiteralOperator*VariableOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 2*x*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 2*x*2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x*2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x*(x+1)^2
+	break;
+case "VariableOperator^LiteralOperator*Variable":
+//	0	1	2	3	4 x^2*x
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 x^2*2*x
+	break;
+case "VariableOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 x^2*x^2
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 x^2*2*x^2
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 x^2*2*x^2
+	break;
+case "VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7 x^2*sin(x)
+	break;
+case "VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 x^2*sin(x)^2
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 x^2*2*sin(x)
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 x^2*2*sin(x)^2
+	break;
+case "VariableOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 x^2*(x+1)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 2*x^2*x
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8 2*x^2*2*x
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 2*x^2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x^2*2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x^2*2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 2*x^2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x^2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x^2*2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*x^2*2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*x^2*(x+1)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 2*x^2*x
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8 2*x^2*2*x
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 2*x^2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x^2*2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x^2*2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 2*x^2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x^2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x^2*2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*x^2*2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*x^2*(x+1)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Variable":
+//	0	1	2	3	4	5 sin(x)*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7 sin(x)*2*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7 sin(x)*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)*2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)*2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8 sin(x)*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 sin(x)*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10 sin(x)*2*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 sin(x)*2*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 sin(x)*(x+1)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7 sin(x)^2*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)^2*2*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)^2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 sin(x)^2*2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 sin(x)^2*2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10 sin(x)^2*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 sin(x)^2*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 sin(x)^2*2*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 sin(x)^2*2*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 sin(x)^2*(x+1)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Variable":
+//	0	1	2	3	4	5	6	7 2*sin(x)*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9 2*sin(x)*2*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 2*sin(x)*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)*2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)*2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10 2*sin(x)*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*sin(x)*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*sin(x)*2*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 2*sin(x)*2*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*sin(x)*(x+1)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9 2*sin(x)^2*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)^2*2*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)^2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*sin(x)^2*2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*sin(x)^2*2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*sin(x)^2*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 2*sin(x)^2*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 2*sin(x)^2*2*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16 2*sin(x)^2*2*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15 2*sin(x)^2*(x+1)^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8 (x+1)^2*x
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9	10 (x+1)^2*2*x
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 (x+1)^2*x^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 (x+1)^2*2*x^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 (x+1)^2*2*x^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11 (x+1)^2*sin(x)
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 (x+1)^2*sin(x)^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 (x+1)^2*2*sin(x)
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15 (x+1)^2*2*sin(x)^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 (x+1)^2*(x+1)^2
+	break;

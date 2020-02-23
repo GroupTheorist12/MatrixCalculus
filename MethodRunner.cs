@@ -251,16 +251,28 @@ namespace MatrixCalculus
 
             string[] funcs =
             {
-                "x*x",
-                "2x*x",
-                "x*2x",
-                "x*x^2",
+                "x",
+                "2x",
+                "x^2",
                 "2x^2",
-                "2x*sin(x^2)"
+                "2x^2",
+                "sin(x)",
+                "sin(x)^2",
+                "2sin(x)",
+                "2sin(x)^2",
+                "(x+1)^2"
             };
-
+/*
             foreach (string FunctionString in funcs)
             {
+                TokenFactory toke = new TokenFactory();
+                toke.ParseExpression(FunctionString);
+                foreach (Symbol sym in toke.symbolList)
+                {
+                    Console.WriteLine("{0}", sym.NakedTokenString);
+                    Console.WriteLine("{0}", sym.TokenString);
+                }
+
                 //string FunctionString = "x^2+x";
                 //Tokenizer toke = new Tokenizer();
                 //List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
@@ -290,10 +302,10 @@ namespace MatrixCalculus
                     }
 
                 }
-                */
+                
 
             }
-
+*/
 
             /*
             SymbolList symL = new SymbolList(tokes);
@@ -315,6 +327,7 @@ namespace MatrixCalculus
 
 
             //FindVariable("2x^2");
+            /*
             StringBuilder sb = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             int cnt = 0;
@@ -340,13 +353,16 @@ namespace MatrixCalculus
             /*
             Console.WriteLine(@"{0}", sb.ToString());
             Console.WriteLine("//{0}", sb2.ToString());
-
-            Symbol symA = new Symbol("x^2");
-            Symbol symB = new Symbol("x");
-
-            Symbol symM = symA * symB;
-            Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
             */
+
+            
+            Symbol symA = new Symbol("x^0.5");
+            Symbol symB = new Symbol("x^2");
+            Symbol symM =  symA * symB;
+            Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
+
+            
+
 
             return 0;
         }

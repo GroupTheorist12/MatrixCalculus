@@ -1,0 +1,685 @@
+        public static Symbol operator *(Symbol a, Symbol b)
+        {
+            Symbol combine = new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);
+
+            /*
+            int i = 0;
+            if(a.Tokens.Count > b.Tokens.Count)
+            {
+                for(i = 0; i < a.Tokens.Count; i++)
+                {
+                    b.Tokens.Add(new Token("Null", "0"));
+                }
+            }
+            else if(b.Tokens.Count > a.Tokens.Count)
+            {
+                for(i = 0; i < b.Tokens.Count; i++)
+                {
+                    a.Tokens.Add(new Token("Null", "0"));
+                }
+
+            }
+
+            var data = from item in a.Tokens
+                        where item.Type == "Variable"
+                        select item;
+            for(i = 0; i < a.Tokens.Count; i++)
+            {
+                
+                if(a.Tokens[i].Type == "Null" || b.Tokens[i].Type == "Null")
+                {
+                    break;
+                }
+            }
+            */
+
+
+
+            // a symbol vars
+            int indA = 0;
+            Rational rA = 1;
+            Rational rExpA = 1;
+            int indVA = 0;
+            int indLA = 0;
+            string typeA = "Variable";
+            string strA = string.Empty;
+
+            // b vars
+            Rational rB = 1;
+            Rational rExpB = 1;
+            int indVB = 0;
+            int indLB = 0;
+            int indB = 0;
+            string typeB = "Variable";
+            string strB = string.Empty;
+
+            Rational rLiteralTotal = 1;
+            Rational rExpTotal = 1;
+            /*Start of process a variable*****************************************************/
+            indA = a.IsPow();
+            if (indA >= 0) // pow => ^
+            {
+                //Literal after ^
+                if (indA < a.Tokens.Count - 1 && a.Tokens[indA + 1].Type == "Literal")
+                {
+                    rExpA = Rational.Parse(a.Tokens[indA + 1].Value); //Literal value should be first token after ^
+                }
+
+                indVA = a.IsVariable();
+                if (indVA >= 0 && indVA == indA - 1) //Variable should be right before ^ such as x^
+                {
+                    typeA = "VariablePow";
+                    if (indVA - 2 >= 0 && a.Tokens[indVA - 2].Type == "Literal") //literal times variable such as 2*x^2
+                    {
+                        rA = Rational.Parse(a.Tokens[indVA - 2].Value);
+                    }
+                    else //naked variable aka x^2
+                    {
+                        rA = 1;
+                    }
+                }
+                else if ((indVA = a.IsFunction()) >= 0) //
+                {
+                    typeA = "FunctionPow";
+                    if (indVA - 2 >= 0 && a.Tokens[indVA - 2].Type == "Literal") //literal times function such as 2*sin(x)^2
+                    {
+                        rA = Rational.Parse(a.Tokens[indVA - 2].Value);
+                    }
+                    else //naked variable aka x^2
+                    {
+                        rA = 1;
+                    }
+
+                }
+            }
+            else if ((indA = a.IsVariable()) >= 0) //variable
+            {
+                typeA = "Variable";
+                if (indA - 2 >= 0 && a.Tokens[indA - 2].Type == "Literal") //literal times variable such as 2*x
+                {
+                    rA = Rational.Parse(a.Tokens[indA - 2].Value);
+                }
+                else //naked variable aka x
+                {
+                    rA = 1;
+                }
+
+            }
+            else if ((indA = a.IsFunction()) >= 0)
+            {
+                typeA = "Function";
+
+                if (indA - 2 >= 0 && a.Tokens[indA - 2].Type == "Literal") //literal times function such as 2*sin(x)
+                {
+                    rA = Rational.Parse(a.Tokens[indA - 2].Value);
+                }
+                else //naked function aka sin(x)
+                {
+                    rA = 1;
+                }
+
+            }
+            /*End of process a variable*****************************************************/
+
+            /*Start of process b variable*****************************************************/
+            indB = a.IsPow();
+            if (indB >= 0) // pow => ^
+            {
+                //Literal after ^
+                if (indB < b.Tokens.Count - 1 && b.Tokens[indB + 1].Type == "Literal")
+                {
+                    rExpB = Rational.Parse(b.Tokens[indB + 1].Value); //Literal value should be first token after ^
+                }
+
+                indVB = b.IsVariable();
+                if (indVB >= 0 && indVB == indB - 1) //Variable should be right before ^ such as x^
+                {
+                    typeB = "VariablePow";
+                    if (indVB - 2 >= 0 && b.Tokens[indVB - 2].Type == "Literal") //literal times variable such as 2*x^2
+                    {
+                        rB = Rational.Parse(b.Tokens[indVB - 2].Value);
+                    }
+                    else //naked variable aka x^2
+                    {
+                        rB = 1;
+                    }
+                }
+                else if ((indVB = b.IsFunction()) >= 0) //
+                {
+                    typeB = "FunctionPow";
+                    if (indVB - 2 >= 0 && a.Tokens[indVB - 2].Type == "Literal") //literal times function such as 2*sin(x)^2
+                    {
+                        rB = Rational.Parse(a.Tokens[indVB - 2].Value);
+                    }
+                    else //naked variable aka x^2
+                    {
+                        rB = 1;
+                    }
+
+                }
+            }
+            else if ((indB = b.IsVariable()) >= 0) //variable
+            {
+                typeB = "Variable";
+                if (indB - 2 >= 0 && b.Tokens[indB - 2].Type == "Literal") //literal times variable such as 2*x
+                {
+                    rB = Rational.Parse(b.Tokens[indB - 2].Value);
+                }
+                else //naked variable aka x
+                {
+                    rB = 1;
+                }
+
+            }
+            else if ((indB = b.IsFunction()) >= 0)
+            {
+                typeB = "Function";
+
+                if (indB - 2 >= 0 && b.Tokens[indB - 2].Type == "Literal") //literal times function such as 2*sin(x)
+                {
+                    rB = Rational.Parse(b.Tokens[indA - 2].Value);
+                }
+                else //naked function aka sin(x)
+                {
+                    rB = 1;
+                }
+
+            }
+            /*End of process b variable*****************************************************/
+
+            string NakedString = string.Empty;
+            rLiteralTotal = rA * rB;
+            string rTotal = (rLiteralTotal == 1) ? "" : rLiteralTotal.ToString();
+
+            if (rExpA == 1 && rExpB == 1) // ax * bx or axsin(x)
+            {
+                if (typeA == "Variable" && typeB == "Variable")
+                {
+                    strA = a.Tokens[a.IsVariable()].Value;
+                    strB = b.Tokens[b.IsVariable()].Value;
+
+                    if (strA == strB) //x*x
+                    {
+                        NakedString = string.Format("{0}{1}^2", rTotal, strA);
+                    }
+                    else
+                    {
+                        NakedString = string.Format("{0}{1}{2}", rTotal, strA, strB);
+                    }
+                }
+            }
+
+            if (NakedString != string.Empty)
+            {
+                combine = new Symbol(NakedString);
+            }
+            return combine;
+        }
+
+        public bool Pow(Symbol a, Symbol b, out string strCombined)
+        {
+            int indA = a.IsPow();
+            int indB = b.IsPow();
+
+
+            // a symbol vars
+            Rational rA = 1;
+            Rational rExpA = 1;
+            int indVA = a.IsVariable();
+            int indLA = 0;
+            int indFA = a.IsFunction();
+            string typeA = "Variable";
+            string strA = string.Empty;
+
+            // b vars
+            Rational rB = 1;
+            Rational rExpB = 1;
+            int indVB = b.IsVariable();
+            int indLB = 0;
+            int indFB = b.IsFunction();
+
+            string typeB = "Variable";
+            string strB = string.Empty;
+
+            Rational rLiteralTotal = 1;
+            Rational rExpTotal = 1;
+            string ret = string.Empty;
+            strCombined = string.Empty;
+
+            if (indA == -1 && indB == -1)
+            {
+                return false;
+            }
+
+            if (indA >= 0) // pow => ^
+            {
+                //Literal after ^
+                if (indA < a.Tokens.Count - 1 && a.Tokens[indA + 1].Type == "Literal")
+                {
+                    rExpA = Rational.Parse(a.Tokens[indA + 1].Value); //Literal value should be first token after ^
+                }
+            }
+
+            if (indVA >= 0) //variable x^2 or x or 2*x or 2*x^2
+            {
+                if (indVA - 2 >= 0 && a.Tokens[indVA - 2].Type == "Literal") //literal times variable such as 2*x^2
+                {
+                    rA = Rational.Parse(a.Tokens[indVA - 2].Value);
+                }
+                else //naked variable aka x^2
+                {
+                    rA = 1;
+                }
+
+            }
+
+            if(indFA >= 0) //function like sin(x), sin(x)^2 2*sin(x)
+            {
+                    if (indFA - 2 >= 0 && a.Tokens[indFA - 2].Type == "Literal") //literal times function such as 2*sin(x)^2
+                    {
+                        rA = Rational.Parse(a.Tokens[indFA - 2].Value);
+                    }
+                    else //naked variable aka x^2
+                    {
+                        rA = 1;
+                    }
+
+            }
+
+            if (indB >= 0) // pow => ^
+            {
+                //Literal after ^
+                if (indB < b.Tokens.Count - 1 && b.Tokens[indB + 1].Type == "Literal")
+                {
+                    rExpB = Rational.Parse(b.Tokens[indB + 1].Value); //Literal value should be first token after ^
+                }
+            }
+
+            if (indVB >= 0) //variable x^2 or x or 2*x or 2*x^2
+            {
+                if (indVB - 2 >= 0 && a.Tokens[indVB - 2].Type == "Literal") //literal times variable such as 2*x^2
+                {
+                    rB = Rational.Parse(a.Tokens[indVB - 2].Value);
+                }
+                else //naked variable aka x^2
+                {
+                    rB = 1;
+                }
+
+            }
+
+            if(indFB >= 0) //function like sin(x), sin(x)^2 2*sin(x)
+            {
+                    if (indFB - 2 >= 0 && a.Tokens[indFB - 2].Type == "Literal") //literal times function such as 2*sin(x)^2
+                    {
+                        rB = Rational.Parse(a.Tokens[indFB - 2].Value);
+                    }
+                    else //naked variable aka x^2
+                    {
+                        rB = 1;
+                    }
+
+            }
+
+            rLiteralTotal = rA * rB;
+            string rTotal = (rLiteralTotal == 1) ? "" : rLiteralTotal.ToString();
+
+            if (indA == -1) // ax * bx^2 or axsin(x)
+            {
+            }
+
+            // x^2 * x^2 
+            return true;
+        }
+
+        private static void FindOperation(string Func)
+        {
+            switch(Func)
+            {
+case "VariableOperator*Variable":
+//	0	1	2 x*x
+	break;
+case "VariableOperator*LiteralOperator*Variable":
+//	0	1	2	3	4 x*2*x
+	break;
+case "VariableOperator*VariableOperator^Literal":
+//	0	1	2	3	4 x*x^2
+	break;
+case "VariableOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 x*2*x^2
+	break;
+case "VariableOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5 x*sin(x)
+	break;
+case "VariableOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7 x*sin(x)^2
+	break;
+case "VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7 x*2*sin(x)
+	break;
+case "VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 x*2*sin(x)^2
+	break;
+case "VariableOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 x*(x+1)^2
+	break;
+case "LiteralOperator*VariableOperator*Variable":
+//	0	1	2	3	4 2*x*x
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 2*x*2*x
+	break;
+case "LiteralOperator*VariableOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 2*x*x^2
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 2*x*2*x^2
+	break;
+case "LiteralOperator*VariableOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7 2*x*sin(x)
+	break;
+case "LiteralOperator*VariableOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 2*x*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 2*x*2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x*2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x*(x+1)^2
+	break;
+case "VariableOperator^LiteralOperator*Variable":
+//	0	1	2	3	4 x^2*x
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 x^2*2*x
+	break;
+case "VariableOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6 x^2*x^2
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 x^2*2*x^2
+	break;
+case "VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7 x^2*sin(x)
+	break;
+case "VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 x^2*sin(x)^2
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 x^2*2*sin(x)
+	break;
+case "VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 x^2*2*sin(x)^2
+	break;
+case "VariableOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 x^2*(x+1)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6 2*x^2*x
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8 2*x^2*2*x
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8 2*x^2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 2*x^2*2*x^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9 2*x^2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x^2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*x^2*2*sin(x)
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*x^2*2*sin(x)^2
+	break;
+case "LiteralOperator*VariableOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*x^2*(x+1)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Variable":
+//	0	1	2	3	4	5 sin(x)*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7 sin(x)*2*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7 sin(x)*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)*2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8 sin(x)*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 sin(x)*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10 sin(x)*2*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 sin(x)*2*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 sin(x)*(x+1)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7 sin(x)^2*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)^2*2*x
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 sin(x)^2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 sin(x)^2*2*x^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10 sin(x)^2*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 sin(x)^2*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 sin(x)^2*2*sin(x)
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 sin(x)^2*2*sin(x)^2
+	break;
+case "FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 sin(x)^2*(x+1)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Variable":
+//	0	1	2	3	4	5	6	7 2*sin(x)*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9 2*sin(x)*2*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9 2*sin(x)*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)*2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10 2*sin(x)*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*sin(x)*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*sin(x)*2*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 2*sin(x)*2*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*sin(x)*(x+1)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9 2*sin(x)^2*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)^2*2*x
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11 2*sin(x)^2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 2*sin(x)^2*2*x^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 2*sin(x)^2*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 2*sin(x)^2*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 2*sin(x)^2*2*sin(x)
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16 2*sin(x)^2*2*sin(x)^2
+	break;
+case "LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15 2*sin(x)^2*(x+1)^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8 (x+1)^2*x
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*Variable":
+//	0	1	2	3	4	5	6	7	8	9	10 (x+1)^2*2*x
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10 (x+1)^2*x^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*VariableOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12 (x+1)^2*2*x^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11 (x+1)^2*sin(x)
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 (x+1)^2*sin(x)^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight Parenthesis":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13 (x+1)^2*2*sin(x)
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*LiteralOperator*FunctionsinLeft ParenthesisVariableRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15 (x+1)^2*2*sin(x)^2
+	break;
+case "Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^LiteralOperator*Left ParenthesisVariableOperator+LiteralRight ParenthesisOperator^Literal":
+//	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14 (x+1)^2*(x+1)^2
+	break;
+                
+                default:
+                    break;    
+            }
+        }
+
+
+        private static Symbol Multiply(Symbol a, Symbol b)
+        {
+            Symbol combine = new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);
+            Console.WriteLine(@"case ""{0}"":", combine.TokenString);
+            StringBuilder sb2 = new StringBuilder();
+            for(int i = 0; i < combine.Tokens.Count; i++)
+            {
+                sb2.Append("\t" + (i).ToString());
+            }
+            Console.WriteLine("//{0} {1}", sb2.ToString(), combine.NakedTokenString);
+            Console.WriteLine("\tbreak;");
+
+            Symbol ret = new Symbol();
+
+            Rational rA;
+            Rational rB;
+            Rational rSum;
+            Rational rExp;
+
+            switch (combine.TokenString)
+            {
+                case "VariableOperator*Variable":
+                    if (combine.Tokens[0].Value == combine.Tokens[2].Value) // x * x
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + "^2");
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value);
+                    }
+                    break;
+                case "VariableOperator*LiteralOperator*Variable":
+                    if (combine.Tokens[0].Value == combine.Tokens[4].Value) // x * ax
+                    {
+                        ret = new Symbol(combine.Tokens[2].Value + combine.Tokens[0].Value + "^2");
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[2].Value + combine.Tokens[0].Value + combine.Tokens[4].Value);
+                    }
+                    break;
+                case "LiteralOperator*VariableOperator*Variable":
+                    if (combine.Tokens[2].Value == combine.Tokens[4].Value) // ax * x
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value + "^2");
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value + combine.Tokens[4].Value);
+                    }
+                    break;
+                case "LiteralOperator*VariableOperator*LiteralOperator*Variable": //ax * bx = abx^2
+                    rA = Rational.Parse(combine.Tokens[0].Value);
+                    rB = Rational.Parse(combine.Tokens[4].Value);
+                    rSum = rA * rB;
+
+                    if (combine.Tokens[2].Value == combine.Tokens[6].Value)
+                    {
+                        ret = new Symbol(rSum.ToString() + combine.Tokens[2].Value + "^2");
+                    }
+                    else
+                    {
+                        ret = new Symbol(rSum.ToString() + combine.Tokens[2].Value + combine.Tokens[6].Value);
+                    }
+                    break;
+                case "VariableOperator*VariableOperator^Literal":
+                    //     0	    1	    2	    3	    4
+                    rExp = Rational.Parse(combine.Tokens[4].Value) + 1;
+                    if (combine.Tokens[0].Value == combine.Tokens[2].Value) // x * x^2
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + "^" + rExp.ToString());
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value);
+                    }
+                    break;
+
+                case "VariableOperator^LiteralOperator*Variable":
+                    //  0	    1	    2	    3	    4 
+                    rExp = Rational.Parse(combine.Tokens[2].Value) + 1;
+                    if (combine.Tokens[0].Value == combine.Tokens[4].Value) // x^2 * x
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + "^" + rExp.ToString());
+                    }
+                    else
+                    {
+                        ret = new Symbol(combine.Tokens[0].Value + combine.Tokens[2].Value);
+                    }
+                    break;
+                default:
+                    ret = combine;
+                    break;
+            }
+
+            return ret;
+        }
