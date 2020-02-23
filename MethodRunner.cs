@@ -356,8 +356,8 @@ namespace MatrixCalculus
             */
 
             
-            Symbol symA = new Symbol("x^0.5");
-            Symbol symB = new Symbol("x^2");
+            Symbol symA = new Symbol("7*x^0.5");
+            Symbol symB = new Symbol("11x^2");
             Symbol symM =  symA * symB;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
 
