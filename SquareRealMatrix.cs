@@ -171,7 +171,46 @@ namespace MatrixCalculus
             Zero();
         }
 
+        public string Name { get; set; }
+        public string LatexName{get; private set;}
+        public static SquareRealMatrix ElementaryMatrix(int rows, int columns, string Name)
+        {
+            SquareRealMatrix ret = new SquareRealMatrix(rows, columns);
+            ret.Name = Name;
 
+            if (ret.Name[0] != 'E')
+            {
+                throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices");
+            }
+
+            int oI1 = 0;
+            int oI2 = 0;
+
+            try
+            {
+                if (!int.TryParse(ret.Name[1].ToString(), out oI1))
+                {
+                    throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 1 bad.");
+
+                }
+
+                if (!int.TryParse(ret.Name[2].ToString(), out oI2))
+                {
+                    throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 2 bad");
+
+                }
+
+                ret[oI1 - 1, oI2 - 1] = 1;
+                ret.LatexName = @"E_{" + (oI1).ToString() + (oI2).ToString() + "}";
+            }
+            catch (Exception)
+            {
+                throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices. Could not parse indices.");
+            }
+
+
+            return ret;
+        }
         public SquareRealMatrix(int rows, int columns, List<double> V)
         {
             if (rows != columns)
@@ -424,16 +463,45 @@ namespace MatrixCalculus
             return ret;
         }
 
-        public enum RowColumn
-        {
-            Row,
-            Column
-        }
 
         public struct RowOrColumn
         {
             public RowColumn rowColumn;
             public int Val;
+        }
+        public RealVector this[string ColumnsOrRows]
+        {
+            get
+            {
+                RealVector ret = new RealVector();
+                if (ColumnsOrRows.Length != 2 && ColumnsOrRows.IndexOf(".") == -1)
+                {
+                    throw new Exception("Bad indexer. Should by .j or i. with i or j being numeric such as .1 or 2.");
+                }
+
+                RowOrColumn rc = new RowOrColumn();
+                try
+                {
+                    if (ColumnsOrRows[0] == '.') //Column
+                    {
+                        rc.rowColumn = RowColumn.Column;
+                        rc.Val = int.Parse(ColumnsOrRows[1].ToString());
+                    }
+                    else//row
+                    {
+                        rc.rowColumn = RowColumn.Row;
+                        rc.Val = int.Parse(ColumnsOrRows[0].ToString());
+                    }
+                }
+                catch
+                {
+                    throw new Exception("Bad indexer. Should by .j or i. with i or j being numeric such as .1 or 2.");
+
+                }
+                ret = this[rc];
+                ret.IsRowOrColumn = rc.rowColumn;
+                return ret;
+            }
         }
         public RealVector this[RowOrColumn rc]
         {

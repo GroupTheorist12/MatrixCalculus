@@ -8,12 +8,12 @@ using System.Numerics;
 namespace MatrixCalculus
 {
 
-    public enum RowColumn
+   /*  public enum RowColumn
     {
         Row,
         Column
     }
-
+ */
     public class RealVector : List<double>
     {
         public RowColumn IsRowOrColumn { get; set; }
