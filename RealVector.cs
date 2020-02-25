@@ -8,16 +8,16 @@ using System.Numerics;
 namespace MatrixCalculus
 {
 
-   /*  public enum RowColumn
-    {
-        Row,
-        Column
-    }
- */
+    /*  public enum RowColumn
+     {
+         Row,
+         Column
+     }
+  */
     public class RealVector : List<double>
     {
         public RowColumn IsRowOrColumn { get; set; }
-        public string FullRep{get;set;}
+        public string FullRep { get; set; }
         public RealVector()
         {
             this.IsRowOrColumn = RowColumn.Column;
@@ -30,7 +30,7 @@ namespace MatrixCalculus
             IsInteger = false;
         }
 
-        public bool IsInteger {get;set;}
+        public bool IsInteger { get; set; }
         public double Norm()
         {
             return Math.Sqrt(DotProduct(this, this));
@@ -151,12 +151,12 @@ namespace MatrixCalculus
         public string ToLatex(string Rep)
         {
             string ret = ToLatex();
-            switch(Rep)
+            switch (Rep)
             {
                 default:
                     break;
                 case "F":
-                    ret = FullRep;    
+                    ret = FullRep;
                     break;
             }
 
@@ -177,20 +177,34 @@ namespace MatrixCalculus
             int i = 0;
             for (i = 0; i < this.Count - 1; i++)
             {
-                if(!IsInteger)
+                if (!IsInteger)
                 {
-                    sb.AppendFormat("{0:0.0000}{1}", this[i], vType);
+                    if (Math.Abs(this[i] % 1) <= (Double.Epsilon * 100))
+                    {
+                        sb.AppendFormat("{0}{1}", this[i], vType);
+                    }
+                    else
+                    {
+                        sb.AppendFormat("{0:0.0000}{1}", this[i], vType);
+                    }
                 }
                 else
                 {
                     sb.AppendFormat("{0}{1}", this[i], vType);
-    
+
                 }
             }
 
-            if(!IsInteger)
+            if (!IsInteger)
             {
-                sb.AppendFormat("{0:0.0000}", this[i]);
+                if (Math.Abs(this[i] % 1) <= (Double.Epsilon * 100))
+                {
+                    sb.AppendFormat("{0}{1}", this[i], vType);
+                }
+                else
+                {
+                    sb.AppendFormat("{0:0.0000}{1}", this[i], vType);
+                }
             }
             else
             {

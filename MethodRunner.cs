@@ -245,6 +245,35 @@ namespace MatrixCalculus
             }
 
         }
+        public static int Test_SRM_To_Elem()
+        {
+            SquareRealMatrix elem = SquareRealMatrix.ElementaryMatrix(4,4, "E22"); //E22 elementary matrix
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(elem.ToString("F"), "Test_SRM_To_Elem.html"); //display Latex via mathjax
+            return 0;
+        }
+
+        public static int Test_Columns_Of_Matrix()
+        {
+            List<double> initer = new List<double>{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);
+            A.Name = "A";
+            
+            string outR = @"\begin{aligned}&A  = " + A.ToLatex() + @" \\ \\" + "&" + A[".2"].ToLatex("F") + @"\end{aligned}";  //use column accessor A.2 which returns column 2.          
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(outR, "TestColumns_Of_Matrix.html"); //display Latex via mathjax
+            return 0;
+        }
+
+        public static int Test_Rows_Of_Matrix()
+        {
+            List<double> initer = new List<double>{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);
+            A.Name = "A";
+            
+            string outR = @"\begin{aligned}&A  = " + A.ToLatex() + @" \\ \\" + "&" + A["2."].ToLatex("F") + @"\end{aligned}";  //use row accessor A2. which returns row 2.          
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(outR, "TestColumns_Of_Matrix.html"); //display Latex via mathjax
+            return 0;
+        }
+
         public static int Test_Symbols_Tokens()
         {
 

@@ -209,6 +209,7 @@ namespace MatrixCalculus
             }
 
 
+            ret.FullRep = ret.LatexName + @"\;=\;" + ret.ToLatex();
             return ret;
         }
         public SquareRealMatrix(int rows, int columns, List<double> V)
@@ -485,12 +486,12 @@ namespace MatrixCalculus
                     if (ColumnsOrRows[0] == '.') //Column
                     {
                         rc.rowColumn = RowColumn.Column;
-                        rc.Val = int.Parse(ColumnsOrRows[1].ToString());
+                        rc.Val = int.Parse(ColumnsOrRows[1].ToString()) - 1;
                     }
                     else//row
                     {
                         rc.rowColumn = RowColumn.Row;
-                        rc.Val = int.Parse(ColumnsOrRows[0].ToString());
+                        rc.Val = int.Parse(ColumnsOrRows[0].ToString()) - 1;
                     }
                 }
                 catch
@@ -499,6 +500,7 @@ namespace MatrixCalculus
 
                 }
                 ret = this[rc];
+                ret.FullRep = this.Name + "_" + ColumnsOrRows + @"\;=\;" + ret.ToLatex();
                 ret.IsRowOrColumn = rc.rowColumn;
                 return ret;
             }
