@@ -247,30 +247,30 @@ namespace MatrixCalculus
         }
         public static int Test_SRM_To_Elem()
         {
-            SquareRealMatrix elem = SquareRealMatrix.ElementaryMatrix(4,4, "E22"); //E22 elementary matrix
+            SquareRealMatrix elem = SquareRealMatrix.ElementaryMatrix(4, 4, "E22"); //E22 elementary matrix
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(elem.ToString("F"), "Test_SRM_To_Elem.html"); //display Latex via mathjax
             return 0;
         }
 
         public static int Test_Columns_Of_Matrix()
         {
-            List<double> initer = new List<double>{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);
-            A.Name = "A";
-            
-            string outR = @"\begin{aligned}&A  = " + A.ToLatex() + @" \\ \\" + "&" + A[".2"].ToLatex("F") + @"\end{aligned}";  //use column accessor A.2 which returns column 2.          
+            List<double> initer = new List<double> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }; //init matrix vector
+            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer); //create 4X4 matrix
+            A.Name = "A"; //give it a name
+            RealVector rv = A[".2"]; //use accessor to get column 2 of matrix
+            string outR = @"\begin{aligned}&A  = " + A.ToLatex() + @" \\ \\" + "&" + rv.ToLatex("F") + @"\end{aligned}";  //use column accessor A.2 which returns column 2.          
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(outR, "TestColumns_Of_Matrix.html"); //display Latex via mathjax
             return 0;
         }
 
         public static int Test_Rows_Of_Matrix()
         {
-            List<double> initer = new List<double>{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);
-            A.Name = "A";
-            
-            string outR = @"\begin{aligned}&A  = " + A.ToLatex() + @" \\ \\" + "&" + A["2."].ToLatex("F") + @"\end{aligned}";  //use row accessor A2. which returns row 2.          
-            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(outR, "TestColumns_Of_Matrix.html"); //display Latex via mathjax
+            List<double> initer = new List<double> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };//init matrix vector
+            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);//create 4X4 matrix
+            A.Name = "A";//give it a name
+            RealVector rvRow = A["2."]; //use accessor to get row 2 of matrix
+            string outR = @"\begin{aligned}&A  = " + A.ToLatex() + @" \\ \\" + "&" + rvRow.ToLatex("F") + @"\end{aligned}";  //use row accessor A2. which returns row 2.          
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(outR, "TestRows_Of_Matrix.html"); //display Latex via mathjax
             return 0;
         }
 
@@ -291,50 +291,50 @@ namespace MatrixCalculus
                 "2sin(x)^2",
                 "(x+1)^2"
             };
-/*
-            foreach (string FunctionString in funcs)
-            {
-                TokenFactory toke = new TokenFactory();
-                toke.ParseExpression(FunctionString);
-                foreach (Symbol sym in toke.symbolList)
-                {
-                    Console.WriteLine("{0}", sym.NakedTokenString);
-                    Console.WriteLine("{0}", sym.TokenString);
-                }
+            /*
+                        foreach (string FunctionString in funcs)
+                        {
+                            TokenFactory toke = new TokenFactory();
+                            toke.ParseExpression(FunctionString);
+                            foreach (Symbol sym in toke.symbolList)
+                            {
+                                Console.WriteLine("{0}", sym.NakedTokenString);
+                                Console.WriteLine("{0}", sym.TokenString);
+                            }
 
-                //string FunctionString = "x^2+x";
-                //Tokenizer toke = new Tokenizer();
-                //List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
+                            //string FunctionString = "x^2+x";
+                            //Tokenizer toke = new Tokenizer();
+                            //List<Token> tokes = toke.tokenizeToSymbol(FunctionString);
 
-                //StringBuilder sb = new StringBuilder();
-                //StringBuilder sb2 = new StringBuilder();
+                            //StringBuilder sb = new StringBuilder();
+                            //StringBuilder sb2 = new StringBuilder();
 
-                /*    
-                for (int i = 0; i < tokes.Count; i++)
-                {
-                    Token t = tokes[i];
+                            /*    
+                            for (int i = 0; i < tokes.Count; i++)
+                            {
+                                Token t = tokes[i];
 
-                    sb.Append(t.Type);
-                    //sb2.Append((cnt++).ToString() + "\t");
-                    if (t.Type == "Operator")
-                    {
-                        sb.Append(t.Value);
-                    }
+                                sb.Append(t.Type);
+                                //sb2.Append((cnt++).ToString() + "\t");
+                                if (t.Type == "Operator")
+                                {
+                                    sb.Append(t.Value);
+                                }
 
-                    if(t.SymbolEnd)
-                    {
-                        //Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
-                        //Console.WriteLine("case \"{0}\":", sb.ToString());
-                        //Console.WriteLine("//{0}", sb2.ToString());
-                        //Console.WriteLine("\tbreak;");
+                                if(t.SymbolEnd)
+                                {
+                                    //Console.WriteLine("{0}. Type = {1}, value = {2}, Symbol End {3}, current {4}", cnt++, t.Type, t.Value, t.SymbolEnd, sb.ToString());
+                                    //Console.WriteLine("case \"{0}\":", sb.ToString());
+                                    //Console.WriteLine("//{0}", sb2.ToString());
+                                    //Console.WriteLine("\tbreak;");
 
-                    }
+                                }
 
-                }
-                
+                            }
 
-            }
-*/
+
+                        }
+            */
 
             /*
             SymbolList symL = new SymbolList(tokes);
@@ -384,13 +384,13 @@ namespace MatrixCalculus
             Console.WriteLine("//{0}", sb2.ToString());
             */
 
-            
+
             Symbol symA = new Symbol("7x^0.5");
             Symbol symB = new Symbol("11x^2");
-            Symbol symM =  symA * symB;
+            Symbol symM = symA * symB;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
 
-            
+
 
 
             return 0;
