@@ -84,6 +84,26 @@ namespace MatrixCalculus
             }
         }
 
+        public SquareRealMatrix(List<RealVector> rvList)
+        {
+            this.Rows = rvList[0].Count;
+            this.Columns = rvList.Count;
+
+            InternalRep = new double[this.Rows, this.Columns];
+
+            Zero();
+            for (int i = 0; i < this.Columns; i++)
+            {
+                int rows = rvList[i].Count;
+                if (rows != this.Columns)
+                {
+                    throw new Exception("rows and columns must be equal for square matrix");
+
+                }
+
+                this[i] = rvList[i];
+            }
+        }
         public SquareRealMatrix(double[,] RC)
         {
             int rows = RC.GetLength(0);
@@ -172,7 +192,7 @@ namespace MatrixCalculus
         }
 
         public string Name { get; set; }
-        public string LatexName{get; private set;}
+        public string LatexName { get; private set; }
         public static SquareRealMatrix ElementaryMatrix(int rows, int columns, string Name)
         {
             SquareRealMatrix ret = new SquareRealMatrix(rows, columns);
