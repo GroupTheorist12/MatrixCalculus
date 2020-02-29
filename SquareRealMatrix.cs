@@ -628,6 +628,56 @@ namespace MatrixCalculus
             return A.MultiplyByScalar(value);
         }
 
+       public static RealVector operator*(UnitVector uv, SquareRealMatrix em)
+        {
+            RealVector ret = new RealVector();
+            ret.IsRowOrColumn = uv.IsRowOrColumn;
+            if (uv.Order != em.Rows)
+            {
+                throw new Exception("Vector length must be same as number of columns and rows of matrix");
+            }
+
+            for (int i = 0; i < em.Rows; i++)
+            {
+                double SumOfRow = 0;
+                for (int j = 0; j < em.Columns; j++)
+                {
+                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                }
+
+                ret.Add(SumOfRow);
+            }
+
+            return ret;
+        
+        }
+
+        public static RealVector operator*(SquareRealMatrix em, UnitVector uv)
+        {
+            RealVector ret = new RealVector();
+            ret.Clear();
+            ret.IsRowOrColumn = uv.IsRowOrColumn;
+
+            if (uv.Order != em.Rows)
+            {
+                throw new Exception("Vector length must be same as number of columns and rows of matrix");
+            }
+
+            for (int i = 0; i < em.Rows; i++)
+            {
+                double SumOfRow = 0;
+                for (int j = 0; j < em.Columns; j++)
+                {
+                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                }
+
+                ret.Add(SumOfRow);
+            }
+
+            return ret;
+        
+        }
+ 
         public double Trace()
         {
             double ret = 0;

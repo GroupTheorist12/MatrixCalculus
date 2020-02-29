@@ -18,6 +18,8 @@ namespace MatrixCalculus
     {
         public RowColumn IsRowOrColumn { get; set; }
         public string FullRep { get; set; }
+
+        public string Name{get;set;}
         public RealVector()
         {
             this.IsRowOrColumn = RowColumn.Column;
@@ -30,6 +32,16 @@ namespace MatrixCalculus
             IsInteger = false;
         }
 
+        public RealVector(UnitVector vIn)
+        {
+            foreach(int i in vIn)
+            {
+                this.Add(vIn[i]);
+            }
+
+            this.IsInteger = true;
+            this.Name = vIn.Name;
+        }
         public bool IsInteger { get; set; }
         public double Norm()
         {

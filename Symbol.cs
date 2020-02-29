@@ -39,6 +39,8 @@ namespace MatrixCalculus
             this.Exponent = 0;
             this.Literal = 1;
 
+            this.LatexString = this.NakedTokenString.Replace("*", "");
+            
             if (this.ExponentIndex >= 0) // pow => ^
             {
                 //Literal after ^
@@ -52,7 +54,14 @@ namespace MatrixCalculus
             {
                 if (this.VariableIndex - 2 >= 0 && Tokens[this.VariableIndex - 2].Type == "Literal") //literal times variable such as 2*x^2
                 {
-                    this.Literal = Rational.Parse(Tokens[this.VariableIndex - 2].Value);
+                    if(Tokens[this.VariableIndex - 2].Value == "-")
+                    {
+                        this.Literal = -1;
+                    }
+                    else
+                    {
+                        this.Literal = Rational.Parse(Tokens[this.VariableIndex - 2].Value);
+                    }
                 }
                 else //naked variable aka x^2
                 {
@@ -101,6 +110,8 @@ namespace MatrixCalculus
             }
 
         }
+
+        public string LatexString {get; set;}
         public Symbol(string exp)
         {
             TokenFactory tokes = new TokenFactory();

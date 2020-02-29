@@ -293,6 +293,45 @@ namespace MatrixCalculus
             return 0;
         }
 
+       public static int Test_UnitVector_Col_Row_Accessors()
+        {
+            List<double> initer = new List<double> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };//init matrix vector
+            SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);//create 4X4 matrix
+            A.Name = "A";//give it a name
+
+            UnitVectorSpace uvs = new UnitVectorSpace(4); //Create unit vector space to use
+            UnitVector e2 = new UnitVector("e2", 4, RowColumn.Column);
+            UnitVector e2_p = new UnitVector("e2", 4, RowColumn.Row);
+
+            RealVector rv = A * e2;
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            sb.AppendFormat(@"&A = &{0} \\ \\", A.ToLatex()); //Display Original A matrix
+            sb.Append(@"&A_{.2} = &"  + rv.ToLatex() + @" \\ \\");
+            RealVector rvRow = e2_p * A;
+            sb.Append(@"&A_{2.}' = &"  + rvRow.ToLatex());
+
+            sb.Append(@"\end{aligned}");
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_UnitVector_Col_Row_Accessors.html"); //display Latex via mathjax
+            return 0;
+        }
+
+        public static int Test_Symbol_Groups()
+        {
+            SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup(); //Get kleingroup cayle table    
+            SymbolMatrix smQL = SymbolMatrixUtilities.LeftChiralQuaternion();
+            SymbolMatrix smQR = SymbolMatrixUtilities.RightChiralQuaternion();
+
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            sb.AppendFormat(@"&{0} \\ \\", smK.ToLatex("F"));
+            sb.AppendFormat(@"&{0} \\ \\", smQL.ToLatex("F"));
+            sb.AppendFormat(@"&{0}", smQR.ToLatex("F"));
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_KleinGroup.html"); //display Latex via mathjax
+            return 0;
+        }
         public static int Test_Symbols_Tokens()
         {
 
