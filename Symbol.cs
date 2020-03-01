@@ -204,6 +204,11 @@ namespace MatrixCalculus
 
             Symbol combine = new Symbol(a.NakedTokenString + ((Subtract) ? " - " : " + ") + b.NakedTokenString);
 
+            if(combine.NakedTokenString.IndexOf("+-") != -1)
+            {
+                string fixIt = combine.NakedTokenString.Replace("+-", " - ");
+                combine = new Symbol(fixIt);
+            }
             string NakedString = string.Empty;
             //Product of literals of two symbols aka ax * bx => a * b
             Rational rLiteralTotal = (Subtract) ? (a.Literal - b.Literal) : (a.Literal + b.Literal);
