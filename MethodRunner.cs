@@ -443,9 +443,9 @@ namespace MatrixCalculus
             */
 
             
-            Symbol symA = new Symbol("15x");
-            Symbol symB = new Symbol("5x");
-            Symbol symM = symA - symB;
+            Symbol symA = new Symbol("15x^2");
+            Symbol symB = new Symbol("-5x^2");
+            Symbol symM = symA + symB;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
             
 

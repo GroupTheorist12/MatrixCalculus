@@ -182,11 +182,10 @@ namespace MatrixCalculus
         
         private static Symbol Subtract(Symbol a, Symbol b)
         {
-            Symbol bMinus = new Symbol("-" + b.NakedTokenString);
 
-            return Add(a, bMinus);
+            return Add(a, b, true);
         }
-        private static Symbol Add(Symbol a, Symbol b)
+        private static Symbol Add(Symbol a, Symbol b, bool Subtract = false)
         {
             if(a.Tokens[0].Value == "0") //Add a  zero
             {
@@ -203,11 +202,11 @@ namespace MatrixCalculus
                 return new Symbol((a.Literal + b.Literal).ToString());
             }
 
-            Symbol combine = new Symbol(a.NakedTokenString + " + " + b.NakedTokenString);
+            Symbol combine = new Symbol(a.NakedTokenString + ((Subtract) ? " - " : " + ") + b.NakedTokenString);
 
             string NakedString = string.Empty;
             //Product of literals of two symbols aka ax * bx => a * b
-            Rational rLiteralTotal = a.Literal + b.Literal;
+            Rational rLiteralTotal = (Subtract) ? (a.Literal - b.Literal) : (a.Literal + b.Literal);
             Rational rExponentTotal = (a.Exponent == b.Exponent) ? a.Exponent : a.Exponent + b.Exponent;
 
             string strLiteralTotal = (rLiteralTotal == 1) ? "" : rLiteralTotal.ToString();
