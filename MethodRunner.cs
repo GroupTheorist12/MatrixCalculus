@@ -442,11 +442,12 @@ namespace MatrixCalculus
             Console.WriteLine("//{0}", sb2.ToString());
             */
 
-
-            Symbol symA = new Symbol("7x^0.5");
-            Symbol symB = new Symbol("11x^2");
-            Symbol symM = symA * symB;
+            
+            Symbol symA = new Symbol("15x");
+            Symbol symB = new Symbol("5x");
+            Symbol symM = symA - symB;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
+            
 
 
 
