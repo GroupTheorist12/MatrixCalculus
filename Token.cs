@@ -112,7 +112,15 @@ namespace MatrixCalculus
                     {
                         TokenList[TokenList.Count - 1].SymbolEnd = true;
                     }
-                    TokenList.Add(new Token("Operator", ch.ToString()));
+                    if(ch == '^')
+                    {
+                        TokenList.Add(new Token("Operator", ch.ToString()));
+                    }
+                    else
+                    {
+                        TokenList.Add(new Token("Operator", " " + ch.ToString() + " "));
+
+                    }
                 }
                 else if (tokes.isLeftParenthesis(ch))
                 {

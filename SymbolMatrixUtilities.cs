@@ -35,6 +35,52 @@ namespace MatrixCalculus
             return result;
         }
 
+        public static SymbolMatrix C3()
+        {
+            List<string> kgL = new List<string>
+            {
+                "a", "b", "c",
+                "c", "a", "b",
+                "b", "c", "a" 
+            };
+
+            SymbolMatrix ret = new SymbolMatrix(3, 3);
+            int cnt = 0;
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+                    ret[i, j] = new Symbol(kgL[cnt++]);
+                }
+            }
+            
+            ret.FullRep = @"C_2 = " + ret.ToLatex();
+            return ret;
+
+        }
+
+        public static SymbolMatrix C2()
+        {
+            List<string> kgL = new List<string>
+            {
+                "a", "b", 
+                "b", "a" 
+            };
+
+            SymbolMatrix ret = new SymbolMatrix(2, 2);
+            int cnt = 0;
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+                    ret[i, j] = new Symbol(kgL[cnt++]);
+                }
+            }
+            
+            ret.FullRep = @"C_2 = " + ret.ToLatex();
+            return ret;
+
+        }
         public static SymbolMatrix KleinGroup()
         {
             List<string> kgL = new List<string>

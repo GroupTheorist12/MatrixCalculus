@@ -332,6 +332,17 @@ namespace MatrixCalculus
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_KleinGroup.html"); //display Latex via mathjax
             return 0;
         }
+
+        public static int Test_Symbol_Determinant()
+        {
+            //SymbolMatrix C3 = SymbolMatrixUtilities.C3();
+            //Symbol det = C3.Determinant();
+
+            SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup(); //Get kleingroup cayle table    
+            Symbol det = smK.Determinant();
+            //HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(det.NakedTokenString, "Test_Symbol_Determinant.html"); //display Latex via mathjax
+            return 0;
+        }
         public static int Test_Symbols_Tokens()
         {
 
@@ -443,9 +454,9 @@ namespace MatrixCalculus
             */
 
             
-            Symbol symA = new Symbol("15x^2");
+            Symbol symA = new Symbol("15x^2 - 5x");
             Symbol symB = new Symbol("-5x^2");
-            Symbol symM = symA + symB;
+            Symbol symM = symA;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
             
 

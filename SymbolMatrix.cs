@@ -93,6 +93,77 @@ namespace MatrixCalculus
             set { InternalRep[r, c] = value; }
         }
 
+        private Symbol SignOfElement(int i, int j)
+        {
+            if ((i + j) % 2 == 0)
+            {
+                return new Symbol("1");
+            }
+            else
+            {
+                return new Symbol("-1");
+            }
+        }
+
+        //this method determines the sub matrix corresponding to a given element
+        private Symbol[,] CreateSmallerMatrix(Symbol[,] input, int i, int j)
+        {
+            int order = int.Parse(System.Math.Sqrt(input.Length).ToString());
+            Symbol[,] output = new Symbol[order - 1, order - 1];
+            int x = 0, y = 0;
+            for (int m = 0; m < order; m++, x++)
+            {
+                if (m != i)
+                {
+                    y = 0;
+                    for (int n = 0; n < order; n++)
+                    {
+                        if (n != j)
+                        {
+                            output[x, y] = input[m, n];
+                            y++;
+                        }
+                    }
+                }
+                else
+                {
+                    x--;
+                }
+            }
+            return output;
+        }
+
+        public Symbol Determinant()
+        {
+            return Determinant(this.InternalRep);
+        }
+
+        private Symbol Determinant(Symbol[,] input)
+        {
+            int order = int.Parse(System.Math.Sqrt(input.Length).ToString());
+            if (order > 2)
+            {
+                Symbol value = new Symbol("0");
+                for (int j = 0; j < order; j++)
+                {
+                    Symbol[,] Temp = CreateSmallerMatrix(input, 0, j);
+                    string strPlusMunus = (SignOfElement(0, j).Tokens[0].Value == "1") ? "" : "-";
+
+                    Console.WriteLine(strPlusMunus + input[0, j].NakedTokenString + "(" + Determinant(Temp).NakedTokenString + ")");
+                    value = value + input[0, j] * (SignOfElement(0, j) * Determinant(Temp));
+                }
+                return value;
+            }
+            else if (order == 2)
+            {
+                return ((input[0, 0] * input[1, 1]) - (input[1, 0] * input[0, 1]));
+            }
+            else
+            {
+                return (input[0, 0]);
+            }
+        }
+
        public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();
