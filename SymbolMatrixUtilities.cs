@@ -59,6 +59,56 @@ namespace MatrixCalculus
 
         }
 
+        public static SymbolMatrix C3RowColumn()
+        {
+            List<string> kgL = new List<string>
+            {
+                "a", "b", "c",
+                "d", "e", "f",
+                "g", "h", "i" 
+            };
+
+            SymbolMatrix ret = new SymbolMatrix(3, 3);
+            int cnt = 0;
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+                    ret[i, j] = new Symbol(kgL[cnt++]);
+                }
+            }
+            
+            ret.FullRep = @"C_2 = " + ret.ToLatex();
+            return ret;
+
+        }
+
+        public static SymbolMatrix C4RowColumn()
+        {
+            List<string> kgL = new List<string>
+            {
+                "a", "b", "c", "d",
+                "e", "f", "g", "h", 
+                "i", "j", "k", "l",
+                "m", "n", "o", "p",
+            };
+
+            SymbolMatrix ret = new SymbolMatrix(4, 4);
+            int cnt = 0;
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+                    ret[i, j] = new Symbol(kgL[cnt++]);
+                }
+            }
+            
+            ret.FullRep = @"C_4 = " + ret.ToLatex();
+            return ret;
+
+        }
+
+
         public static SymbolMatrix C2()
         {
             List<string> kgL = new List<string>

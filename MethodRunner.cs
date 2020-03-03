@@ -335,12 +335,22 @@ namespace MatrixCalculus
 
         public static int Test_Symbol_Determinant()
         {
-            //SymbolMatrix C3 = SymbolMatrixUtilities.C3();
+            //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
             //Symbol det = C3.Determinant();
-
-            SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup(); //Get kleingroup cayle table    
-            Symbol det = smK.Determinant();
+            Symbol det = SymbolMatrixUtilities.C4RowColumn().Determinant();
+            //SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup(); //Get kleingroup cayle table    
+            //Symbol det = smK.Determinant();
             //HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(det.NakedTokenString, "Test_Symbol_Determinant.html"); //display Latex via mathjax
+            return 0;
+        }
+
+        public static int Test_RowColumnExpressions()
+        {
+            RowColumnExpression rc1 = new RowColumnExpression(4, "a11");
+            RowColumnExpression rc2 = new RowColumnExpression(4, "a11");
+
+            RowColumnExpression ret = rc1 * rc2;
+            Console.WriteLine("{0}", ret.Expression); 
             return 0;
         }
         public static int Test_Symbols_Tokens()

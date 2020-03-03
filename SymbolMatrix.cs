@@ -11,11 +11,11 @@ namespace MatrixCalculus
     {
         private Symbol[,] InternalRep = null;
 
-        public string FullRep {get;set;}
+        public string FullRep { get; set; }
         public int Rows = 0;
         public int Columns = 0;
         private List<Symbol> Vector = null;
-        
+
         private void Zero()
         {
             for (int i = 0; i < Rows; i++)
@@ -93,6 +93,28 @@ namespace MatrixCalculus
             set { InternalRep[r, c] = value; }
         }
 
+        public SymbolVector this[int Column]
+        {
+            get
+            {
+                SymbolVector ret = new SymbolVector();
+
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    ret.Add(InternalRep[i, Column]);
+                }
+
+                return ret;
+            }
+            set
+            {
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    InternalRep[i, Column] = value[i];
+                }
+
+            }
+        }
         private Symbol SignOfElement(int i, int j)
         {
             if ((i + j) % 2 == 0)
@@ -149,7 +171,7 @@ namespace MatrixCalculus
                     Symbol[,] Temp = CreateSmallerMatrix(input, 0, j);
                     string strPlusMunus = (SignOfElement(0, j).Tokens[0].Value == "1") ? "" : "-";
 
-                    Console.WriteLine(strPlusMunus + input[0, j].NakedTokenString + "(" + Determinant(Temp).NakedTokenString + ")");
+                    Console.WriteLine(strPlusMunus + input[0, j].NakedTokenString + "(" + Determinant(Temp).NakedTokenString + ")" + " " + order.ToString());
                     value = value + input[0, j] * (SignOfElement(0, j) * Determinant(Temp));
                 }
                 return value;
@@ -164,7 +186,7 @@ namespace MatrixCalculus
             }
         }
 
-       public string ToLatex()
+        public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\\begin{bmatrix}");
@@ -190,7 +212,7 @@ namespace MatrixCalculus
 
         }
 
-       public string ToLatex(string Rep)
+        public string ToLatex(string Rep)
         {
             string ret = ToLatex();
 
