@@ -7,6 +7,20 @@ using System.Numerics;
 
 namespace MatrixCalculus
 {
+
+    public struct CoFactorInfoList
+    {
+        public CoFactorInfo cfiTop;
+        public List<CoFactorInfo> cfLinks;
+        public List<CoFactorInfoList> Links;
+    }
+    public struct CoFactorInfo
+    {
+        public SymbolMatrix Minor;
+        public int Sign;
+
+        public Symbol CoFactor;
+    }
     public class SymbolMatrix
     {
         private Symbol[,] InternalRep = null;
@@ -155,6 +169,39 @@ namespace MatrixCalculus
             return output;
         }
 
+        public static List<CoFactorInfo> GetCoFactors(SymbolMatrix ParentMatrix)
+        {
+            List<CoFactorInfo> cfiL = new List<CoFactorInfo>();
+            int Order = ParentMatrix.Rows;
+
+            for(int i = 0; i < ParentMatrix.Columns; i++)
+            {
+                cfiL.Add(GetCoFactor(ParentMatrix, i + 1));
+            }
+            return cfiL;
+        }
+        public static CoFactorInfo GetCoFactor(SymbolMatrix symIn, int Column)
+        {
+            CoFactorInfo cfi = new CoFactorInfo();
+            cfi.Sign = (int)Math.Pow(-1, Column + 1);
+            SymbolVector col = symIn[Column - 1];
+            cfi.CoFactor = col[0];
+            List<Symbol> symList = new List<Symbol>();
+
+            for(int i = 1; i < symIn.Rows; i++)
+            {
+                for(int j = 0; j < symIn.Columns; j++)
+                {
+                    if(j + 1 != Column)
+                    {
+                        symList.Add(symIn[i, j]);
+                    }
+                }
+            }
+
+            cfi.Minor = new SymbolMatrix(symIn.Rows - 1, symIn.Columns - 1, symList);
+            return cfi;
+        }
         public Symbol Determinant()
         {
             return Determinant(this.InternalRep);

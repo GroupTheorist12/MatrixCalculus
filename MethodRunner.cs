@@ -274,26 +274,26 @@ namespace MatrixCalculus
             return 0;
         }
 
-       public static int Test_Partioned_Matrix()
+        public static int Test_Partioned_Matrix()
         {
             List<double> initer = new List<double> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };//init matrix vector
             SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);//create 4X4 matrix
             A.Name = "A";//give it a name
-            SquareRealMatrix AColumns = new SquareRealMatrix(new List<RealVector>{A[".1"], A[".2"], A[".3"], A[".4"]}); //Create partioned matrix from columns
-            SquareRealMatrix ARows = new SquareRealMatrix(new List<RealVector>{A["1."], A["2."], A["3."], A["4."]}); //Create partioned matrix from rows
-            
+            SquareRealMatrix AColumns = new SquareRealMatrix(new List<RealVector> { A[".1"], A[".2"], A[".3"], A[".4"] }); //Create partioned matrix from columns
+            SquareRealMatrix ARows = new SquareRealMatrix(new List<RealVector> { A["1."], A["2."], A["3."], A["4."] }); //Create partioned matrix from rows
+
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
             sb.AppendFormat(@"&A = &{0} \\ \\", A.ToLatex()); //Display Original A matrix
-            sb.Append(@"&A = \left[ A_{.1}\;A_{.2}\;A_{.3}\;A_{.4} \right] = \;\;"  + "&" + AColumns.ToLatex() + @" \\ \\");//partioned matrix via columns of A
-            sb.Append(@"&\left[ A_{1.}\;A_{2.}\;A_{3.}\;A_{4.} \right] = \;\;"  + "&" + ARows.ToLatex() + @" \\ \\");//partioned matrix via rows of A
-            sb.Append(@"&A = \left[ A_{1.}\;A_{2.}\;A_{3.}\;A_{4.} \right]' = \;\;"  + "&" + ARows.Transpose().ToLatex() + @" \\ \\"); //transpose to get A
+            sb.Append(@"&A = \left[ A_{.1}\;A_{.2}\;A_{.3}\;A_{.4} \right] = \;\;" + "&" + AColumns.ToLatex() + @" \\ \\");//partioned matrix via columns of A
+            sb.Append(@"&\left[ A_{1.}\;A_{2.}\;A_{3.}\;A_{4.} \right] = \;\;" + "&" + ARows.ToLatex() + @" \\ \\");//partioned matrix via rows of A
+            sb.Append(@"&A = \left[ A_{1.}\;A_{2.}\;A_{3.}\;A_{4.} \right]' = \;\;" + "&" + ARows.Transpose().ToLatex() + @" \\ \\"); //transpose to get A
             sb.Append(@"\end{aligned}");
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Partioned_Matrix.html"); //display Latex via mathjax
             return 0;
         }
 
-       public static int Test_UnitVector_Col_Row_Accessors()
+        public static int Test_UnitVector_Col_Row_Accessors()
         {
             List<double> initer = new List<double> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };//init matrix vector
             SquareRealMatrix A = new SquareRealMatrix(4, 4, initer);//create 4X4 matrix
@@ -307,9 +307,9 @@ namespace MatrixCalculus
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
             sb.AppendFormat(@"&A = &{0} \\ \\", A.ToLatex()); //Display Original A matrix
-            sb.Append(@"&A_{.2} = &"  + rv.ToLatex() + @" \\ \\");
+            sb.Append(@"&A_{.2} = &" + rv.ToLatex() + @" \\ \\");
             RealVector rvRow = e2_p * A;
-            sb.Append(@"&A_{2.}' = &"  + rvRow.ToLatex());
+            sb.Append(@"&A_{2.}' = &" + rvRow.ToLatex());
 
             sb.Append(@"\end{aligned}");
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_UnitVector_Col_Row_Accessors.html"); //display Latex via mathjax
@@ -337,10 +337,33 @@ namespace MatrixCalculus
         {
             //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
             //Symbol det = C3.Determinant();
-            Symbol det = SymbolMatrixUtilities.C4RowColumn().Determinant();
+            //Symbol det = SymbolMatrixUtilities.C4RowColumn().Determinant();
             //SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup(); //Get kleingroup cayle table    
             //Symbol det = smK.Determinant();
-            //HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(det.NakedTokenString, "Test_Symbol_Determinant.html"); //display Latex via mathjax
+            SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup();
+            CoFactorInfo minor = SymbolMatrix.GetCoFactor(smK, 1);
+            List<CoFactorInfo> cfList = SymbolMatrix.GetCoFactors(smK);
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            sb.AppendFormat(@"&{0} \\ \\", smK.ToLatex());
+
+            foreach (CoFactorInfo ci in cfList)
+            {
+
+                sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci.Minor.ToLatex());
+                if (ci.Minor.Rows > 2)
+                {
+                    List<CoFactorInfo> cfList2 = SymbolMatrix.GetCoFactors(ci.Minor);
+
+                    foreach (CoFactorInfo ci2 in cfList2)
+                    {
+                        sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());
+                    }
+                }
+            }
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Symbol_Determinant.html"); //display Latex via mathjax
             return 0;
         }
 
@@ -350,7 +373,7 @@ namespace MatrixCalculus
             RowColumnExpression rc2 = new RowColumnExpression(4, "a11");
 
             RowColumnExpression ret = rc1 * rc2;
-            Console.WriteLine("{0}", ret.Expression); 
+            Console.WriteLine("{0}", ret.Expression);
             return 0;
         }
         public static int Test_Symbols_Tokens()
@@ -463,12 +486,12 @@ namespace MatrixCalculus
             Console.WriteLine("//{0}", sb2.ToString());
             */
 
-            
+
             Symbol symA = new Symbol("15x^2 - 5x");
             Symbol symB = new Symbol("-5x^2");
             Symbol symM = symA;
             Console.WriteLine("{0} {1}", symM.TokenString, symM.NakedTokenString);
-            
+
 
 
 
