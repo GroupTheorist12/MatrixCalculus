@@ -14,12 +14,14 @@ namespace MatrixCalculus
         public List<CoFactorInfo> cfLinks;
         public List<CoFactorInfoList> Links;
     }
-    public struct CoFactorInfo
+    public class CoFactorInfo
     {
-        public SymbolMatrix Minor;
-        public int Sign;
+        public SymbolMatrix Minor = null;
+        public int Sign = 0;
 
-        public Symbol CoFactor;
+        public Symbol CoFactor = null;
+
+        public List<List<CoFactorInfo>> ListOfLists = new List<List<CoFactorInfo>>();
     }
     public class SymbolMatrix
     {
@@ -169,6 +171,34 @@ namespace MatrixCalculus
             return output;
         }
 
+        public static List<CoFactorInfo> GetAllMatrixCoFactors(SymbolMatrix ParentMatrix)
+        {
+            List<CoFactorInfo> cfList = SymbolMatrix.GetCoFactors(ParentMatrix);
+            int inc = 0;
+            CoFactorInfo cfi = null;
+
+            while(inc < cfList.Count)
+            {
+                if(cfi == null)
+                {
+                    cfi = cfList[inc];
+                }
+                else if(cfi != null) //init value
+                {
+                    List<CoFactorInfo> cfListChild = SymbolMatrix.GetCoFactors(cfi.Minor);
+                    cfi.ListOfLists.Add(cfListChild);
+
+                    if(cfListChild[0].Minor.Rows == 2) //end of line
+                    {
+                        cfList[inc] = cfi;
+                        cfi = null;
+                        inc++;
+                    }    
+                }
+            }
+
+            return cfList;
+        }
         public static List<CoFactorInfo> GetCoFactors(SymbolMatrix ParentMatrix)
         {
             List<CoFactorInfo> cfiL = new List<CoFactorInfo>();

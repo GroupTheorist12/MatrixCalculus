@@ -50,7 +50,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             
@@ -74,7 +76,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             
@@ -99,7 +103,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             
@@ -123,7 +129,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             
@@ -148,7 +156,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             
@@ -173,7 +183,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             
@@ -198,7 +210,9 @@ namespace MatrixCalculus
             {
                 for (int j = 0; j < ret.Columns; j++)
                 {
-                    ret[i, j] = new Symbol(kgL[cnt++]);
+                    Symbol sym = new Symbol(kgL[cnt++]); 
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
                 }
             }
             

@@ -14,11 +14,13 @@ namespace MatrixCalculus
             set;
         }
 
+        public bool IsExpression{get;set;}
         public bool IsOperator { get; set; }
         public Symbol()
         {
             this.Tokens = new List<Token>();
             IsOperator = false;
+            IsExpression = false;
         }
 
         private Rational Exponent { get; set; }
@@ -128,6 +130,7 @@ namespace MatrixCalculus
             this.Tokens = tokes.TokenList;
             Discover();
             IsOperator = false;
+            IsExpression = false;
         }
 
 
@@ -482,16 +485,29 @@ namespace MatrixCalculus
 
         public static Symbol operator *(Symbol a, Symbol b)
         {
+            if(a.IsExpression && b.IsExpression)
+            {
+                return new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);
+            }
             return Multiply(a, b);
         }
 
         public static Symbol operator +(Symbol a, Symbol b)
         {
+            if(a.IsExpression && b.IsExpression)
+            {
+                return new Symbol(a.NakedTokenString + " + " + b.NakedTokenString);
+            }
             return Add(a, b);
         }
 
         public static Symbol operator -(Symbol a, Symbol b)
         {
+            if(a.IsExpression && b.IsExpression)
+            {
+                return new Symbol(a.NakedTokenString + " - " + b.NakedTokenString);
+            }
+            
             return Subtract(a, b);
         }
 

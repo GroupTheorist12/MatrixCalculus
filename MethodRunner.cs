@@ -340,17 +340,60 @@ namespace MatrixCalculus
             //Symbol det = SymbolMatrixUtilities.C4RowColumn().Determinant();
             //SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup(); //Get kleingroup cayle table    
             //Symbol det = smK.Determinant();
+
+
             SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup();
             CoFactorInfo minor = SymbolMatrix.GetCoFactor(smK, 1);
-            List<CoFactorInfo> cfList = SymbolMatrix.GetCoFactors(smK);
+            List<CoFactorInfo> cfList = SymbolMatrix.GetAllMatrixCoFactors(smK);
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
             sb.AppendFormat(@"&{0} \\ \\", smK.ToLatex());
 
+            /*
+            int inc = 0;
+            CoFactorInfo cfi = null;
+
+            while(inc < cfList.Count)
+            {
+                if(cfi == null)
+                {
+                    cfi = cfList[inc];
+                }
+                else if(cfi != null && cfi.ListOfLists.Count == 0) //init value
+                {
+                    List<CoFactorInfo> cfListChild = SymbolMatrix.GetCoFactors(cfi.Minor);
+                    cfi.ListOfLists.Add(cfListChild);
+
+                    if(cfListChild[0].Minor.Rows == 2) //end of line
+                    {
+                        cfList[inc] = cfi;
+                        cfi = null;
+                        inc++;
+                    }    
+                }
+                else if(cfi != null && cfi.ListOfLists.Count > 0) //have values
+                {
+                    List<CoFactorInfo> cfListChild = SymbolMatrix.GetCoFactors(cfi.Minor);
+                    cfi.ListOfLists.Add(cfListChild);
+
+                    if(cfListChild[0].Minor.Rows == 2) //end of line
+                    {
+                        cfList[inc] = cfi;
+                        cfi = null;
+                        inc++;
+                    }    
+
+                }
+            }
+
+            */
+
+
             foreach (CoFactorInfo ci in cfList)
             {
 
-                sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci.Minor.ToLatex());
+                //sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci.Minor.ToLatex());
+                /*
                 if (ci.Minor.Rows > 2)
                 {
                     List<CoFactorInfo> cfList2 = SymbolMatrix.GetCoFactors(ci.Minor);
@@ -360,10 +403,31 @@ namespace MatrixCalculus
                         sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());
                     }
                 }
+                */
+
+                foreach (List<CoFactorInfo> lstChild in ci.ListOfLists)
+                {
+                    foreach (CoFactorInfo ci2 in lstChild)
+                    {
+                        if (ci2.Minor.Rows == 2)
+                        {
+                            
+                            //sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());
+                            string det = string.Format("({0} - {1})", 
+                            ci2.Minor[0, 0].Tokens[0]. Value + ci2.Minor[1, 1].Tokens[0]. Value,
+                            ci2.Minor[1, 0].Tokens[0]. Value + ci2.Minor[0, 1].Tokens[0]. Value);
+
+                            sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + det);
+                        }
+                    }
+
+                }
             }
             sb.Append(@"\end{aligned}");
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Symbol_Determinant.html"); //display Latex via mathjax
+
+
             return 0;
         }
 
