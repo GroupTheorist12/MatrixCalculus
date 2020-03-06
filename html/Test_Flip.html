@@ -1,0 +1,26 @@
+
+      <html>
+      <head>
+      <title></title>
+      <meta charset="utf-8" />
+<script type='text/javascript' async
+  src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'>
+</script>
+<script type='text/x-mathjax-config'>
+  MathJax.Hub.Register.StartupHook('End', function()
+  {
+    var x = document.getElementById('pLatex');
+    x.style.display = 'block';
+  });
+</script>
+
+      </ head>
+      <body>
+      <p id='pLatex' style='height: 300px; width: 300px;display:none'>
+\begin{equation}      
+       \begin{aligned}&\begin{bmatrix}a &b &c\\c &a &b\\b &c &a\\ \end{bmatrix} \\ \\&\begin{bmatrix}d &e &f\\e &f &d\\f &d &e\\ \end{bmatrix}\end{aligned}
+\end{equation}      
+      </p>
+      </body>
+      </html>
+      

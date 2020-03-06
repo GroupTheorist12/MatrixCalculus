@@ -5,4 +5,11 @@ namespace MatrixCalculus
         Row,
         Column
     }
+
+    public struct RowOrColumn
+    {
+        public RowColumn rowColumn;
+        public int Val;
+    }
+
 }

@@ -333,6 +333,31 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_Flip()
+        {
+            SymbolMatrix C3Flip = SymbolMatrixUtilities.C3().Flip().ReName(new List<string>{"d", "e", "f"});
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            sb.AppendFormat(@"&{0} \\ \\", SymbolMatrixUtilities.C3().ToLatex());
+            sb.AppendFormat(@"&{0}", C3Flip.ToLatex());
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Flip.html"); //display Latex via mathjax
+
+            return 0;
+        }
+
+        public static int Test_D3()
+        {
+            SymbolMatrix D3 = SymbolMatrixUtilities.D3();
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.AppendFormat(@"{0}", D3.ToLatex());
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_D3.html"); //display Latex via mathjax
+
+            return 0;
+        }
+
         public static int Test_Symbol_Determinant()
         {
             //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
@@ -342,8 +367,7 @@ namespace MatrixCalculus
             //Symbol det = smK.Determinant();
 
 
-            SymbolMatrix smK = SymbolMatrixUtilities.KleinGroup();
-            CoFactorInfo minor = SymbolMatrix.GetCoFactor(smK, 1);
+            SymbolMatrix smK = SymbolMatrixUtilities.D3();
             List<CoFactorInfo> cfList = SymbolMatrix.GetAllMatrixCoFactors(smK);
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
@@ -409,15 +433,17 @@ namespace MatrixCalculus
                 {
                     foreach (CoFactorInfo ci2 in lstChild)
                     {
-                        if (ci2.Minor.Rows == 2)
+                        //if (ci2.Minor.Rows == 2)
                         {
                             
-                            //sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());
+                            sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());
+                            /*
                             string det = string.Format("({0} - {1})", 
                             ci2.Minor[0, 0].Tokens[0]. Value + ci2.Minor[1, 1].Tokens[0]. Value,
                             ci2.Minor[1, 0].Tokens[0]. Value + ci2.Minor[0, 1].Tokens[0]. Value);
 
                             sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + det);
+                            */
                         }
                     }
 

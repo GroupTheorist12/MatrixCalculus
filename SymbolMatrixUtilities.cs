@@ -220,6 +220,49 @@ namespace MatrixCalculus
             return ret;
         }
 
+        public static SymbolMatrix D3()
+        {
+            SymbolMatrix ret = new SymbolMatrix(6, 6);
+            
+            SymbolMatrix smC3 = C3();
+            SymbolMatrix C3Flip = SymbolMatrixUtilities.C3().Flip().ReName(new List<string>{"d", "e", "f"});
+
+            int i = 0;
+            int j = 0;
+            for(i = 0; i < smC3.Rows; i++)
+            {
+                for(j = 0; j < smC3.Columns; j++)
+                {
+                    ret[i, j] = smC3[i, j];
+                }
+            }
+
+            for(i = 3; i < smC3.Rows + 3; i++)
+            {
+                for(j = 0; j < smC3.Columns; j++)
+                {
+                    ret[i, j] = C3Flip[i - 3, j];
+                }
+            }
+
+            for(i = 3; i < smC3.Rows + 3; i++)
+            {
+                for(j = 3; j < smC3.Columns + 3; j++)
+                {
+                    ret[i, j] = smC3[i - 3, j - 3];
+                }
+            }
+
+            for(i = 0; i < smC3.Rows; i++)
+            {
+                for(j = 3; j < smC3.Columns + 3; j++)
+                {
+                    ret[i, j] = C3Flip[i, j - 3];
+                }
+            }
+            
+            return ret;
+        }
     }
 
     

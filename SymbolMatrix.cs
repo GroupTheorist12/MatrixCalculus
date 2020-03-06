@@ -109,6 +109,44 @@ namespace MatrixCalculus
             set { InternalRep[r, c] = value; }
         }
 
+        public SymbolVector this[RowOrColumn rc]
+        {
+            get
+            {
+                SymbolVector ret = new SymbolVector();
+
+                if (rc.rowColumn == RowColumn.Column)
+                {
+                    ret = this[rc.Val];
+                }
+                else
+                {
+                    for (int i = 0; i < this.Columns; i++)
+                    {
+                        ret.Add(InternalRep[rc.Val, i]);
+                    }
+
+                }
+                return ret;
+            }
+            set
+            {
+                if (rc.rowColumn == RowColumn.Column)
+                {
+                    this[rc.Val] = value;
+                }
+                else
+                {
+                    for (int i = 0; i < this.Columns; i++)
+                    {
+                        InternalRep[rc.Val, i] = value[i];
+                    }
+
+                }
+
+            }
+        }
+
         public SymbolVector this[int Column]
         {
             get
@@ -176,25 +214,55 @@ namespace MatrixCalculus
             List<CoFactorInfo> cfList = SymbolMatrix.GetCoFactors(ParentMatrix);
             int inc = 0;
             CoFactorInfo cfi = null;
-
-            while(inc < cfList.Count)
+            CoFactorInfo cfiChild = null;
+            List<CoFactorInfo> cfListChild = null;
+            while (inc < cfList.Count)
             {
-                if(cfi == null)
+                if (cfi == null)
                 {
                     cfi = cfList[inc];
                 }
-                else if(cfi != null) //init value
+                else if (cfi != null && cfi.ListOfLists.Count == 0) //init value
                 {
-                    List<CoFactorInfo> cfListChild = SymbolMatrix.GetCoFactors(cfi.Minor);
+                    cfListChild = SymbolMatrix.GetCoFactors(cfi.Minor);
                     cfi.ListOfLists.Add(cfListChild);
-
-                    if(cfListChild[0].Minor.Rows == 2) //end of line
+                    if (cfListChild[0].Minor.Rows == 2) //end of line
                     {
                         cfList[inc] = cfi;
                         cfi = null;
                         inc++;
-                    }    
+                    }
                 }
+                else if (cfi != null && cfi.ListOfLists.Count > 0) //have value
+                {
+                    List<CoFactorInfo> cfListTmp = null;
+                    cfiChild = new CoFactorInfo();
+                    foreach (CoFactorInfo cfiC in cfListChild)
+                    {
+                        cfListTmp = SymbolMatrix.GetCoFactors(cfiC.Minor);
+                        cfi.ListOfLists.Add(cfListTmp);
+                        cfiChild.ListOfLists.Add(cfListTmp);
+                    }
+
+                    cfListChild.Clear();
+                    foreach (List<CoFactorInfo> cfl in cfiChild.ListOfLists)
+                    {
+                        foreach (CoFactorInfo cfiC in cfl)
+                        {
+                            cfListChild.Add(cfiC);
+                        }
+                    }
+
+                    cfiChild = null;
+
+                    if (cfListChild[0].Minor.Rows == 2) //end of line
+                    {
+                        cfList[inc] = cfi;
+                        cfi = null;
+                        inc++;
+                    }
+                }
+
             }
 
             return cfList;
@@ -204,7 +272,7 @@ namespace MatrixCalculus
             List<CoFactorInfo> cfiL = new List<CoFactorInfo>();
             int Order = ParentMatrix.Rows;
 
-            for(int i = 0; i < ParentMatrix.Columns; i++)
+            for (int i = 0; i < ParentMatrix.Columns; i++)
             {
                 cfiL.Add(GetCoFactor(ParentMatrix, i + 1));
             }
@@ -218,11 +286,11 @@ namespace MatrixCalculus
             cfi.CoFactor = col[0];
             List<Symbol> symList = new List<Symbol>();
 
-            for(int i = 1; i < symIn.Rows; i++)
+            for (int i = 1; i < symIn.Rows; i++)
             {
-                for(int j = 0; j < symIn.Columns; j++)
+                for (int j = 0; j < symIn.Columns; j++)
                 {
-                    if(j + 1 != Column)
+                    if (j + 1 != Column)
                     {
                         symList.Add(symIn[i, j]);
                     }
@@ -263,6 +331,41 @@ namespace MatrixCalculus
             }
         }
 
+        public SymbolMatrix ReName(List<string> newSymbols)
+        {
+            SymbolMatrix flipper = new SymbolMatrix(this.Rows, this.Columns);
+            RowOrColumn rc = new RowOrColumn();
+            rc.rowColumn = RowColumn.Row;
+            rc.Val = 0;
+
+            SymbolVector oldSymbols = this[rc];
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    int ind = oldSymbols.FindIndex(f => f.Expression == this[i, j].Expression);
+                    Symbol sym = new Symbol(newSymbols[ind]);
+                    sym.IsExpression = true;
+                    flipper[i, j] = sym;
+                }
+            }
+            return flipper;
+        }
+
+        public SymbolMatrix Flip()
+        {
+            SymbolMatrix flipper = new SymbolMatrix(this.Rows, this.Columns);
+            for (int i = 0; i < Rows; i++)
+            {
+                int MaxColumn = this.Columns - 1;
+                for (int j = 0; j < Columns; j++)
+                {
+                    flipper[i, MaxColumn] = this[i, j];
+                    --MaxColumn;
+                }
+            }
+            return flipper;
+        }
         public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();

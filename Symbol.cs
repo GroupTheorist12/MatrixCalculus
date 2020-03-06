@@ -33,6 +33,7 @@ namespace MatrixCalculus
         private int LiteralIndex { get; set; }
 
         public string FunctionType { get; set; }
+        public string Expression { get; set; }
         private void Discover()
         {
             this.ExponentIndex = IsPow();
@@ -48,6 +49,7 @@ namespace MatrixCalculus
             {
                 this.FunctionType = "Literal";
                 this.Literal = Rational.Parse(this.Tokens[0].Value);
+                this.LatexString = this.Tokens[0].Value;
                 return;
             }
             this.LatexString = this.NakedTokenString.Replace("*", "");
@@ -126,6 +128,7 @@ namespace MatrixCalculus
         public Symbol(string exp)
         {
             TokenFactory tokes = new TokenFactory();
+            this.Expression = exp;
             tokes.ParseExpression(exp);
             this.Tokens = tokes.TokenList;
             Discover();

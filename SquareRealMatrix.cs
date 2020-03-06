@@ -484,12 +484,6 @@ namespace MatrixCalculus
             return ret;
         }
 
-
-        public struct RowOrColumn
-        {
-            public RowColumn rowColumn;
-            public int Val;
-        }
         public RealVector this[string ColumnsOrRows]
         {
             get
