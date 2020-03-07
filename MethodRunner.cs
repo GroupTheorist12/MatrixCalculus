@@ -416,7 +416,7 @@ namespace MatrixCalculus
             foreach (CoFactorInfo ci in cfList)
             {
 
-                //sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci.Minor.ToLatex());
+                sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci.Minor.ToLatex());
                 /*
                 if (ci.Minor.Rows > 2)
                 {
@@ -433,7 +433,7 @@ namespace MatrixCalculus
                 {
                     foreach (CoFactorInfo ci2 in lstChild)
                     {
-                        //if (ci2.Minor.Rows == 2)
+                        //if (ci2.Minor.Rows == 4)
                         {
                             
                             sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());

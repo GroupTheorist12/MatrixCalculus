@@ -224,8 +224,9 @@ namespace MatrixCalculus
                 }
                 else if (cfi != null && cfi.ListOfLists.Count == 0) //init value
                 {
-                    cfListChild = SymbolMatrix.GetCoFactors(cfi.Minor);
-                    cfi.ListOfLists.Add(cfListChild);
+                    List<CoFactorInfo> cfListTmp = SymbolMatrix.GetCoFactors(cfi.Minor);
+                    cfi.ListOfLists.Add(cfListTmp);
+                    cfListChild = new List<CoFactorInfo>(cfListTmp);
                     if (cfListChild[0].Minor.Rows == 2) //end of line
                     {
                         cfList[inc] = cfi;
@@ -244,7 +245,7 @@ namespace MatrixCalculus
                         cfiChild.ListOfLists.Add(cfListTmp);
                     }
 
-                    cfListChild.Clear();
+                    cfListChild = new List<CoFactorInfo>();
                     foreach (List<CoFactorInfo> cfl in cfiChild.ListOfLists)
                     {
                         foreach (CoFactorInfo cfiC in cfl)
