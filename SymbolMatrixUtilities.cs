@@ -56,7 +56,38 @@ namespace MatrixCalculus
                 }
             }
             
-            ret.FullRep = @"C_2 = " + ret.ToLatex();
+            ret.FullRep = @"C_3 = " + ret.ToLatex();
+            return ret;
+
+        }
+
+        public static SymbolMatrix C3(List<string> variables)
+        {
+            List<string> kgL = new List<string>
+            {
+                "a", "b", "c",
+                "c", "a", "b",
+                "b", "c", "a" 
+            };
+
+            List<string> mapper = kgL.Take(3).ToList();
+
+            SymbolMatrix ret = new SymbolMatrix(3, 3);
+            int cnt = 0;
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+                    int ind = mapper.FindIndex(t => t == kgL[cnt]);
+
+                    Symbol sym = new Symbol(variables[ind]); 
+                    cnt++;
+                    sym.IsExpression = true;
+                    ret[i, j] = sym;
+                }
+            }
+            
+            ret.FullRep = @"C_3 = " + ret.ToLatex();
             return ret;
 
         }
@@ -220,6 +251,48 @@ namespace MatrixCalculus
             return ret;
         }
 
+        public static SymbolMatrix KroneckerProduct(SymbolMatrix a, SymbolMatrix b)
+        {
+            int Rows = a.Rows * b.Rows;
+            int Columns = a.Columns * b.Rows;
+            int incC = 0;
+            int incR = 0;
+            int incAMC = 0;
+            int incAMR = 0;
+            SymbolMatrix ret = new SymbolMatrix(Rows, Columns);
+            int i = 0;
+            int j = 0;
+            string exp = string.Empty;
+
+            for(i = 0; i < ret.Rows; i++)
+            {
+                if(incR > b.Rows - 1)
+                {
+                    incR = 0;
+                    incAMR++;
+                }
+                incAMC = 0;
+                for(j = 0; j < ret.Columns; j++)
+                {
+                    exp = a[incAMR, incAMC].Expression + b[incR, incC].Expression;
+                    incC++;
+                    if(incC > b.Columns - 1)
+                    {
+                        incC = 0;
+                        incAMC++;    
+                    }
+
+                    //exp = a[i, j].Expression + b[i, j].Expression;
+                    ret[i, j] = new Symbol(exp);
+                }
+                incR++;
+
+            }
+
+            ret.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + ret.ToLatex();
+            return ret;
+        }
+        
         public static SymbolMatrix D3()
         {
             SymbolMatrix ret = new SymbolMatrix(6, 6);

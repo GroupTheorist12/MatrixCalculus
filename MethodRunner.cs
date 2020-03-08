@@ -347,6 +347,25 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_KroneckerProduct()
+        {
+            SymbolMatrix C3_xyz = SymbolMatrixUtilities.C3(new List<string>{"x", "y", "z"});
+            SymbolMatrix C3 = SymbolMatrixUtilities.C3();
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.AppendFormat(@"{0}", SymbolMatrixUtilities.KroneckerProduct(C3, C3_xyz).ToLatex("F"));
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_KroneckerProduct.html"); //display Latex via mathjax
+            return 0;
+        }
+        public static int Test_C3()
+        {
+            SymbolMatrix C3 = SymbolMatrixUtilities.C3(new List<string>{"x", "y", "z"});
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.AppendFormat(@"{0}", C3.ToLatex());
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_C3.html"); //display Latex via mathjax
+            return 0;
+        }
         public static int Test_D3()
         {
             SymbolMatrix D3 = SymbolMatrixUtilities.D3();

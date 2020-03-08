@@ -1,0 +1,26 @@
+
+      <html>
+      <head>
+      <title></title>
+      <meta charset="utf-8" />
+<script type='text/javascript' async
+  src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'>
+</script>
+<script type='text/x-mathjax-config'>
+  MathJax.Hub.Register.StartupHook('End', function()
+  {
+    var x = document.getElementById('pLatex');
+    x.style.display = 'block';
+  });
+</script>
+
+      </ head>
+      <body>
+      <p id='pLatex' style='height: 300px; width: 300px;display:none'>
+\begin{equation}      
+       \begin{bmatrix}a &b &c\\c &a &b\\b &c &a\\ \end{bmatrix}\;\otimes\;\begin{bmatrix}x &y &z\\z &x &y\\y &z &x\\ \end{bmatrix} = \begin{bmatrix}ax &ay &az &bx &by &bz &cx &cy &cz\\az &ax &ay &bz &bx &by &cz &cx &cy\\ay &az &ax &by &bz &bx &cy &cz &cx\\cx &cy &cz &ax &ay &az &bx &by &bz\\cz &cx &cy &az &ax &ay &bz &bx &by\\cy &cz &cx &ay &az &ax &by &bz &bx\\bx &by &bz &cx &cy &cz &ax &ay &az\\bz &bx &by &cz &cx &cy &az &ax &ay\\by &bz &bx &cy &cz &cx &ay &az &ax\\ \end{bmatrix}
+\end{equation}      
+      </p>
+      </body>
+      </html>
+      
