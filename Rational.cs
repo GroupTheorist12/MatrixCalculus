@@ -160,7 +160,19 @@ namespace MatrixCalculus
             return mNumerator + "/" + mDenominator;
         }
 
+        public string ToLatex()
+        {
+            if (mNumerator == 0)
+            {
+                return "0";
+            }
+            if (mDenominator == 1)
+            {
+                return mNumerator.ToString();
+            }
+            return @"\dfrac{" + mNumerator + "}{" + mDenominator + "}";
 
+        }
         /// <summary>
         /// Returns the deimal approximation of the string in standard form
         /// </summary>

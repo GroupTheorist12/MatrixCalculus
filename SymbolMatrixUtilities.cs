@@ -7,6 +7,16 @@ using System.Numerics;
 
 namespace MatrixCalculus
 {
+    public enum SymbolType
+    {
+        Expression,
+        Formula,
+        Equation,
+        GroupMember,
+        Rational,
+        Real,
+        Integer
+    }
     public class SymbolMatrixUtilities
     {
         public static Symbol[,] SymbolFromSymbolArray(Symbol[][] input)
@@ -253,12 +263,12 @@ namespace MatrixCalculus
 
         public static SymbolMatrix KroneckerProduct(SymbolMatrix a, SymbolMatrix b)
         {
-            int Rows = a.Rows * b.Rows;
-            int Columns = a.Columns * b.Rows;
-            int incC = 0;
-            int incR = 0;
-            int incAMC = 0;
-            int incAMR = 0;
+            int Rows = a.Rows * b.Rows; //calculate number of rows.
+            int Columns = a.Columns * b.Rows; // calculate number of columns
+            int incC = 0; //increment variable for column of b matrix
+            int incR = 0; //increment variable for row of b matrix
+            int incAMC = 0;//increment variable for column of a matrix
+            int incAMR = 0;//increment variable for row of a matrix
             SymbolMatrix ret = new SymbolMatrix(Rows, Columns);
             int i = 0;
             int j = 0;
@@ -266,30 +276,29 @@ namespace MatrixCalculus
 
             for(i = 0; i < ret.Rows; i++)
             {
-                if(incR > b.Rows - 1)
+                if(incR > b.Rows - 1)//reached end of rows of b matrix
                 {
                     incR = 0;
-                    incAMR++;
+                    incAMR++; 
                 }
                 incAMC = 0;
                 for(j = 0; j < ret.Columns; j++)
                 {
                     exp = a[incAMR, incAMC].Expression + b[incR, incC].Expression;
                     incC++;
-                    if(incC > b.Columns - 1)
+                    if(incC > b.Columns - 1)////reached end of columns of b matrix
                     {
                         incC = 0;
                         incAMC++;    
                     }
 
-                    //exp = a[i, j].Expression + b[i, j].Expression;
                     ret[i, j] = new Symbol(exp);
                 }
                 incR++;
 
             }
 
-            ret.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + ret.ToLatex();
+            ret.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + ret.ToLatex(); //produce latex string
             return ret;
         }
         

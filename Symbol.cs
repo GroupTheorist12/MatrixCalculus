@@ -14,7 +14,8 @@ namespace MatrixCalculus
             set;
         }
 
-        public bool IsExpression{get;set;}
+        public bool IsExpression { get; set; }
+        public bool IsRational { get; set; }
         public bool IsOperator { get; set; }
         public Symbol()
         {
@@ -45,7 +46,11 @@ namespace MatrixCalculus
             this.Exponent = 0;
             this.Literal = 1;
 
-            if(this.LiteralIndex != -1) //literal value
+            if (TryRational())
+            {
+                return;
+            }
+            if (this.LiteralIndex != -1) //literal value
             {
                 this.FunctionType = "Literal";
                 this.Literal = Rational.Parse(this.Tokens[0].Value);
@@ -113,7 +118,7 @@ namespace MatrixCalculus
             {
                 this.FunctionType = "Variable";
             }
-            else if (this.ExponentIndex == -1 &&  this.FunctionIndex != -1) // pure function => sin(x)
+            else if (this.ExponentIndex == -1 && this.FunctionIndex != -1) // pure function => sin(x)
             {
                 this.FunctionType = "Function";
             }
@@ -131,12 +136,31 @@ namespace MatrixCalculus
             this.Expression = exp;
             tokes.ParseExpression(exp);
             this.Tokens = tokes.TokenList;
+            this.symbolType = SymbolType.Expression;
             Discover();
             IsOperator = false;
             IsExpression = false;
         }
 
+        public SymbolType symbolType { get; set; }
 
+        private bool TryRational()
+        {
+            bool ret = false;
+            try
+            {
+                Rational rExp = Rational.Parse(this.Expression);
+                this.symbolType = SymbolType.Rational;
+                LatexString = rExp.ToLatex();
+                ret = true;
+            }
+            catch
+            {
+
+            }
+
+            return ret;
+        }
         public string NakedTokenString
         {
             get
@@ -185,7 +209,7 @@ namespace MatrixCalculus
             }
             return ret;
         }
-        
+
         private static Symbol Subtract(Symbol a, Symbol b)
         {
 
@@ -193,24 +217,24 @@ namespace MatrixCalculus
         }
         private static Symbol Add(Symbol a, Symbol b, bool Subtract = false)
         {
-            if(a.Tokens[0].Value == "0") //Add a  zero
+            if (a.Tokens[0].Value == "0") //Add a  zero
             {
-                return  b;
+                return b;
             }
 
-            if(b.Tokens[0].Value == "0") //Add a  zero
+            if (b.Tokens[0].Value == "0") //Add a  zero
             {
-                return  a;
+                return a;
             }
 
-            if(a.FunctionType == "Literal" && b.FunctionType == "Literal") //Literal + Literal
+            if (a.FunctionType == "Literal" && b.FunctionType == "Literal") //Literal + Literal
             {
                 return new Symbol((a.Literal + b.Literal).ToString());
             }
 
             Symbol combine = new Symbol(a.NakedTokenString + ((Subtract) ? " - " : " + ") + b.NakedTokenString);
 
-            if(combine.NakedTokenString.IndexOf("+-") != -1)
+            if (combine.NakedTokenString.IndexOf("+-") != -1)
             {
                 string fixIt = combine.NakedTokenString.Replace("+-", " - ");
                 combine = new Symbol(fixIt);
@@ -238,7 +262,7 @@ namespace MatrixCalculus
                     strB = b.Tokens[b.VariableIndex].Value;
                     if (strA == strB)  //x + x
                     {
-                        if(rLiteralTotal == 0) //-x + x
+                        if (rLiteralTotal == 0) //-x + x
                         {
                             NakedString = "0";
                         }
@@ -246,8 +270,8 @@ namespace MatrixCalculus
                         {
                             NakedString = string.Format("{0}{1}", strLiteralTotal, strA);
                         }
-                    
-                    }       
+
+                    }
                     break;
 
                 case "VariablePow+VariablePow": //x^2 + x^2
@@ -255,7 +279,7 @@ namespace MatrixCalculus
                     strB = b.Tokens[b.VariableIndex].Value + strExpB;
                     if (strA == strB)  //x^2 + x^2
                     {
-                        if(rLiteralTotal == 0) //-x^2 + x^2 == 0
+                        if (rLiteralTotal == 0) //-x^2 + x^2 == 0
                         {
                             NakedString = "0";
                         }
@@ -263,7 +287,7 @@ namespace MatrixCalculus
                         {
                             NakedString = string.Format("{0}{1}", strLiteralTotal, strA);
                         }
-                    }       
+                    }
                     break;
 
                 case "Function+Function":
@@ -271,7 +295,7 @@ namespace MatrixCalculus
                     strB = ReturnFunctionString(b);
                     if (strA == strB)  //x^2 + x^2
                     {
-                        if(rLiteralTotal == 0) //-x^2 + x^2 == 0
+                        if (rLiteralTotal == 0) //-x^2 + x^2 == 0
                         {
                             NakedString = "0";
                         }
@@ -279,14 +303,14 @@ namespace MatrixCalculus
                         {
                             NakedString = string.Format("{0}{1}", strLiteralTotal, strA);
                         }
-                    }       
+                    }
                     break;
                 case "FunctionPow+FunctionPow":
                     strA = ReturnFunctionString(a) + strExpA;
                     strB = ReturnFunctionString(b) + strExpB;
                     if (strA == strB)  //x^2 + x^2
                     {
-                        if(rLiteralTotal == 0) //-x^2 + x^2 == 0
+                        if (rLiteralTotal == 0) //-x^2 + x^2 == 0
                         {
                             NakedString = "0";
                         }
@@ -294,12 +318,12 @@ namespace MatrixCalculus
                         {
                             NakedString = string.Format("{0}{1}", strLiteralTotal, strA);
                         }
-                    }       
+                    }
                     break;
 
                 default:
                     break;
-            }        
+            }
 
             if (NakedString != string.Empty)
             {
@@ -310,12 +334,12 @@ namespace MatrixCalculus
         }
         private static Symbol Multiply(Symbol a, Symbol b)
         {
-            if(a.Tokens[0].Value == "0" || b.Tokens[0].Value == "0") //multiply by zero
+            if (a.Tokens[0].Value == "0" || b.Tokens[0].Value == "0") //multiply by zero
             {
-                return  new Symbol("0");
+                return new Symbol("0");
             }
 
-            if(a.FunctionType == "Literal" && b.FunctionType == "Literal") //Literal * Literal
+            if (a.FunctionType == "Literal" && b.FunctionType == "Literal") //Literal * Literal
             {
                 return new Symbol((a.Literal * b.Literal).ToString());
             }
@@ -364,13 +388,13 @@ namespace MatrixCalculus
                             strExp = "^";
                             strExponentTotal = "2";
                         }
-                        else 
+                        else
                         {
-                            if(a.Exponent != 0 && b.Exponent == 0)
+                            if (a.Exponent != 0 && b.Exponent == 0)
                             {
                                 strExponentTotal = (a.Exponent + 1).ToString();
                             }
-                            else if(a.Exponent == 0 && b.Exponent != 0)
+                            else if (a.Exponent == 0 && b.Exponent != 0)
                             {
                                 strExponentTotal = (b.Exponent + 1).ToString();
                             }
@@ -392,7 +416,7 @@ namespace MatrixCalculus
                 case "Function*Literal":
                     strA = ReturnFunctionString(a);
                     NakedString = string.Format("{0}{1}{2}{3}", strLiteralTotal, strA, strExp, strExponentTotal);
-                break;
+                    break;
                 case "Function*Function":
                 case "FunctionPow*FunctionPow":
                 case "FunctionPow*Function":
@@ -407,13 +431,13 @@ namespace MatrixCalculus
                             strExp = "^";
                             strExponentTotal = "2";
                         }
-                        else 
+                        else
                         {
-                            if(a.Exponent != 0 && b.Exponent == 0)
+                            if (a.Exponent != 0 && b.Exponent == 0)
                             {
                                 strExponentTotal = (a.Exponent + 1).ToString();
                             }
-                            else if(a.Exponent == 0 && b.Exponent != 0)
+                            else if (a.Exponent == 0 && b.Exponent != 0)
                             {
                                 strExponentTotal = (b.Exponent + 1).ToString();
                             }
@@ -449,12 +473,12 @@ namespace MatrixCalculus
             strCombined = string.Empty;
             return false;
         }
-  
+
         public int IsLiteral()
         {
             int index = -1;
 
-            if(this.Tokens.Count == 1 && this.Tokens[0].Type == "Literal")
+            if (this.Tokens.Count == 1 && this.Tokens[0].Type == "Literal")
             {
                 index = 0;
             }
@@ -488,7 +512,7 @@ namespace MatrixCalculus
 
         public static Symbol operator *(Symbol a, Symbol b)
         {
-            if(a.IsExpression && b.IsExpression)
+            if (a.IsExpression && b.IsExpression)
             {
                 return new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);
             }
@@ -497,7 +521,7 @@ namespace MatrixCalculus
 
         public static Symbol operator +(Symbol a, Symbol b)
         {
-            if(a.IsExpression && b.IsExpression)
+            if (a.IsExpression && b.IsExpression)
             {
                 return new Symbol(a.NakedTokenString + " + " + b.NakedTokenString);
             }
@@ -506,11 +530,11 @@ namespace MatrixCalculus
 
         public static Symbol operator -(Symbol a, Symbol b)
         {
-            if(a.IsExpression && b.IsExpression)
+            if (a.IsExpression && b.IsExpression)
             {
                 return new Symbol(a.NakedTokenString + " - " + b.NakedTokenString);
             }
-            
+
             return Subtract(a, b);
         }
 

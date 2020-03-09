@@ -349,10 +349,21 @@ namespace MatrixCalculus
 
         public static int Test_KroneckerProduct()
         {
-            SymbolMatrix C3_xyz = SymbolMatrixUtilities.C3(new List<string>{"x", "y", "z"});
-            SymbolMatrix C3 = SymbolMatrixUtilities.C3();
+            SymbolMatrix A1 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with symbols a,b,c,d
+            new List<Symbol>
+            {
+                new Symbol("a"), new Symbol("b"), 
+                new Symbol("c"), new Symbol("d")
+            });
+
+            SymbolMatrix A2 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with symbols e,f,g,h
+            new List<Symbol>
+            {
+                new Symbol("e"), new Symbol("f"), 
+                new Symbol("g"), new Symbol("h")
+            });
             StringBuilder sb = new StringBuilder();//Start building latex
-            sb.AppendFormat(@"{0}", SymbolMatrixUtilities.KroneckerProduct(C3, C3_xyz).ToLatex("F"));
+            sb.AppendFormat(@"{0}", SymbolMatrixUtilities.KroneckerProduct(A1, A2).ToLatex("F"));
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_KroneckerProduct.html"); //display Latex via mathjax
             return 0;
@@ -377,6 +388,31 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_MultiplyRationalSymbolMatrix()
+        {
+            SymbolMatrix A1 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with rationals
+            new List<Symbol>
+            {
+                new Symbol("1/2"), new Symbol("1/5"), 
+                new Symbol("2/3"), new Symbol("7/8")
+            });
+
+            SymbolMatrix A2 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol with rationals
+            new List<Symbol>
+            {
+                new Symbol("1/4"), new Symbol("7/9"), 
+                new Symbol("3/10"), new Symbol("4/7")
+            });
+            
+            A1.SymbolMatrixSymbolType = A2.SymbolMatrixSymbolType = SymbolType.Rational;
+            
+            SymbolMatrix symMul = A1 * A2; //multiply the matrices
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.AppendFormat(@"{0}", symMul.ToLatex("F"));
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Multiply_Rational_Symbol_Matrix.html"); //display Latex via mathjax
+            return 0;
+        }
         public static int Test_Symbol_Determinant()
         {
             //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
