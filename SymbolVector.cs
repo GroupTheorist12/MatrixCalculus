@@ -10,6 +10,7 @@ namespace MatrixCalculus
     public class SymbolVector : List<Symbol>
     {
         public RowColumn IsRowOrColumn { get; set; }
+        public SymbolFactory Parent{get;set;}
         public string FullRep { get; set; }
         public string Name { get; set; }
 

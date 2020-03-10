@@ -34,6 +34,8 @@ namespace MatrixCalculus
 
         public SymbolType SymbolMatrixSymbolType { get; set; }
 
+        public SymbolFactory Parent{get;set;}
+
         private void Zero()
         {
             for (int i = 0; i < Rows; i++)
@@ -95,8 +97,8 @@ namespace MatrixCalculus
             this.Rows = rows;
             this.Columns = columns;
             InternalRep = new Symbol[this.Rows, this.Columns];
-            SymbolMatrixSymbolType = SymbolType.Expression;
-
+            SymbolMatrixSymbolType = V[0].symbolType;
+            this.Parent = V[0].Parent;
             FromVector();
         }
 

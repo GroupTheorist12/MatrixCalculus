@@ -390,21 +390,18 @@ namespace MatrixCalculus
 
         public static int Test_MultiplyRationalSymbolMatrix()
         {
-            SymbolMatrix A1 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with rationals
-            new List<Symbol>
-            {
-                new Symbol("1/2"), new Symbol("1/5"), 
-                new Symbol("2/3"), new Symbol("7/8")
-            });
+            SymbolFactory sf = new SymbolFactory(SymbolType.Rational);
 
-            SymbolMatrix A2 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol with rationals
-            new List<Symbol>
-            {
-                new Symbol("1/4"), new Symbol("7/9"), 
-                new Symbol("3/10"), new Symbol("4/7")
-            });
+            SymbolMatrix A1 = sf[2, 2, //create a 2 X 2 symbol matrix with rationals
+                "1/2", "1/5", 
+                "2/3", "7/8"
+            ];
             
-            A1.SymbolMatrixSymbolType = A2.SymbolMatrixSymbolType = SymbolType.Rational;
+
+            SymbolMatrix A2 = sf[2, 2, //create a 2 X 2 symbol with rationals
+                "1/4", "7/9", 
+                "3/10", "4/7"
+            ];
             
             SymbolMatrix symMul = A1 * A2; //multiply the matrices
             StringBuilder sb = new StringBuilder();//Start building latex

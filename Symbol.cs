@@ -35,7 +35,8 @@ namespace MatrixCalculus
 
         public string FunctionType { get; set; }
         public string Expression { get; set; }
-        private void Discover()
+
+        public void Discover()
         {
             this.ExponentIndex = IsPow();
             this.VariableIndex = IsVariable();
@@ -130,6 +131,8 @@ namespace MatrixCalculus
         }
 
         public string LatexString { get; set; }
+
+        public SymbolFactory Parent{get; set;}
         public Symbol(string exp)
         {
             TokenFactory tokes = new TokenFactory();
@@ -140,9 +143,25 @@ namespace MatrixCalculus
             Discover();
             IsOperator = false;
             IsExpression = false;
+
+            if(Parent == null)
+            {
+                Parent = new SymbolFactory(SymbolType.Expression);
+            }
         }
 
-        public SymbolType symbolType { get; set; }
+        private SymbolType m_symbolType = SymbolType.Expression;
+        public SymbolType symbolType 
+        { 
+            get
+            {
+                return m_symbolType;
+            }
+            set
+            {
+                m_symbolType = value;
+            } 
+        }
 
         private bool TryRational()
         {
