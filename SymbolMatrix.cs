@@ -34,7 +34,7 @@ namespace MatrixCalculus
 
         public SymbolType SymbolMatrixSymbolType { get; set; }
 
-        public SymbolFactory Parent{get;set;}
+        public SymbolFactory Parent { get; set; }
 
         private void Zero()
         {
@@ -399,16 +399,134 @@ namespace MatrixCalculus
 
             return ret;
         }
+
+        public static SymbolMatrix operator +(SymbolMatrix a, SymbolMatrix b)
+        {
+            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+
+                    ret.InternalRep[i, j] = a.InternalRep[i, j] + b.InternalRep[i, j];
+
+                }
+
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(@"\;+\;");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(ret.ToLatex());
+
+            ret.FullRep = sb.ToString();
+
+            return ret;
+
+        }
+        public static SymbolMatrix operator -(SymbolMatrix a, SymbolMatrix b)
+        {
+            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+
+                    ret.InternalRep[i, j] = a.InternalRep[i, j] - b.InternalRep[i, j];
+
+                }
+
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(@"\;-\;");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(ret.ToLatex());
+
+            ret.FullRep = sb.ToString();
+
+            return ret;
+
+        }
+
         public static SymbolMatrix operator *(SymbolMatrix a, SymbolMatrix b)
         {
-            SymbolMatrix ret = null;
+            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
 
-            if(a.SymbolMatrixSymbolType == SymbolType.Rational)
+
+            for (int i = 0; i < ret.Rows; i++)
             {
-                return MultiplyRational(a, b);
+                for (int j = 0; j < ret.Columns; j++)
+                {
+
+                    for (int k = 0; k < ret.Columns; k++)
+                    {
+
+                        ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
+
+                    }
+
+                }
+
             }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(ret.ToLatex());
+
+            ret.FullRep = sb.ToString();
+
+
             return ret;
+
         }
+
+        public static SymbolMatrix operator /(SymbolMatrix a, SymbolMatrix b)
+        {
+            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
+
+
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+
+                    for (int k = 0; k < ret.Columns; k++)
+                    {
+
+                        ret.InternalRep[i, j] += a.InternalRep[i, k] / b.InternalRep[k, j];
+
+                    }
+
+                }
+
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(ret.ToLatex());
+
+            ret.FullRep = sb.ToString();
+
+
+            return ret;
+
+        }
+
         /***************************End of Operators**********************************/
 
         public SymbolMatrix Flip()

@@ -132,7 +132,7 @@ namespace MatrixCalculus
 
         public string LatexString { get; set; }
 
-        public SymbolFactory Parent{get; set;}
+        public SymbolFactory Parent { get; set; }
         public Symbol(string exp)
         {
             TokenFactory tokes = new TokenFactory();
@@ -144,15 +144,15 @@ namespace MatrixCalculus
             IsOperator = false;
             IsExpression = false;
 
-            if(Parent == null)
+            if (Parent == null)
             {
                 Parent = new SymbolFactory(SymbolType.Expression);
             }
         }
 
         private SymbolType m_symbolType = SymbolType.Expression;
-        public SymbolType symbolType 
-        { 
+        public SymbolType symbolType
+        {
             get
             {
                 return m_symbolType;
@@ -160,7 +160,7 @@ namespace MatrixCalculus
             set
             {
                 m_symbolType = value;
-            } 
+            }
         }
 
         private bool TryRational()
@@ -351,8 +351,51 @@ namespace MatrixCalculus
 
             return combine;
         }
+
+        private static Symbol DivideRational(Symbol a, Symbol b)
+        {
+            Rational inter = Rational.Parse(a.Expression) / Rational.Parse(b.Expression);
+            Symbol sym = a.Parent[inter.ToString()];
+            sym.LatexString = inter.ToLatex();
+
+            return sym;
+        }
+
+        private static Symbol MultiplyRational(Symbol a, Symbol b)
+        {
+            Rational inter = Rational.Parse(a.Expression) * Rational.Parse(b.Expression);
+            Symbol sym = a.Parent[inter.ToString()];
+            sym.LatexString = inter.ToLatex();
+
+            return sym;
+        }
+
+        private static Symbol AddRational(Symbol a, Symbol b)
+        {
+            Rational inter = Rational.Parse(a.Expression) + Rational.Parse(b.Expression);
+            Symbol sym = a.Parent[inter.ToString()];
+            sym.LatexString = inter.ToLatex();
+
+            return sym;
+
+        }
+
+        private static Symbol SubtractRational(Symbol a, Symbol b)
+        {
+            Rational inter = Rational.Parse(a.Expression) - Rational.Parse(b.Expression);
+            Symbol sym = a.Parent[inter.ToString()];
+            sym.LatexString = inter.ToLatex();
+
+            return sym;
+
+        }
+
         private static Symbol Multiply(Symbol a, Symbol b)
         {
+            if(a.Parent.FactorySymbolType == SymbolType.Rational && b.Parent.FactorySymbolType == SymbolType.Rational)
+            {
+                return MultiplyRational(a, b);
+            }
             if (a.Tokens[0].Value == "0" || b.Tokens[0].Value == "0") //multiply by zero
             {
                 return new Symbol("0");
@@ -529,6 +572,20 @@ namespace MatrixCalculus
 
         }
 
+        public static Symbol operator /(Symbol a, Symbol b)
+        {
+            if(a.Parent.FactorySymbolType == SymbolType.Rational && b.Parent.FactorySymbolType == SymbolType.Rational)
+            {
+                return DivideRational(a, b);
+            }
+            
+            if (a.IsExpression && b.IsExpression)
+            {
+                return new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);
+            }
+            return Multiply(a, b);
+        }
+
         public static Symbol operator *(Symbol a, Symbol b)
         {
             if (a.IsExpression && b.IsExpression)
@@ -540,6 +597,11 @@ namespace MatrixCalculus
 
         public static Symbol operator +(Symbol a, Symbol b)
         {
+            if(a.Parent.FactorySymbolType == SymbolType.Rational && b.Parent.FactorySymbolType == SymbolType.Rational)
+            {
+                return AddRational(a, b);
+            }
+            
             if (a.IsExpression && b.IsExpression)
             {
                 return new Symbol(a.NakedTokenString + " + " + b.NakedTokenString);
@@ -549,6 +611,11 @@ namespace MatrixCalculus
 
         public static Symbol operator -(Symbol a, Symbol b)
         {
+            if(a.Parent.FactorySymbolType == SymbolType.Rational && b.Parent.FactorySymbolType == SymbolType.Rational)
+            {
+                return SubtractRational(a, b);
+            }
+
             if (a.IsExpression && b.IsExpression)
             {
                 return new Symbol(a.NakedTokenString + " - " + b.NakedTokenString);

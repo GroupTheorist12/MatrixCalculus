@@ -410,6 +410,35 @@ namespace MatrixCalculus
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Multiply_Rational_Symbol_Matrix.html"); //display Latex via mathjax
             return 0;
         }
+        public static int Test_RationalSymbolMatrixOperations()
+        {
+            SymbolFactory sf = new SymbolFactory(SymbolType.Rational);
+
+            SymbolMatrix A1 = sf[2, 2, //create a 2 X 2 symbol matrix with rationals
+                "1/2", "1/5", 
+                "2/3", "7/8"
+            ];
+            
+
+            SymbolMatrix A2 = sf[2, 2, //create a 2 X 2 symbol with rationals
+                "1/4", "7/9", 
+                "3/10", "4/7"
+            ];
+            
+            SymbolMatrix symMul = A1 * A2; //multiply the matrices
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            
+            sb.AppendFormat(@"&{0}", (A1 * A2).ToLatex("F") + @" \\ \\");
+            sb.AppendFormat(@"&{0}", (A1 + A2).ToLatex("F") + @" \\ \\");
+            sb.AppendFormat(@"&{0}", (A1 - A2).ToLatex("F"));
+
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_RationalSymbolMatrixOperations.html"); //display Latex via mathjax
+            return 0;
+        }
+
         public static int Test_Symbol_Determinant()
         {
             //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
