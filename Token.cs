@@ -27,8 +27,9 @@ namespace MatrixCalculus
     {
         public List<Token> TokenList { get; set; }
         public SymbolList symbolList { get; set; }
-        List<string> letterBuffer = new List<string>();
-        List<string> numberBuffer = new List<string>();
+        public List<string> letterBuffer = new List<string>();
+        public List<string> variableBuffer = new List<string>();
+        public List<string> numberBuffer = new List<string>();
 
         public enum CoordinateSystem
         {
@@ -59,6 +60,41 @@ namespace MatrixCalculus
             }
         }
         public Coordinates coordinates { get; set; }
+
+        public bool isComma(char ch)
+        {
+            return new Regex(@"/,/").IsMatch(ch.ToString());
+        }
+
+        public bool isDigit(char ch)
+        {
+            return new Regex(@"\d").IsMatch(ch.ToString());
+        }
+
+        public bool isLetter(char ch)
+        {
+            return char.IsLetter(ch);
+        }
+
+        public bool isOperator(char ch)
+        {
+            return new Regex(@"\+|\-|\*|\/|\^").IsMatch(ch.ToString());
+        }
+
+        public bool isLeftParenthesis(char ch)
+        {
+            return new Regex(@"\(").IsMatch(ch.ToString());
+        }
+
+        public bool isRightParenthesis(char ch)
+        {
+            return new Regex(@"\)").IsMatch(ch.ToString());
+        }
+
+        public bool isUnderScore(char ch)
+        {
+            return new Regex(@"\_").IsMatch(ch.ToString());
+        }
 
 
         public TokenFactory() //default constructor
@@ -161,7 +197,7 @@ namespace MatrixCalculus
             symbolList  = new SymbolList(this.TokenList); 
         }
 
-        private void emptyNumberBufferAsLiteral(bool SymbolEnd = false)
+        public void emptyNumberBufferAsLiteral(bool SymbolEnd = false)
         {
             if (numberBuffer.Count > 0)
             {
@@ -172,7 +208,7 @@ namespace MatrixCalculus
             }
         }
 
-        private void emptyLetterBufferAsVariables(bool SymbolEnd = false)
+        public void emptyLetterBufferAsVariables(bool SymbolEnd = false)
         {
             var l = letterBuffer.Count;
             for (var i = 0; i < l; i++)
@@ -191,9 +227,9 @@ namespace MatrixCalculus
     }
     public class Tokenizer
     {
-        private List<Token> result = new List<Token>();
-        private List<string> letterBuffer = new List<string>();
-        private List<string> numberBuffer = new List<string>();
+        public List<Token> result = new List<Token>();
+        public List<string> letterBuffer = new List<string>();
+        public List<string> numberBuffer = new List<string>();
 
         public bool isComma(char ch)
         {

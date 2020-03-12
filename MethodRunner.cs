@@ -439,6 +439,24 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_ParseSymbols()
+        {
+            ExpressionFactory tokes = new ExpressionFactory();
+            tokes.Variables.Add("x");
+            tokes.Variables.Add("y");
+
+            tokes.ParseExpression("(xy + 1)^2");
+            int cnt = 0;
+            for (int j = 0; j < tokes.TokenList.Count; j++)
+            {
+                Token t = tokes.TokenList[j];
+                Console.WriteLine("{0}. Type = {1}, value = {2}, symbol end {3}", cnt++, t.Type, t.Value, t.SymbolEnd);
+                                    
+            }
+
+            return 0;
+        }
+
         public static int Test_Symbol_Determinant()
         {
             //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
