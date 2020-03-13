@@ -442,10 +442,11 @@ namespace MatrixCalculus
         public static int Test_ParseSymbols()
         {
             ExpressionFactory tokes = new ExpressionFactory();
+            //TokenFactory tokes = new TokenFactory();
             tokes.Variables.Add("x");
             tokes.Variables.Add("y");
 
-            tokes.ParseExpression("sin(2x)");
+            tokes.ParseExpression("2xsin(2x)");
             int cnt = 0;
             int j = 0;
             for (j = 0; j < tokes.TokenList.Count; j++)
@@ -464,6 +465,8 @@ namespace MatrixCalculus
                 Console.WriteLine("{0}. Type = {1}, value = {2}, symbol end {3}", cnt++, t.Type, t.Value, t.SymbolEnd);
                                     
             }
+            
+            
             
 
             return 0;

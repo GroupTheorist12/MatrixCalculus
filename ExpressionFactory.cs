@@ -127,7 +127,7 @@ namespace MatrixCalculus
                     {
                         newList.Add(new Token(" Right Parenthesis", ")"));
                         newList.Add(new Token("Variable", t.Value));
-
+                        FunctionBuffer.Clear();
                     }
                 }
                 else if (t.Type == "Function")
@@ -237,6 +237,10 @@ namespace MatrixCalculus
                         Token t = new Token("Variable", string.Join("", variableBuffer.ToArray()));
                         t.SymbolEnd = false;
                         TokenList.Add(t);
+                        if(i != FunctionString.Length - 1 && !InBracket)
+                        {
+                            TokenList.Add(new Token("Operator", "*"));
+                        }
                         variableBuffer.Clear();
                     }
                     else
