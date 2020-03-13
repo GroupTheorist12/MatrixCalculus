@@ -445,14 +445,26 @@ namespace MatrixCalculus
             tokes.Variables.Add("x");
             tokes.Variables.Add("y");
 
-            tokes.ParseExpression("(xy + 1)^2");
+            tokes.ParseExpression("sin(2x)");
             int cnt = 0;
-            for (int j = 0; j < tokes.TokenList.Count; j++)
+            int j = 0;
+            for (j = 0; j < tokes.TokenList.Count; j++)
             {
                 Token t = tokes.TokenList[j];
                 Console.WriteLine("{0}. Type = {1}, value = {2}, symbol end {3}", cnt++, t.Type, t.Value, t.SymbolEnd);
                                     
             }
+
+            
+            Symbol sym = tokes.DF(tokes.symbolList[0]);
+
+            for (j = 0; j < sym.Tokens.Count; j++)
+            {
+                Token t = sym.Tokens[j];
+                Console.WriteLine("{0}. Type = {1}, value = {2}, symbol end {3}", cnt++, t.Type, t.Value, t.SymbolEnd);
+                                    
+            }
+            
 
             return 0;
         }

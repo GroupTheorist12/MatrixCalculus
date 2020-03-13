@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
@@ -66,6 +67,117 @@ namespace MatrixCalculus
             }
         }
 
+        private string TrigDF(string trigValue)
+        {
+            string ret = string.Empty;
+            Hashtable ht = new Hashtable();
+            ht["sin"] = "cos";
+            ht["cos"] = "-sin";
+            return (string)ht[trigValue];
+        }
+        public Symbol DF(Symbol sym)
+        {
+            Symbol ret = new Symbol();
+            List<Token> lstCopy = new List<Token>();
+            List<string> LiteralBuffer = new List<string>();
+            List<string> OperatorBuffer = new List<string>();
+            List<string> VariableBuffer = new List<string>();
+            List<string> FunctionBuffer = new List<string>();
+            List<Token> newList = new List<Token>();
+            foreach (Token t in sym.Tokens)
+            {
+                lstCopy.Add(t);
+            }
+
+            lstCopy.Reverse();
+
+            int i = 0;
+            Rational pow = 0;
+            Rational accum = 0;
+
+            while (i < lstCopy.Count)
+            {
+                Token t = lstCopy[i];
+                if (t.Type == "Literal")
+                {
+                    LiteralBuffer.Add(t.Value);
+                }
+                else if (t.Type == "Operator")
+                {
+                    if (t.Value == "^") //Power
+                    {
+                        pow = Rational.Parse(string.Join("", LiteralBuffer.ToArray())) - 1;
+                        accum += Rational.Parse(string.Join("", LiteralBuffer.ToArray()));
+                        if (pow > 1)
+                        {
+                            newList.Add(new Token("Literal", pow.ToString()));
+                            newList.Add(new Token("Operator", "^"));
+
+                        }
+                        LiteralBuffer.Clear();
+                    }
+                }
+                else if (t.Type == "Variable")
+                {
+                    if (pow > 0)
+                    {
+                        newList.Add(new Token("Variable", t.Value));
+                    }
+                    else if (FunctionBuffer.Count > 0)
+                    {
+                        newList.Add(new Token(" Right Parenthesis", ")"));
+                        newList.Add(new Token("Variable", t.Value));
+
+                    }
+                }
+                else if (t.Type == "Function")
+                {
+                    newList.Add(new Token(" Left Parenthesis", "("));
+                    newList.Add(new Token("Function", TrigDF(t.Value)));
+
+                }
+                else if (t.Type == "Right Parenthesis")
+                {
+                    FunctionBuffer.Add(t.Value);
+                }
+                else if (t.Type == "Left Parenthesis")
+                {
+                    if (LiteralBuffer.Count > 0)
+                    {
+                        accum += Rational.Parse(string.Join("", LiteralBuffer.ToArray()));
+                        Rational tmp = Rational.Parse(string.Join("", LiteralBuffer.ToArray()));
+                        newList.Add(new Token("Literal", tmp.ToString()));
+                        LiteralBuffer.Clear();
+
+                    }
+
+                }
+                i++;
+            }
+
+            if (LiteralBuffer.Count > 0)
+            {
+                accum *= Rational.Parse(string.Join("", LiteralBuffer.ToArray()));
+
+                if (pow > 0)
+                {
+                    newList.Add(new Token("Operator", "*"));
+
+                }
+
+                newList.Add(new Token("Literal", accum.ToString()));
+
+            }
+            else if(accum > 0)
+            {
+                newList.Add(new Token("Literal", accum.ToString()));
+
+            }
+            newList.Reverse();
+            newList[newList.Count - 1].SymbolEnd = true;
+            ret.Tokens = newList;
+            return ret;
+        }
         public void ParseExpression(string FunctionString)
         {
             int i = 0;
@@ -134,21 +246,21 @@ namespace MatrixCalculus
                     }
 
                 }
-                else if(ch == '^') //numbers coming
+                else if (ch == '^') //numbers coming
                 {
                     TokenList.Add(new Token("Operator", ch.ToString()));
                 }
-                else if(ch == '/')
+                else if (ch == '/')
                 {
                     emptyNumberBufferAsLiteral();
                     TokenList.Add(new Token("Operator", ch.ToString()));
                 }
-                else if(ch == ' ') //space denotes polynomial. everything before is complete
+                else if (ch == ' ') //space denotes polynomial. everything before is complete
                 {
                     //TokenList[TokenList.Count - 1].SymbolEnd = true;
 
                 }
-                else if(ch == '+')
+                else if (ch == '+')
                 {
                     emptyNumberBufferAsLiteral();
                     TokenList[TokenList.Count - 1].SymbolEnd = (InBracket) ? false : true;
@@ -191,7 +303,7 @@ namespace MatrixCalculus
             emptyNumberBufferAsLiteral();
             TokenList[TokenList.Count - 1].SymbolEnd = true;
 
-
+            this.symbolList = new SymbolList(TokenList);
         }
     }
 }
