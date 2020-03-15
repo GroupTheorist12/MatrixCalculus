@@ -31,6 +31,8 @@ namespace MatrixCalculus
         public List<string> variableBuffer = new List<string>();
         public List<string> numberBuffer = new List<string>();
 
+        public List<string> Variables = new List<string>();
+
         public enum CoordinateSystem
         {
             x,
@@ -50,6 +52,7 @@ namespace MatrixCalculus
             public int Dimension { get; set; }
             public CoordinateSystem coordinateSystem { get; set; }
             public string VariableStringValues { get; set; }
+
 
             public Coordinates(CoordinateSystem cs, int dim, string variableStringRep)
             {
@@ -117,7 +120,7 @@ namespace MatrixCalculus
             while (i < FunctionString.Length)
             {
                 char ch = FunctionString[i];
-                if(ch == '-' && FunctionString[i + 1] != ' ') //negative number. Parser needs space for +-*/
+                if (ch == '-' && FunctionString[i + 1] != ' ') //negative number. Parser needs space for +-*/
                 {
                     numberBuffer.Add(ch.ToString());
 
@@ -137,18 +140,36 @@ namespace MatrixCalculus
                         emptyNumberBufferAsLiteral();
                         TokenList.Add(new Token("Operator", "*"));
                     }
-                    letterBuffer.Add(ch.ToString());
+                    if (Variables.Exists(v => v == ch.ToString()))
+                    {
+                        letterBuffer.Add(ch.ToString());
+                        emptyLetterBufferAsVariables();
+                        if (i - 1 > 0)
+                        {
+                            char ch2 = FunctionString[i - 1];
+                            if (ch2 == ' ' && !InBracket)//(ch != '^')
+                            {
+                                TokenList[TokenList.Count - 1].SymbolEnd = true;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        letterBuffer.Add(ch.ToString());
+
+                    }
                 }
                 else if (tokes.isOperator(ch))
                 {
                     emptyNumberBufferAsLiteral();
                     emptyLetterBufferAsVariables();
-                    char ch2  = FunctionString[i - 1];
+                    char ch2 = FunctionString[i - 1];
                     if (ch2 == ' ' && !InBracket)//(ch != '^')
                     {
                         TokenList[TokenList.Count - 1].SymbolEnd = true;
                     }
-                    if(ch == '^')
+                    if (ch == '^')
                     {
                         TokenList.Add(new Token("Operator", ch.ToString()));
                     }
@@ -191,10 +212,10 @@ namespace MatrixCalculus
                 i++;
             }
 
-            emptyNumberBufferAsLiteral(true);  
-            emptyLetterBufferAsVariables(true);         
+            emptyNumberBufferAsLiteral(true);
+            emptyLetterBufferAsVariables(true);
 
-            symbolList  = new SymbolList(this.TokenList); 
+            symbolList = new SymbolList(this.TokenList);
         }
 
         public void emptyNumberBufferAsLiteral(bool SymbolEnd = false)

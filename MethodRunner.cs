@@ -347,6 +347,31 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_KroneckerSum()
+        {
+            RealFactory rf = new RealFactory();
+            SquareRealMatrix A = rf[2, 2, 
+                    1, -1,
+                    0, 2
+            ];
+
+            SquareRealMatrix B =  rf[2, 2,
+                    1, 0,
+                    2, -1
+            ];
+
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            
+            sb.AppendFormat(@"&A = {0}\;B = {1}", A.ToLatex(), B.ToLatex() + @" \\ \\");
+            sb.AppendFormat(@"&C = A\;\oplus\;B = {0}", SquareRealMatrix.KroneckerSum(A, B).ToLatex());
+
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_KroneckerSum.html"); //display Latex via mathjax
+
+            return 0;
+        }
         public static int Test_KroneckerProduct()
         {
             SymbolMatrix A1 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with symbols a,b,c,d
@@ -441,11 +466,17 @@ namespace MatrixCalculus
 
         public static int Test_ParseSymbols()
         {
-            ExpressionFactory tokes = new ExpressionFactory();
+            TokenFactory tokes = new TokenFactory();
             //TokenFactory tokes = new TokenFactory();
             tokes.Variables.Add("x");
-            tokes.Variables.Add("y");
 
+            SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
+
+            Symbol sym = sf["3/2x"];
+            Console.WriteLine(sym.TokenString);
+            Console.WriteLine(DerivativeStatePattern.DF(sym));
+
+            /*
             tokes.ParseExpression("2xsin(2x)");
             int cnt = 0;
             int j = 0;
@@ -466,7 +497,7 @@ namespace MatrixCalculus
                                     
             }
             
-            
+            */
             
 
             return 0;

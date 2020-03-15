@@ -11,6 +11,7 @@ namespace MatrixCalculus
         private double[,] InternalRep = null;
         private string m_FullRep = string.Empty;
 
+        public RealFactory Parent{get;set;}
         public int Rows = 0;
         public int Columns = 0;
         private List<double> Vector = null;
@@ -842,6 +843,73 @@ namespace MatrixCalculus
 
 
             return sb.ToString();
+        }
+
+        public static SquareRealMatrix KroneckerSum(SquareRealMatrix a, SquareRealMatrix b)
+        {
+            SquareRealMatrix ret = null;
+            SquareRealMatrix id = IdentityMatrix(a.Rows);
+
+            ret = KroneckerProduct(a, id) + KroneckerProduct(id, b);
+            
+            ret.FullRep = a.ToLatex() + @"\;\oplus\;" + b.ToLatex() + " = " + ret.ToLatex(); //produce latex string
+
+            return ret;
+        }
+        public static SquareRealMatrix IdentityMatrix(int Order)
+        {
+            SquareRealMatrix ret = new SquareRealMatrix(Order, Order);
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+                    if(i == j)
+                    {
+                        ret[i, j] = 1;    
+                    }
+                }
+            }
+            return ret;
+        }
+        public static SquareRealMatrix KroneckerProduct(SquareRealMatrix a, SquareRealMatrix b)
+        {
+            int Rows = a.Rows * b.Rows; //calculate number of rows.
+            int Columns = a.Columns * b.Rows; // calculate number of columns
+            int incC = 0; //increment variable for column of b matrix
+            int incR = 0; //increment variable for row of b matrix
+            int incAMC = 0;//increment variable for column of a matrix
+            int incAMR = 0;//increment variable for row of a matrix
+            SquareRealMatrix ret = new SquareRealMatrix(Rows, Columns);
+            int i = 0;
+            int j = 0;
+            double exp = 0;
+
+            for(i = 0; i < ret.Rows; i++)
+            {
+                if(incR > b.Rows - 1)//reached end of rows of b matrix
+                {
+                    incR = 0;
+                    incAMR++; 
+                }
+                incAMC = 0;
+                for(j = 0; j < ret.Columns; j++)
+                {
+                    exp = a[incAMR, incAMC] * b[incR, incC];
+                    incC++;
+                    if(incC > b.Columns - 1)////reached end of columns of b matrix
+                    {
+                        incC = 0;
+                        incAMC++;    
+                    }
+
+                    ret[i, j] = exp;
+                }
+                incR++;
+
+            }
+
+            ret.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + ret.ToLatex(); //produce latex string
+            return ret;
         }
 
     }

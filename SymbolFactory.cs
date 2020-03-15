@@ -16,10 +16,13 @@ namespace MatrixCalculus
 
         public SymbolType FactorySymbolType { get; private set; }
         public RowColumn FactoryRowColumn {get;set;}
-        public SymbolFactory(SymbolType st)
+
+        public TokenFactory tokenFactory  {get;}
+        public SymbolFactory(SymbolType st, TokenFactory epf = null)
         {
             FactorySymbolType = st;
             FactoryRowColumn = RowColumn.Column;
+            tokenFactory = epf;
         }
 
         public Symbol this[string exp]
@@ -30,6 +33,12 @@ namespace MatrixCalculus
                 sym.Expression = exp;
                 sym.symbolType = FactorySymbolType;
                 sym.Parent = this;
+
+                if(tokenFactory != null)
+                {
+                    tokenFactory.ParseExpression(exp);
+                    sym.Tokens = tokenFactory.TokenList;
+                }
                 sym.Discover();
                 return sym;
             }
