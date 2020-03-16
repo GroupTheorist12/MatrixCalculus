@@ -49,14 +49,14 @@ namespace MatrixCalculus
         private static string Poly(SymbolList symAgg)
         {
             StringBuilder sb = new StringBuilder();
-            foreach(Symbol sym in symAgg)
+            foreach (Symbol sym in symAgg)
             {
                 sb.Append(DF(sym));
             }
 
             //Check for literal plus literal and literal minus literal
             Symbol symCheck = new Symbol(sb.ToString());
-            if(symCheck.HashTokenString == "LiteralOperator_Plus_Literal" || 
+            if (symCheck.HashTokenString == "LiteralOperator_Plus_Literal" ||
             symCheck.HashTokenString == "LiteralOperator_Minus_Literal"
             )
             {
@@ -69,7 +69,7 @@ namespace MatrixCalculus
         {
             SymbolList symList = new SymbolList(sym.Tokens);
 
-            if(!SkipPoly && symList.Count > 1) //Do polynomials 
+            if (!SkipPoly && symList.Count > 1) //Do polynomials 
             {
                 return Poly(symList);
             }
@@ -151,8 +151,8 @@ namespace MatrixCalculus
         public static string DF_LiteralOperator_Plus_Literal(Symbol sym)
         {
             string DerivativeString = string.Empty;
-            
-            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) +  Rational.Parse(sym.Tokens[2].Value)).ToString();
+
+            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) + Rational.Parse(sym.Tokens[2].Value)).ToString();
 
             return DerivativeString;
         }
@@ -160,13 +160,25 @@ namespace MatrixCalculus
         public static string DF_LiteralOperator_Minus_Literal(Symbol sym)
         {
             string DerivativeString = string.Empty;
-            
-            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) -  Rational.Parse(sym.Tokens[2].Value)).ToString();
+
+            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) - Rational.Parse(sym.Tokens[2].Value)).ToString();
 
             return DerivativeString;
         }
 
+        public static string DF_FunctionLeft_ParenthesisVariableRight_Parenthesis(Symbol sym)
+        {
+            string DerivativeString = string.Empty;
+            string funcDF = sym.Tokens[0].Value.ToLower();
+            if(dicTrigFunctions.ContainsKey(sym.Tokens[0].Value.ToLower()))
+            {
+                funcDF = dicTrigFunctions[sym.Tokens[0].Value.ToLower()];
+            }
 
+            DerivativeString = string.Format("{0}({1})", funcDF, sym.Tokens[2].Value);
+            return DerivativeString;
+
+        }
 
     }
 }
