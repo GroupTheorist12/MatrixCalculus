@@ -167,7 +167,11 @@ namespace MatrixCalculus
                     char ch2 = FunctionString[i - 1];
                     if (ch2 == ' ' && !InBracket)//(ch != '^')
                     {
-                        TokenList[TokenList.Count - 1].SymbolEnd = true;
+                        if(TokenList.Count - 1 >= 0)
+                        {
+                            TokenList[TokenList.Count - 1].SymbolEnd = true;
+                        }
+
                     }
                     if (ch == '^')
                     {

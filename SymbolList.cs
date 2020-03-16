@@ -37,6 +37,7 @@ namespace MatrixCalculus
                 else if(sym != null && t.SymbolEnd)
                 {
                     sym.Tokens.Add(t);
+                    sym.Expression = sym.NakedTokenString;
                     this.Add(sym);
                     SymbolEnd = true;
                     sym = null;
@@ -49,6 +50,7 @@ namespace MatrixCalculus
 
             if(sym != null && sym.Tokens.Count > 0)
             {
+                sym.Expression = sym.NakedTokenString;
                 this.Add(sym);
             }
 

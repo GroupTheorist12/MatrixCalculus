@@ -472,8 +472,9 @@ namespace MatrixCalculus
 
             SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
 
-            Symbol sym = sf["3/2x"];
-            Console.WriteLine(sym.TokenString);
+            Symbol sym = sf["sin(x)"];
+            Console.WriteLine(sym.Expression);
+            Console.WriteLine(sym.HashTokenString);
             Console.WriteLine(DerivativeStatePattern.DF(sym));
 
             /*

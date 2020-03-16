@@ -13,14 +13,12 @@ namespace MatrixCalculus
     public class DerivativeStatePattern
     {
         private static Hashtable htTestFuncs = new Hashtable();
-        private static Dictionary<string, string> dicLookUp = new Dictionary<string, string>
-        {
-            {"a", "Literal"},
-            {"X", "Variable"},
-            {"aX", "LiteralOperator*Variable"},
-            {"XDivLiteral", "VariableOperator / Literal"}
-        };
 
+        private static Dictionary<string, string> dicTrigFunctions = new Dictionary<string, string>
+        {
+            {"sin", "cos"},
+            {"cos", "-sin"}
+        };
         static DerivativeStatePattern()
         {
             // get all public static methods of MethodRunner type
@@ -40,27 +38,52 @@ namespace MatrixCalculus
                 }
 
                 string miKey = methodInfo.Name.Replace("DF_", "");
-                string miKey2 = dicLookUp[miKey];
-                //Console.WriteLine(miKey2);
+                //Console.WriteLine(miKey);
 
-                htTestFuncs[miKey2] = methodInfo;
+                htTestFuncs[miKey] = methodInfo;
             }
 
 
         }
-        public static string DF(Symbol sym)
+
+        private static string Poly(SymbolList symAgg)
         {
-            MethodInfo mi = (MethodInfo)htTestFuncs[sym.TokenString];
+            StringBuilder sb = new StringBuilder();
+            foreach(Symbol sym in symAgg)
+            {
+                sb.Append(DF(sym));
+            }
+
+            //Check for literal plus literal and literal minus literal
+            Symbol symCheck = new Symbol(sb.ToString());
+            if(symCheck.HashTokenString == "LiteralOperator_Plus_Literal" || 
+            symCheck.HashTokenString == "LiteralOperator_Minus_Literal"
+            )
+            {
+                sb.Clear();
+                sb.Append(DF(symCheck, true));
+            }
+            return sb.ToString();
+        }
+        public static string DF(Symbol sym, bool SkipPoly = false)
+        {
+            SymbolList symList = new SymbolList(sym.Tokens);
+
+            if(!SkipPoly && symList.Count > 1) //Do polynomials 
+            {
+                return Poly(symList);
+            }
+            MethodInfo mi = (MethodInfo)htTestFuncs[sym.HashTokenString];
             if (mi != null)
             {
                 return (string)mi.Invoke(null, new object[] { sym });
 
             }
 
-            return sym.Expression;
+            return sym.NakedTokenString;
         }
 
-        public static string DF_a(Symbol sym)
+        public static string DF_Literal(Symbol sym)
         {
             if (sym.Tokens.Count > 1)
             {
@@ -70,7 +93,7 @@ namespace MatrixCalculus
             return string.Empty;
         }
 
-        public static string DF_X(Symbol sym)
+        public static string DF_Variable(Symbol sym)
         {
             if (sym.Tokens.Count > 1)
             {
@@ -80,13 +103,69 @@ namespace MatrixCalculus
             return "1";
         }
 
-        public static string DF_aX(Symbol sym)
+        public static string DF_VariableOperatorCaretLiteral(Symbol sym)
+        {
+            Rational exp = Rational.Parse(sym.Tokens[2].Value) - 1;
+            string strExp = (exp == 1) ? "" : "^" + exp.ToString();
+
+            return string.Format("{0}{1}", sym.Tokens[0].Value, strExp);
+        }
+
+        public static string DF_LiteralOperatorMulVariable(Symbol sym)
         {
             string DerivativeString = string.Empty;
             DerivativeString = Rational.Parse(sym.Tokens[0].Value).ToString();
 
             return DerivativeString;
         }
+
+        public static string DF_LiteralOperatorMulVariableOperatorCaretLiteral(Symbol sym)
+        {
+            string DerivativeString = string.Empty;
+            Rational exp = Rational.Parse(sym.Tokens[4].Value) - 1;
+            Rational literal = Rational.Parse(sym.Tokens[0].Value) * Rational.Parse(sym.Tokens[4].Value);
+
+            string strExp = (exp == 1) ? "" : "^" + exp.ToString();
+
+            DerivativeString = string.Format("{0}{1}{2}", literal.ToString(), sym.Tokens[2].Value, strExp);
+
+            return DerivativeString;
+        }
+
+        public static string DF_VariableOperator_Div_Literal(Symbol sym)
+        {
+            string DerivativeString = string.Empty;
+            DerivativeString = Rational.Parse("1/" + sym.Tokens[2].Value).ToString();
+
+            return DerivativeString;
+        }
+
+        public static string DF_LiteralOperatorMulVariableOperator_Div_Literal(Symbol sym)
+        {
+            string DerivativeString = string.Empty;
+            DerivativeString = Rational.Parse(sym.Tokens[0].Value + "/" + sym.Tokens[4].Value).ToString();
+
+            return DerivativeString;
+        }
+
+        public static string DF_LiteralOperator_Plus_Literal(Symbol sym)
+        {
+            string DerivativeString = string.Empty;
+            
+            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) +  Rational.Parse(sym.Tokens[2].Value)).ToString();
+
+            return DerivativeString;
+        }
+
+        public static string DF_LiteralOperator_Minus_Literal(Symbol sym)
+        {
+            string DerivativeString = string.Empty;
+            
+            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) -  Rational.Parse(sym.Tokens[2].Value)).ToString();
+
+            return DerivativeString;
+        }
+
 
 
     }

@@ -195,6 +195,20 @@ namespace MatrixCalculus
             }
         }
 
+        public string HashTokenString
+        {
+            get
+            {
+                return TokenString.
+                Replace(" ", "_").
+                Replace("*", "Mul").
+                Replace("/", "Div").
+                Replace("^", "Caret").
+                Replace("+", "Plus").
+                Replace("-", "Minus");
+
+            }
+        }
         public string TokenString
         {
             get
@@ -204,7 +218,7 @@ namespace MatrixCalculus
                 {
                     Token t = Tokens[i];
                     sb.Append(t.Type);
-                    if (t.Type == "Operator" || t.Type == "Function")
+                    if (t.Type == "Operator")
                     {
                         sb.Append(t.Value);
                     }

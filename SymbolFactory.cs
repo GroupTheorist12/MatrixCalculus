@@ -38,6 +38,7 @@ namespace MatrixCalculus
                 {
                     tokenFactory.ParseExpression(exp);
                     sym.Tokens = tokenFactory.TokenList;
+                    sym.Expression = exp;
                 }
                 sym.Discover();
                 return sym;
