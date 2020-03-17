@@ -472,7 +472,7 @@ namespace MatrixCalculus
 
             SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
 
-            Symbol sym = sf["sin(x)"];
+            Symbol sym = sf["2x^2tan(x)"];
             Console.WriteLine(sym.Expression);
             Console.WriteLine(sym.HashTokenString);
             Console.WriteLine(DerivativeStatePattern.DF(sym));

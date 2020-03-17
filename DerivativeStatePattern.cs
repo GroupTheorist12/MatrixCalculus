@@ -17,7 +17,8 @@ namespace MatrixCalculus
         private static Dictionary<string, string> dicTrigFunctions = new Dictionary<string, string>
         {
             {"sin", "cos"},
-            {"cos", "-sin"}
+            {"cos", "-sin"},
+            {"tan", "sec,2"}
         };
         static DerivativeStatePattern()
         {
@@ -170,15 +171,59 @@ namespace MatrixCalculus
         {
             string DerivativeString = string.Empty;
             string funcDF = sym.Tokens[0].Value.ToLower();
+            string exp = "";
             if(dicTrigFunctions.ContainsKey(sym.Tokens[0].Value.ToLower()))
             {
-                funcDF = dicTrigFunctions[sym.Tokens[0].Value.ToLower()];
+                string[] arr =  dicTrigFunctions[sym.Tokens[0].Value.ToLower()].Split(",");
+                if(arr != null && arr.Length > 1) //power
+                {
+                    funcDF = arr[0];
+                    exp = "^" + arr[1];
+                }
+                else
+                {
+                    funcDF = dicTrigFunctions[sym.Tokens[0].Value.ToLower()];
+                }
             }
 
-            DerivativeString = string.Format("{0}({1})", funcDF, sym.Tokens[2].Value);
+            DerivativeString = string.Format("{0}({1}){2}", funcDF, sym.Tokens[2].Value, exp);
             return DerivativeString;
 
         }
 
+        public static string DF_LiteralOperatorMulVariableOperatorCaretLiteralOperatorMulFunctionLeft_ParenthesisVariableRight_Parenthesis(Symbol sym)
+        {
+            string DerivativeString = sym.NakedTokenString;
+            int split = 5;
+            int i = 0;
+            Symbol symLeft = new Symbol();
+
+            for(i = 0; i < split; i++)
+            {
+                symLeft.Tokens.Add(sym.Tokens[i]);
+            }
+            string funcLeft = symLeft.NakedTokenString;
+            string DFFuncLeft = DF(symLeft);
+
+            Symbol symRight = new Symbol();
+
+            for(i = split + 1; i < sym.Tokens.Count; i++)
+            {
+                symRight.Tokens.Add(sym.Tokens[i]);
+            }
+            string funcRight = symRight.NakedTokenString;
+            string DFFuncRight = DF(symRight);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(funcLeft);
+            sb.Append(DFFuncRight);
+            sb.Append(" + ");
+            sb.Append(funcRight);
+            sb.Append(DFFuncLeft);
+
+            DerivativeString = sb.ToString();
+
+            return DerivativeString;
+        }
     }
 }
