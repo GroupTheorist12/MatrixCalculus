@@ -43,6 +43,10 @@
             "AWSSDK.DynamoDBv2": {
               "target": "Package",
               "version": "[3.3.105.1, )"
+            },
+            "System.CodeDom": {
+              "target": "Package",
+              "version": "[4.7.0, )"
             }
           },
           "imports": [

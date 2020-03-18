@@ -472,10 +472,12 @@ namespace MatrixCalculus
 
             SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
 
-            Symbol sym = sf["2x^2tan(x)"];
+            Symbol sym = sf["x - x"];
             Console.WriteLine(sym.Expression);
             Console.WriteLine(sym.HashTokenString);
-            Console.WriteLine(DerivativeStatePattern.DF(sym));
+            Console.WriteLine(ArithmeticStatePattern.Add(sym));
+
+            //Console.WriteLine(DerivativeStatePattern.DF(sym));
 
             /*
             tokes.ParseExpression("2xsin(2x)");
