@@ -680,7 +680,7 @@ namespace MatrixCalculus
             for(int i = 0; i < this.Columns; i++)
             {
                 RealVector rv = this["." + (i + 1).ToString()]; //use column accessor
-                ret.AddRange(rv); //ad to return vector
+                ret.AddRange(rv); //add to return vector
             }
 
             ret.FullRep = @"Vec\;" + MN + " = " + ret.ToLatex();
