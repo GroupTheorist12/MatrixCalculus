@@ -673,6 +673,19 @@ namespace MatrixCalculus
         
         }
  
+        public RealVector Vec(string MatrixName = "A")
+        {
+            RealVector ret = new RealVector(); //create return vector
+            string MN = (this.Name == string.Empty || this.Name == null) ? MatrixName : this.Name;
+            for(int i = 0; i < this.Columns; i++)
+            {
+                RealVector rv = this["." + (i + 1).ToString()]; //use column accessor
+                ret.AddRange(rv); //ad to return vector
+            }
+
+            ret.FullRep = @"Vec\;" + MN + " = " + ret.ToLatex();
+            return ret;
+        }
         public double Trace()
         {
             double ret = 0;

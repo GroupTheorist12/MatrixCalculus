@@ -435,6 +435,51 @@ namespace MatrixCalculus
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Multiply_Rational_Symbol_Matrix.html"); //display Latex via mathjax
             return 0;
         }
+
+        public static int Test_TraceFunction()
+        {
+            RealFactory rf = new RealFactory(); //create a real factory
+
+            SquareRealMatrix A = rf[3, 3, //create a 3 X 3 real matrix
+            1, 2, 3,
+            7, 8, 9,
+            6, 5, 4 
+            ];
+
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            
+            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
+            sb.AppendFormat(@"&tr A = {0}", A.Trace() + @" \\ \\"); //display trace
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_TraceFunction.html"); //display Latex via mathjax
+
+            return 0;
+        }
+
+        public static int Test_VecOperator()
+        {
+            RealFactory rf = new RealFactory(); //create a real factory
+
+            SquareRealMatrix A = rf[2, 2, //create a 2 X 2 real matrix
+            1, 2,
+            3, 4 
+            ];
+
+            RealVector VecA = A.Vec("A"); //use Vec operator giving the matrix a name
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            
+            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
+            sb.AppendFormat(@"&{0}", VecA.ToLatex("F")); //display Vec A
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_VecOperator.html"); //display Latex via mathjax
+            
+            return 0;
+
+        }
         public static int Test_RationalSymbolMatrixOperations()
         {
             SymbolFactory sf = new SymbolFactory(SymbolType.Rational);
