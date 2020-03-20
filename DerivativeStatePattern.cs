@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace MatrixCalculus
 {
@@ -43,8 +39,6 @@ namespace MatrixCalculus
 
                 htTestFuncs[miKey] = methodInfo;
             }
-
-
         }
 
         private static string Poly(SymbolList symAgg)
@@ -55,11 +49,10 @@ namespace MatrixCalculus
                 sb.Append(DF(sym));
             }
 
-            //Check for literal plus literal and literal minus literal
+            // Check for literal plus literal and literal minus literal
             Symbol symCheck = new Symbol(sb.ToString());
             if (symCheck.HashTokenString == "LiteralOperator_Plus_Literal" ||
-            symCheck.HashTokenString == "LiteralOperator_Minus_Literal"
-            )
+                symCheck.HashTokenString == "LiteralOperator_Minus_Literal")
             {
                 sb.Clear();
                 sb.Append(DF(symCheck, true));
@@ -70,7 +63,7 @@ namespace MatrixCalculus
         {
             SymbolList symList = new SymbolList(sym.Tokens);
 
-            if (!SkipPoly && symList.Count > 1) //Do polynomials 
+            if (!SkipPoly && symList.Count > 1) // Do polynomials 
             {
                 return Poly(symList);
             }
@@ -109,13 +102,12 @@ namespace MatrixCalculus
             Rational exp = Rational.Parse(sym.Tokens[2].Value) - 1;
             string strExp = (exp == 1) ? "" : "^" + exp.ToString();
 
-            return string.Format("{0}{1}", sym.Tokens[0].Value, strExp);
+            return $"{sym.Tokens[0].Value}{strExp}";
         }
 
         public static string DF_LiteralOperatorMulVariable(Symbol sym)
         {
-            string DerivativeString = string.Empty;
-            DerivativeString = Rational.Parse(sym.Tokens[0].Value).ToString();
+            string DerivativeString = Rational.Parse(sym.Tokens[0].Value).ToString();
 
             return DerivativeString;
         }
@@ -128,48 +120,41 @@ namespace MatrixCalculus
 
             string strExp = (exp == 1) ? "" : "^" + exp.ToString();
 
-            DerivativeString = string.Format("{0}{1}{2}", literal.ToString(), sym.Tokens[2].Value, strExp);
+            DerivativeString = $"{literal.ToString()}{sym.Tokens[2].Value}{strExp}";
 
             return DerivativeString;
         }
 
         public static string DF_VariableOperator_Div_Literal(Symbol sym)
         {
-            string DerivativeString = string.Empty;
-            DerivativeString = Rational.Parse("1/" + sym.Tokens[2].Value).ToString();
+            string DerivativeString = Rational.Parse("1/" + sym.Tokens[2].Value).ToString();
 
             return DerivativeString;
         }
 
         public static string DF_LiteralOperatorMulVariableOperator_Div_Literal(Symbol sym)
         {
-            string DerivativeString = string.Empty;
-            DerivativeString = Rational.Parse(sym.Tokens[0].Value + "/" + sym.Tokens[4].Value).ToString();
+            string DerivativeString = Rational.Parse(sym.Tokens[0].Value + "/" + sym.Tokens[4].Value).ToString();
 
             return DerivativeString;
         }
 
         public static string DF_LiteralOperator_Plus_Literal(Symbol sym)
         {
-            string DerivativeString = string.Empty;
-
-            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) + Rational.Parse(sym.Tokens[2].Value)).ToString();
+            string DerivativeString = (Rational.Parse(sym.Tokens[0].Value) + Rational.Parse(sym.Tokens[2].Value)).ToString();
 
             return DerivativeString;
         }
 
         public static string DF_LiteralOperator_Minus_Literal(Symbol sym)
         {
-            string DerivativeString = string.Empty;
-
-            DerivativeString = (Rational.Parse(sym.Tokens[0].Value) - Rational.Parse(sym.Tokens[2].Value)).ToString();
+            string DerivativeString = (Rational.Parse(sym.Tokens[0].Value) - Rational.Parse(sym.Tokens[2].Value)).ToString();
 
             return DerivativeString;
         }
 
         public static string DF_FunctionLeft_ParenthesisVariableRight_Parenthesis(Symbol sym)
         {
-            string DerivativeString = string.Empty;
             string funcDF = sym.Tokens[0].Value.ToLower();
             string exp = "";
             if(dicTrigFunctions.ContainsKey(sym.Tokens[0].Value.ToLower()))
@@ -186,30 +171,31 @@ namespace MatrixCalculus
                 }
             }
 
-            DerivativeString = string.Format("{0}({1}){2}", funcDF, sym.Tokens[2].Value, exp);
+            string DerivativeString = $"{funcDF}({sym.Tokens[2].Value}){exp}";
             return DerivativeString;
 
         }
 
+        // TODO: Holy fuckballs, what a method name! GPG
         public static string DF_LiteralOperatorMulVariableOperatorCaretLiteralOperatorMulFunctionLeft_ParenthesisVariableRight_Parenthesis(Symbol sym)
         {
             string DerivativeString = sym.NakedTokenString;
             int split = 5;
-            int i = 0;
+            int tokenCount = 0;
             Symbol symLeft = new Symbol();
 
-            for(i = 0; i < split; i++)
+            for(tokenCount = 0; tokenCount < split; tokenCount++)
             {
-                symLeft.Tokens.Add(sym.Tokens[i]);
+                symLeft.Tokens.Add(sym.Tokens[tokenCount]);
             }
             string funcLeft = symLeft.NakedTokenString;
             string DFFuncLeft = DF(symLeft);
 
             Symbol symRight = new Symbol();
 
-            for(i = split + 1; i < sym.Tokens.Count; i++)
+            for(tokenCount = split + 1; tokenCount < sym.Tokens.Count; tokenCount++)
             {
-                symRight.Tokens.Add(sym.Tokens[i]);
+                symRight.Tokens.Add(sym.Tokens[tokenCount]);
             }
             string funcRight = symRight.NakedTokenString;
             string DFFuncRight = DF(symRight);

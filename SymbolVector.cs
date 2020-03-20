@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 
 namespace MatrixCalculus
 {
     public class SymbolVector : List<Symbol>
     {
         public RowColumn IsRowOrColumn { get; set; }
-        public SymbolFactory Parent{get;set;}
+        public SymbolFactory Parent { get; set; }
         public string FullRep { get; set; }
         public string Name { get; set; }
 
@@ -18,67 +15,61 @@ namespace MatrixCalculus
 
         public SymbolVector()
         {
-            this.IsRowOrColumn = RowColumn.Column;
+            IsRowOrColumn = RowColumn.Column;
             IsInteger = false;
         }
 
         public SymbolVector(RowColumn rc)
         {
-            this.IsRowOrColumn = rc;
+            IsRowOrColumn = rc;
             IsInteger = false;
         }
 
         public SymbolVector(UnitVector vIn)
         {
-            foreach (int i in vIn)
+            foreach (int vectorCount in vIn)
             {
-                this.Add(new Symbol(vIn[i].ToString()));
+                Add(new Symbol(vIn[vectorCount].ToString()));
             }
 
-            this.IsInteger = true;
-            this.Name = vIn.Name;
+            IsInteger = true;
+            Name = vIn.Name;
         }
 
 
         public static Symbol DotProduct(SymbolVector v1, SymbolVector v2)
         {
-            Symbol ret = new Symbol();
+            Symbol retVal = new Symbol();
 
             if (v1.Count != v2.Count)
             {
                 throw new Exception("Vectors must be equal in length");
             }
 
-            for (int i = 0; i < v1.Count; i++)
+            for (int vectorCounter = 0; vectorCounter < v1.Count; vectorCounter++)
             {
-                ret += (v1[i] * v2[i]);
+                retVal += (v1[vectorCounter] * v2[vectorCounter]);
             }
-            return ret;
+            return retVal;
         }
 
         public string ToLatex()
         {
-            string ret = string.Empty;
-
             string fill =
             "\\begin{bmatrix}" +
             "FILL_ME_UP_SIR" +
             "\\end{bmatrix}";
 
-
-            string vType = (this.IsRowOrColumn == RowColumn.Column) ? "\\\\" : "&&\\!";
+            string vType = (IsRowOrColumn == RowColumn.Column) ? "\\\\" : "&&\\!";
             StringBuilder sb = new StringBuilder();
-            int i = 0;
-            for (i = 0; i < this.Count - 1; i++)
+            int counter = 0;
+            for (counter = 0; counter < Count - 1; counter++)
             {
-                sb.AppendFormat("{0}{1}", this[i].LatexString, vType);
+                sb.AppendFormat("{0}{1}", this[counter].LatexString, vType);
             }
 
-            sb.AppendFormat("{0}", this[i].LatexString);
+            sb.AppendFormat("{0}", this[counter].LatexString);
             return fill.Replace("FILL_ME_UP_SIR", sb.ToString());
         }
-
     }
-
-
 }

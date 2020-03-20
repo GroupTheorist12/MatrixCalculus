@@ -1,5 +1,3 @@
-using System;
-
 namespace MatrixCalculus
 {
     public class SymbolBase

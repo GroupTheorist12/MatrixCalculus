@@ -36,7 +36,7 @@ namespace MatrixCalculus
             }
 
             m_LatexName = "e_{" + iVal.ToString() + "}";
-            for(int i = 0; i < this.Order; i++)
+            for(int orderCounter = 0; orderCounter < Order; orderCounter++)
             {
                 this.Add(0);
             }
@@ -72,18 +72,18 @@ namespace MatrixCalculus
 
         public static int DotProduct(UnitVector v1, UnitVector v2)
         {
-            int ret = 0;
+            int retVal = 0;
 
             if (v1.Count != v2.Count)
             {
                 throw new Exception("Vectors must be equal in length");
             }
 
-            for (int i = 0; i < v1.Count; i++)
+            for (int vectCount = 0; vectCount < v1.Count; vectCount++)
             {
-                ret += (v1[i] * v2[i]);
+                retVal += (v1[vectCount] * v2[vectCount]);
             }
-            return ret;
+            return retVal;
         }
 
         //Kronecker Delta
@@ -116,9 +116,9 @@ namespace MatrixCalculus
         {
             UnitVector uvOut = new UnitVector(0);
             uvOut.Clear();
-            for(int i = 0; i < uv.Count; i++)
+            for(int vectCount = 0; vectCount < uv.Count; vectCount++)
             {
-                uvOut.Add(value * uv[i]); 
+                uvOut.Add(value * uv[vectCount]); 
             }
             return uvOut;
         }
@@ -127,14 +127,14 @@ namespace MatrixCalculus
         {
             UnitVector uvOut = new UnitVector(0);
             uvOut.Clear();
-            for(int i = 0; i < uv.Count; i++)
+            for(int vectCount = 0; vectCount < uv.Count; vectCount++)
             {
-                uvOut.Add(uv[i] * value); 
+                uvOut.Add(uv[vectCount] * value); 
             }
             return uvOut;
         }
 
-        /*
+        /*TODO: remove this GPG
         public static UnitVector operator*(ElementaryMatrix em, UnitVector uv)
         {
             UnitVector uvOut = null;
@@ -187,29 +187,29 @@ namespace MatrixCalculus
             "\\end{bmatrix}";
 
             StringBuilder sb = new StringBuilder();
-            int i = 0;
-            for (i = 0; i < this.Count - 1; i++)
+            int counter = 0;
+            for (counter = 0; counter < Count - 1; counter++)
             {
-                sb.AppendFormat("{0}{1}", this[i], vType);
+                sb.AppendFormat("{0}{1}", this[counter], vType);
             }
 
 
-            sb.AppendFormat("{0}", this[i]);
+            sb.AppendFormat("{0}", this[counter]);
             return fill.Replace("FILL_ME_UP_SIR", sb.ToString());
         }
 
         public string ToLatex(string TheType)
         {
-            string ret = this.ToLatex();
+            string retVal = this.ToLatex();
             StringBuilder sb = new StringBuilder();
 
             switch(TheType)
             {
                 case "F":
-                    ret = this.LatexName + " = " + this.ToLatex();
+                    retVal = this.LatexName + " = " + this.ToLatex();
                     break;
             }
-            return ret;
+            return retVal;
         }
 
     }

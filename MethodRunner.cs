@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MatrixCalculus
@@ -676,7 +673,7 @@ namespace MatrixCalculus
                 "2sin(x)^2",
                 "(x+1)^2"
             };
-            /*
+            /* TODO: remove this altogether? GPG
                         foreach (string FunctionString in funcs)
                         {
                             TokenFactory toke = new TokenFactory();
