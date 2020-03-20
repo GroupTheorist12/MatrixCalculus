@@ -458,6 +458,37 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_RationalSquareMatrix()
+        {
+            RationalFactory rf = new RationalFactory();
+            RealFactory rff = new RealFactory();
+
+            RationalSquareMatrix A = rf[3, 3,
+            "1", "2", "-2",
+            "-1", "1", "3",
+            "2", "-1", "2"
+            ];
+
+            SquareRealMatrix SA = rff[3,3,
+            7, 2, -2,
+            3, 1, 3,
+            8,-1, 2
+            ];
+            RationalVector rv = rf["7", "3", "8"];
+
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            
+            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
+            A[0] = rv;
+            sb.AppendFormat(@"&Ab = {0}", A.ToLatex()); //display Vec A
+            sb.AppendFormat(@"&Det = {0}", SA.Determinant()); //display Vec A
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_VecOperator.html"); //display Latex via mathjax
+
+            return 0;
+        }
         public static int Test_VecOperator()
         {
             RealFactory rf = new RealFactory(); //create a real factory
