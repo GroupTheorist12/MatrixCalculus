@@ -16,9 +16,9 @@ namespace MatrixCalculus
         {
            this.Order = Order;
 
-           for(int i = 0; i < this.Order; i++)
+           for(int counter = 0; counter < Order; counter++)
            {
-               string e = "e" + (i + 1).ToString();
+               string e = "e" + (counter + 1).ToString();
                UnitVector uv = new UnitVector(e, this.Order);
                this.Add(uv);
                htVectors[e] = uv;
@@ -40,10 +40,10 @@ namespace MatrixCalculus
             StringBuilder sb = new StringBuilder();
             rv.IsInteger = true;
             string latex = @"\displaystyle\sum_{i=1}^{PLEASE_REP_ME}{e_i} = ";
-            for(int i = 0; i < this.Order; i++)
+            for(int counter = 0; counter < Order; counter++)
             {
-                UnitVector uv = this[i];
-                rv.Add(uv[i]);
+                UnitVector uv = this[counter];
+                rv.Add(uv[counter]);
             }
 
             rv.FullRep = latex.Replace("PLEASE_REP_ME", this.Order.ToString()) + rv.ToLatex();
@@ -51,16 +51,16 @@ namespace MatrixCalculus
         }
         public string ToLatex()
         {
-            string ret = string.Empty;
+            string retVal = string.Empty;
             StringBuilder sb = new StringBuilder();
-           for(int i = 0; i < this.Order; i++)
+           for(int counter = 0; counter < Order; counter++)
            {
-               UnitVector uv = this[i];
+               UnitVector uv = this[counter];
                 sb.AppendFormat(" {0} ", uv.ToLatex("F"));
            }
-            ret = sb.ToString();
+            retVal = sb.ToString();
 
-            return ret;
+            return retVal;
         }
     }
 }

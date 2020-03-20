@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Text;
 
 namespace MatrixCalculus
@@ -11,30 +9,33 @@ namespace MatrixCalculus
         private double[,] InternalRep = null;
         private string m_FullRep = string.Empty;
 
-        public RealFactory Parent{get;set;}
+        public RealFactory Parent { get; set; }
         public int Rows = 0;
         public int Columns = 0;
         private List<double> Vector = null;
+
+        public string Name { get; set; }
+        public string LatexName { get; private set; }
+
         private void Zero()
         {
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    InternalRep[i, j] = 0;
+                    InternalRep[rowCount, colCount] = 0;
                 }
             }
-
         }
 
         private void FromVector()
         {
             int cnt = 0;
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    InternalRep[i, j] = Vector[cnt++];
+                    InternalRep[rowCount, colCount] = Vector[cnt++];
                 }
             }
         }
@@ -59,12 +60,12 @@ namespace MatrixCalculus
                 throw new Exception("Vector length must be same as number of columns and rows of matrix");
             }
 
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
                 double SumOfRow = 0;
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    SumOfRow += (InternalRep[i, j] * VectorIn[j]);
+                    SumOfRow += (InternalRep[rowCount, colCount] * VectorIn[colCount]);
                 }
 
                 ret.Add(SumOfRow);
@@ -87,24 +88,24 @@ namespace MatrixCalculus
 
         public SquareRealMatrix(List<RealVector> rvList)
         {
-            this.Rows = rvList[0].Count;
-            this.Columns = rvList.Count;
+            Rows = rvList[0].Count;
+            Columns = rvList.Count;
 
-            InternalRep = new double[this.Rows, this.Columns];
+            InternalRep = new double[Rows, Columns];
 
             Zero();
-            for (int i = 0; i < this.Columns; i++)
+            for (int colCount = 0; colCount < Columns; colCount++)
             {
-                int rows = rvList[i].Count;
+                int rows = rvList[colCount].Count;
                 if (rows != this.Columns)
                 {
                     throw new Exception("rows and columns must be equal for square matrix");
-
                 }
 
-                this[i] = rvList[i];
+                this[colCount] = rvList[colCount];
             }
         }
+
         public SquareRealMatrix(double[,] RC)
         {
             int rows = RC.GetLength(0);
@@ -113,15 +114,15 @@ namespace MatrixCalculus
             if (rows != columns)
             {
                 throw new Exception("rows and columns must be equal for square matrix");
-
             }
 
-            this.Rows = rows;
-            this.Columns = columns;
+            Rows = rows;
+            Columns = columns;
             InternalRep = RC;
         }
 
-        //this method determines the sub matrix corresponding to a given element
+        // This method determines the sub matrix corresponding to a given element
+        // TODO: these single letter vars aren't descriptive enough for dumbasses like me. GPG
         private double[,] CreateSmallerMatrix(double[,] input, int i, int j)
         {
             int order = int.Parse(System.Math.Sqrt(input.Length).ToString());
@@ -160,10 +161,10 @@ namespace MatrixCalculus
             if (order > 2)
             {
                 double value = 0;
-                for (int j = 0; j < order; j++)
+                for (int counter = 0; counter < order; counter++)
                 {
-                    double[,] Temp = CreateSmallerMatrix(input, 0, j);
-                    value = value + input[0, j] * (SignOfElement(0, j) * Determinant(Temp));
+                    double[,] Temp = CreateSmallerMatrix(input, 0, counter);
+                    value += input[0, counter] * (SignOfElement(0, counter) * Determinant(Temp));
                 }
                 return value;
             }
@@ -182,26 +183,23 @@ namespace MatrixCalculus
             if (rows != columns)
             {
                 throw new Exception("rows and columns must be equal for square matrix");
-
             }
 
-            this.Rows = rows;
-            this.Columns = columns;
-            InternalRep = new double[this.Rows, this.Columns];
+            Rows = rows;
+            Columns = columns;
+            InternalRep = new double[Rows, Columns];
 
             Zero();
         }
 
-        public string Name { get; set; }
-        public string LatexName { get; private set; }
         public static SquareRealMatrix ElementaryMatrix(int rows, int columns, string Name)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(rows, columns);
-            ret.Name = Name;
+            SquareRealMatrix retVal = new SquareRealMatrix(rows, columns);
+            retVal.Name = Name;
 
-            if (ret.Name[0] != 'E')
+            if (retVal.Name[0] != 'E')
             {
-                throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices");
+                throw new Exception("Name of ElementaryMatrix must begin with a capital E followed by two number indices");
             }
 
             int oI1 = 0;
@@ -209,56 +207,54 @@ namespace MatrixCalculus
 
             try
             {
-                if (!int.TryParse(ret.Name[1].ToString(), out oI1))
+                if (!int.TryParse(retVal.Name[1].ToString(), out oI1))
                 {
-                    throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 1 bad.");
-
+                    throw new Exception("Name of ElementaryMatrix must begin with a capital E followed by two number indices, index 1 bad.");
                 }
 
-                if (!int.TryParse(ret.Name[2].ToString(), out oI2))
+                if (!int.TryParse(retVal.Name[2].ToString(), out oI2))
                 {
-                    throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 2 bad");
-
+                    throw new Exception("Name of ElementaryMatrix must begin with a capital E followed by two number indices, index 2 bad");
                 }
 
-                ret[oI1 - 1, oI2 - 1] = 1;
-                ret.LatexName = @"E_{" + (oI1).ToString() + (oI2).ToString() + "}";
+                retVal[oI1 - 1, oI2 - 1] = 1;
+                retVal.LatexName = @"E_{" + (oI1).ToString() + (oI2).ToString() + "}";
             }
             catch (Exception)
             {
-                throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices. Could not parse indices.");
+                throw new Exception("Name of ElementaryMatrix must begin with a capital E followed by two number indices. Could not parse indices.");
             }
 
-
-            ret.FullRep = ret.LatexName + @"\;=\;" + ret.ToLatex();
-            return ret;
+            retVal.FullRep = retVal.LatexName + @"\;=\;" + retVal.ToLatex();
+            return retVal;
         }
+
         public SquareRealMatrix(int rows, int columns, List<double> V)
         {
             if (rows != columns)
             {
-                throw new Exception("rows and columns must be equal for square matrix");
+                throw new Exception("Row count must equal the column count for a square matrix");
 
             }
 
             if (V.Count % rows != 0)
             {
-                throw new Exception("Vector does not contain even row count");
+                throw new Exception("Vector does not contain an even row count");
             }
 
 
             Vector = V;
 
-            this.Rows = rows;
-            this.Columns = columns;
-            InternalRep = new double[this.Rows, this.Columns];
+            Rows = rows;
+            Columns = columns;
+            InternalRep = new double[Rows, Columns];
 
             FromVector();
         }
 
         public SquareRealMatrix Inverse()
         {
-            double[][] m = HelpFunctions.DoubleArrayFromDouble(this.InternalRep);
+            double[][] m = HelpFunctions.DoubleArrayFromDouble(InternalRep);
             double[][] inv = HelpFunctions.MatrixInverse(m);
 
             double[,] mi = HelpFunctions.DoubleFromDoubleArray(inv);
@@ -266,20 +262,16 @@ namespace MatrixCalculus
             return new SquareRealMatrix(mi);
         }
 
-
         public static SquareRealMatrix operator +(SquareRealMatrix a, SquareRealMatrix b)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int i = 0; i < retVal.Rows; i++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int j = 0; j < retVal.Columns; j++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] + b.InternalRep[i, j];
-
+                    retVal.InternalRep[i, j] = a.InternalRep[i, j] + b.InternalRep[i, j];
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -289,26 +281,23 @@ namespace MatrixCalculus
             sb.Append(" + ");
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
-            return ret;
+            retVal.m_FullRep = sb.ToString();
+            return retVal;
         }
 
         public static SquareRealMatrix operator +(SquareRealMatrix a, double b)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] + b;
-
+                    retVal.InternalRep[rowCount, colCount] = a.InternalRep[rowCount, colCount] + b;
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -318,26 +307,23 @@ namespace MatrixCalculus
             sb.Append(" + ");
             sb.Append(b.ToString());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
-            return ret;
+            retVal.m_FullRep = sb.ToString();
+            return retVal;
         }
 
         public static SquareRealMatrix operator +(double b, SquareRealMatrix a)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] + b;
-
+                    retVal.InternalRep[rowCount, colCount] = a.InternalRep[rowCount, colCount] + b;
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -347,26 +333,23 @@ namespace MatrixCalculus
             sb.Append(" + ");
             sb.Append(b.ToString());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
-            return ret;
+            retVal.m_FullRep = sb.ToString();
+            return retVal;
         }
 
         public static SquareRealMatrix operator -(SquareRealMatrix a, SquareRealMatrix b)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] - b.InternalRep[i, j];
-
+                    retVal.InternalRep[rowCount, colCount] = a.InternalRep[rowCount, colCount] - b.InternalRep[rowCount, colCount];
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -376,26 +359,23 @@ namespace MatrixCalculus
             sb.Append(" + ");
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
-            return ret;
+            retVal.m_FullRep = sb.ToString();
+            return retVal;
         }
 
         public static SquareRealMatrix operator -(SquareRealMatrix a, double b)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] - b;
-
+                    retVal.InternalRep[rowCount, colCount] = a.InternalRep[rowCount, colCount] - b;
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -405,26 +385,23 @@ namespace MatrixCalculus
             sb.Append(" - ");
             sb.Append(b.ToString());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
-            return ret;
+            retVal.m_FullRep = sb.ToString();
+            return retVal;
         }
 
         public static SquareRealMatrix operator -(double b, SquareRealMatrix a)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = b - a.InternalRep[i, j];
-
+                    retVal.InternalRep[rowCount, colCount] = b - a.InternalRep[rowCount, colCount];
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -434,39 +411,32 @@ namespace MatrixCalculus
             sb.Append(" - ");
             sb.Append(a.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
-            return ret;
+            retVal.m_FullRep = sb.ToString();
+            return retVal;
         }
-
 
         public static SquareRealMatrix operator *(SquareRealMatrix a, SquareRealMatrix b)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(a.Rows, a.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    for (int k = 0; k < ret.Columns; k++)
+                    for (int retColCount = 0; retColCount < retVal.Columns; retColCount++)
                     {
+                        retVal.InternalRep[rowCount, colCount] += a.InternalRep[rowCount, retColCount] * b.InternalRep[retColCount, colCount];
+                        double sens = retVal.InternalRep[rowCount, colCount];
 
-                        ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
-                        double sens = ret.InternalRep[i, j];
-
-                        if (Math.Abs(sens) < 1.0e-8d) //f**ked up value set to zero
+                        if (Math.Abs(sens) < 1.0e-8d) //f**ked up value set to zero  // TODO: tell us how you really feel about it, Brad.  GPG
                         {
-                            ret.InternalRep[i, j] = 0;
+                            retVal.InternalRep[rowCount, colCount] = 0;
                         }
                     }
-
                 }
-
-
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -476,20 +446,19 @@ namespace MatrixCalculus
             sb.Append(" \\cdot ");
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
             sb.Append("$$");
 
-            ret.m_FullRep = sb.ToString();
+            retVal.m_FullRep = sb.ToString();
 
-
-            return ret;
+            return retVal;
         }
 
         public RealVector this[string ColumnsOrRows]
         {
             get
             {
-                RealVector ret = new RealVector();
+                RealVector retVal = new RealVector();
                 if (ColumnsOrRows.Length != 2 && ColumnsOrRows.IndexOf(".") == -1)
                 {
                     throw new Exception("Bad indexer. Should by .j or i. with i or j being numeric such as .1 or 2.");
@@ -498,12 +467,12 @@ namespace MatrixCalculus
                 RowOrColumn rc = new RowOrColumn();
                 try
                 {
-                    if (ColumnsOrRows[0] == '.') //Column
+                    if (ColumnsOrRows[0] == '.') // Column
                     {
                         rc.rowColumn = RowColumn.Column;
                         rc.Val = int.Parse(ColumnsOrRows[1].ToString()) - 1;
                     }
-                    else//row
+                    else // Row
                     {
                         rc.rowColumn = RowColumn.Row;
                         rc.Val = int.Parse(ColumnsOrRows[0].ToString()) - 1;
@@ -512,33 +481,31 @@ namespace MatrixCalculus
                 catch
                 {
                     throw new Exception("Bad indexer. Should by .j or i. with i or j being numeric such as .1 or 2.");
-
                 }
-                ret = this[rc];
-                ret.FullRep = this.Name + "_" + ColumnsOrRows + @"\;=\;" + ret.ToLatex();
-                ret.IsRowOrColumn = rc.rowColumn;
-                return ret;
+                retVal = this[rc];
+                retVal.FullRep = this.Name + "_" + ColumnsOrRows + @"\;=\;" + retVal.ToLatex();
+                retVal.IsRowOrColumn = rc.rowColumn;
+                return retVal;
             }
         }
         public RealVector this[RowOrColumn rc]
         {
             get
             {
-                RealVector ret = new RealVector();
+                RealVector retVal = new RealVector();
 
                 if (rc.rowColumn == RowColumn.Column)
                 {
-                    ret = this[rc.Val];
+                    retVal = this[rc.Val];
                 }
                 else
                 {
-                    for (int i = 0; i < this.Columns; i++)
+                    for (int rowCount = 0; rowCount < Columns; rowCount++)
                     {
-                        ret.Add(InternalRep[rc.Val, i]);
+                        retVal.Add(InternalRep[rc.Val, rowCount]);
                     }
-
                 }
-                return ret;
+                return retVal;
             }
             set
             {
@@ -548,191 +515,183 @@ namespace MatrixCalculus
                 }
                 else
                 {
-                    for (int i = 0; i < this.Columns; i++)
+                    for (int colcount = 0; colcount < Columns; colcount++)
                     {
-                        InternalRep[rc.Val, i] = value[i];
+                        InternalRep[rc.Val, colcount] = value[colcount];
                     }
-
                 }
-
             }
         }
+
         public RealVector this[int Column]
         {
             get
             {
-                RealVector ret = new RealVector();
+                RealVector retVal = new RealVector();
 
-                for (int i = 0; i < this.Rows; i++)
+                for (int rowCount = 0; rowCount < Rows; rowCount++)
                 {
-                    ret.Add(InternalRep[i, Column]);
+                    retVal.Add(InternalRep[rowCount, Column]);
                 }
 
-                return ret;
+                return retVal;
             }
             set
             {
-                for (int i = 0; i < this.Rows; i++)
+                for (int colCount = 0; colCount < Rows; colCount++)
                 {
-                    InternalRep[i, Column] = value[i];
+                    InternalRep[colCount, Column] = value[colCount];
                 }
-
             }
         }
+
         public double this[int r, int c]
         {
             get
             {
                 if (!(r < Rows && c < Columns))
                 {
-                    throw new Exception("rows and columns out of range of square matrix");
+                    throw new Exception("Rows and Columns are out of range of square matrix");
                 }
                 return (InternalRep[r, c]);
             }
             set { InternalRep[r, c] = value; }
         }
 
-        /*
-    \begin{bmatrix} 1 & 2 & 3\\ 4 & 5 & 6\\5 & 6 & 7 \end{bmatrix}
-
-        */
         public SquareRealMatrix MultiplyByScalar(double Scalar)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(this.Columns, this.Rows);
-            for (int i = 0; i < ret.Rows; i++)
+            SquareRealMatrix retVal = new SquareRealMatrix(this.Columns, this.Rows);
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = this.InternalRep[i, j] * Scalar;
-
+                    retVal.InternalRep[rowCount, colCount] = this.InternalRep[rowCount, colCount] * Scalar;
                 }
-
             }
 
-            return ret;
+            return retVal;
         }
 
-        static public SquareRealMatrix operator *(SquareRealMatrix A, double value)
+        public static SquareRealMatrix operator *(SquareRealMatrix A, double value)
         {
             return A.MultiplyByScalar(value);
         }
 
-        static public SquareRealMatrix operator *(double value, SquareRealMatrix A)
+        public static SquareRealMatrix operator *(double value, SquareRealMatrix A)
         {
             return A.MultiplyByScalar(value);
         }
 
-       public static RealVector operator*(UnitVector uv, SquareRealMatrix em)
+        public static RealVector operator *(UnitVector uv, SquareRealMatrix em)
         {
-            RealVector ret = new RealVector();
-            ret.IsRowOrColumn = uv.IsRowOrColumn;
+            RealVector retVal = new RealVector();
+            retVal.IsRowOrColumn = uv.IsRowOrColumn;
             if (uv.Order != em.Rows)
             {
-                throw new Exception("Vector length must be same as number of columns and rows of matrix");
+                throw new Exception("Vector length must be equal to the number of rows and columns in the matrix");
             }
 
-            for (int i = 0; i < em.Rows; i++)
+            for (int rowCount = 0; rowCount < em.Rows; rowCount++)
             {
                 double SumOfRow = 0;
-                for (int j = 0; j < em.Columns; j++)
+                for (int colCount = 0; colCount < em.Columns; colCount++)
                 {
-                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                    SumOfRow += (em.InternalRep[rowCount, colCount] * uv[colCount]);
                 }
 
-                ret.Add(SumOfRow);
+                retVal.Add(SumOfRow);
             }
 
-            return ret;
-        
+            return retVal;
         }
 
-        public static RealVector operator*(SquareRealMatrix em, UnitVector uv)
+        public static RealVector operator *(SquareRealMatrix em, UnitVector uv)
         {
-            RealVector ret = new RealVector();
-            ret.Clear();
-            ret.IsRowOrColumn = uv.IsRowOrColumn;
+            RealVector retVal = new RealVector();
+            retVal.Clear();
+            retVal.IsRowOrColumn = uv.IsRowOrColumn;
 
             if (uv.Order != em.Rows)
             {
-                throw new Exception("Vector length must be same as number of columns and rows of matrix");
+                throw new Exception("Vector length must be equal to the number of rows and columns in the matrix");
             }
 
-            for (int i = 0; i < em.Rows; i++)
+            for (int rowCount = 0; rowCount < em.Rows; rowCount++)
             {
                 double SumOfRow = 0;
-                for (int j = 0; j < em.Columns; j++)
+                for (int colCount = 0; colCount < em.Columns; colCount++)
                 {
-                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                    SumOfRow += (em.InternalRep[rowCount, colCount] * uv[colCount]);
                 }
 
-                ret.Add(SumOfRow);
+                retVal.Add(SumOfRow);
             }
 
-            return ret;
-        
+            return retVal;
         }
- 
+
         public RealVector Vec(string MatrixName = "A")
         {
-            RealVector ret = new RealVector(); //create return vector
+            RealVector retVal = new RealVector(); //create return vector
             string MN = (this.Name == string.Empty || this.Name == null) ? MatrixName : this.Name;
-            for(int i = 0; i < this.Columns; i++)
+            for (int rowCount = 0; rowCount < this.Columns; rowCount++)
             {
-                RealVector rv = this["." + (i + 1).ToString()]; //use column accessor
-                ret.AddRange(rv); //add to return vector
+                RealVector rv = this["." + (rowCount + 1).ToString()]; //use column accessor
+                retVal.AddRange(rv); //add to return vector
             }
 
-            ret.FullRep = @"Vec\;" + MN + " = " + ret.ToLatex();
-            return ret;
+            retVal.FullRep = @"Vec\;" + MN + " = " + retVal.ToLatex();
+            return retVal;
         }
+
         public double Trace()
         {
-            double ret = 0;
-            for (int i = 0; i < this.Rows; i++)
+            double retVal = 0;
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                ret += this[i, i];
+                retVal += this[rowCount, rowCount];
             }
-            return ret;
+            return retVal;
         }
 
         public SquareRealMatrix Transpose()
         {
-            SquareRealMatrix ret = new SquareRealMatrix(this.Rows, this.Columns);
+            SquareRealMatrix retVal = new SquareRealMatrix(this.Rows, this.Columns);
             RowOrColumn rc = new RowOrColumn();
             rc.rowColumn = RowColumn.Row;
             rc.Val = 0;
-            for (int i = 0; i < this.Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                RealVector rv = this[i];
-                rc.Val = i;
-                ret[rc] = rv;
+                RealVector rv = this[rowCount];
+                rc.Val = rowCount;
+                retVal[rc] = rv;
             }
 
-            return ret;
+            return retVal;
         }
 
         public RealVector Diagonal()
         {
-            RealVector ret = new RealVector();
-            for (int i = 0; i < this.Columns; i++)
+            RealVector retVal = new RealVector();
+            for (int colCount = 0; colCount < Columns; colCount++)
             {
-                ret.Add(this[i, i]);
+                retVal.Add(this[colCount, colCount]);
             }
 
-            return ret;
-
+            return retVal;
         }
+
         public static SquareRealMatrix DiagonalMatrix(int Dim, double[] arr)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(Dim, Dim);
-            for (int i = 0; i < Dim; i++)
+            SquareRealMatrix retVal = new SquareRealMatrix(Dim, Dim);
+            for (int dimCount = 0; dimCount < Dim; dimCount++)
             {
-                ret[i, i] = arr[i];
+                retVal[dimCount, dimCount] = arr[dimCount];
             }
 
-            return ret;
+            return retVal;
         }
+
         public string FullRep
         {
             get
@@ -754,31 +713,31 @@ namespace MatrixCalculus
             StringBuilder sb = new StringBuilder();
             sb.Append("\\begin{bmatrix}");
             int ColumnCount = Vector.Length;
-            for (int i = 0; i < ColumnCount; i++)
+            for (int colCount = 0; colCount < ColumnCount; colCount++)
             {
-                sb.AppendFormat("{0}", Vector[i]);
+                sb.AppendFormat("{0}", Vector[colCount]);
                 sb.Append("\\\\");
 
             }
             sb.Append(" \\end{bmatrix}");
             return sb.ToString();
-
         }
+
         public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\\begin{bmatrix}");
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    if (j < Columns - 1)
+                    if (colCount < Columns - 1)
                     {
-                        sb.AppendFormat("{0} &", InternalRep[i, j]);
+                        sb.AppendFormat("{0} &", InternalRep[rowCount, colCount]);
                     }
                     else
                     {
-                        sb.AppendFormat("{0}", InternalRep[i, j]);
+                        sb.AppendFormat("{0}", InternalRep[rowCount, colCount]);
                     }
 
                 }
@@ -787,29 +746,28 @@ namespace MatrixCalculus
 
             sb.Append(" \\end{bmatrix}");
             return sb.ToString();
-
         }
 
         public string ToMathML()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("[");
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
                 sb.Append("[");
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    if (j < Columns - 1)
+                    if (colCount < Columns - 1)
                     {
-                        sb.AppendFormat("{0},", InternalRep[i, j]);
+                        sb.AppendFormat("{0},", InternalRep[rowCount, colCount]);
                     }
                     else
                     {
-                        sb.AppendFormat("{0}", InternalRep[i, j]);
+                        sb.AppendFormat("{0}", InternalRep[rowCount, colCount]);
                     }
                 }
 
-                if (i < Rows - 1)
+                if (rowCount < Rows - 1)
                 {
                     sb.Append("],");
                 }
@@ -827,13 +785,13 @@ namespace MatrixCalculus
         {
             switch (Format.ToUpper())
             {
-                case "N": //natural
+                case "N": // natural
                     return ToString();
-                case "X": //Tex
+                case "X": // Tex
                     return ToLatex();
-                case "A": //Ascii
+                case "A": // ASCII
                     return ToMathML();
-                case "F": //Ful Representation
+                case "F": // Full Representation
                     return FullRep;
             };
 
@@ -843,47 +801,47 @@ namespace MatrixCalculus
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    sb.AppendFormat("{0:0.0000}\t", InternalRep[i, j]);
+                    sb.AppendFormat("{0:0.0000}\t", InternalRep[rowCount, colCount]);
                 }
 
                 sb.Append("\r\n");
-
             }
-
 
             return sb.ToString();
         }
 
         public static SquareRealMatrix KroneckerSum(SquareRealMatrix a, SquareRealMatrix b)
         {
-            SquareRealMatrix ret = null;
+            SquareRealMatrix retVal = null;
             SquareRealMatrix id = IdentityMatrix(a.Rows);
 
-            ret = KroneckerProduct(a, id) + KroneckerProduct(id, b);
-            
-            ret.FullRep = a.ToLatex() + @"\;\oplus\;" + b.ToLatex() + " = " + ret.ToLatex(); //produce latex string
+            retVal = KroneckerProduct(a, id) + KroneckerProduct(id, b);
 
-            return ret;
+            retVal.FullRep = a.ToLatex() + @"\;\oplus\;" + b.ToLatex() + " = " + retVal.ToLatex(); //produce latex string
+
+            return retVal;
         }
+
         public static SquareRealMatrix IdentityMatrix(int Order)
         {
-            SquareRealMatrix ret = new SquareRealMatrix(Order, Order);
-            for (int i = 0; i < ret.Rows; i++)
+            SquareRealMatrix retVal = new SquareRealMatrix(Order, Order);
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-                    if(i == j)
+                    if (rowCount == colCount)
                     {
-                        ret[i, j] = 1;    
+                        retVal[rowCount, colCount] = 1;
                     }
                 }
             }
-            return ret;
+            return retVal;
         }
+
         public static SquareRealMatrix KroneckerProduct(SquareRealMatrix a, SquareRealMatrix b)
         {
             int Rows = a.Rows * b.Rows; //calculate number of rows.
@@ -892,38 +850,36 @@ namespace MatrixCalculus
             int incR = 0; //increment variable for row of b matrix
             int incAMC = 0;//increment variable for column of a matrix
             int incAMR = 0;//increment variable for row of a matrix
-            SquareRealMatrix ret = new SquareRealMatrix(Rows, Columns);
-            int i = 0;
-            int j = 0;
+            SquareRealMatrix retVal = new SquareRealMatrix(Rows, Columns);
+            int rowCount = 0;
+            int colCount = 0;
             double exp = 0;
 
-            for(i = 0; i < ret.Rows; i++)
+            for (rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                if(incR > b.Rows - 1)//reached end of rows of b matrix
+                if (incR > b.Rows - 1)//reached end of rows of b matrix
                 {
                     incR = 0;
-                    incAMR++; 
+                    incAMR++;
                 }
                 incAMC = 0;
-                for(j = 0; j < ret.Columns; j++)
+                for (colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     exp = a[incAMR, incAMC] * b[incR, incC];
                     incC++;
-                    if(incC > b.Columns - 1)////reached end of columns of b matrix
+                    if (incC > b.Columns - 1)////reached end of columns of b matrix
                     {
                         incC = 0;
-                        incAMC++;    
+                        incAMC++;
                     }
 
-                    ret[i, j] = exp;
+                    retVal[rowCount, colCount] = exp;
                 }
                 incR++;
-
             }
 
-            ret.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + ret.ToLatex(); //produce latex string
-            return ret;
+            retVal.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + retVal.ToLatex(); //produce latex string
+            return retVal;
         }
-
     }
 }

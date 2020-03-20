@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 
 namespace MatrixCalculus
 {
-    #if !SILVERLIGHT 
-        [Serializable, StructLayout(LayoutKind.Sequential)]
-    #endif
-    public struct Rational :  IComparable,  IEquatable<Rational>, IComparable<Rational>
+#if !SILVERLIGHT
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+#endif
+    public struct Rational : IComparable, IEquatable<Rational>, IComparable<Rational>
 
     {
         private readonly BigInteger mNumerator;
@@ -34,7 +34,7 @@ namespace MatrixCalculus
 
 
         /// <summary>
-        /// Returns the multiplicativ inverse of the Rational, the Inverse of 0 is 0
+        /// Returns the multiplicative inverse of the Rational, the Inverse of 0 is 0
         /// </summary>
         public Rational Inverse
         {
@@ -49,7 +49,7 @@ namespace MatrixCalculus
         }
 
         /// <summary>
-        /// Returns the integer that would be assined as the exponent if put in scientific notation.
+        /// Returns the integer that would be assigned as the exponent if put in scientific notation.
         /// </summary>
         public int Magnitude
         {
@@ -60,9 +60,9 @@ namespace MatrixCalculus
                 Rational significand = numeratorSig / denominatorSig;//between 9.9999 and .100000000
                 if (Abs(significand) < 1)
                 {
-                    return Numerator.Magnitude() - Denominator.Magnitude() -1 ;
+                    return Numerator.Magnitude() - Denominator.Magnitude() - 1;
                 }
-                return Numerator.Magnitude() - Denominator.Magnitude() + significand.BigIntegerPart.Magnitude()  ;
+                return Numerator.Magnitude() - Denominator.Magnitude() + significand.BigIntegerPart.Magnitude();
             }
         }
 
@@ -81,28 +81,28 @@ namespace MatrixCalculus
                 throw new DivideByZeroException();
             }
 
-            int sign = ((numerator > 0 && denominator > 0) || (numerator < 0 && denominator < 0)) ?1 : -1;
+            int sign = ((numerator > 0 && denominator > 0) || (numerator < 0 && denominator < 0)) ? 1 : -1;
 
             if (safe)
             {
-                    mNumerator = sign * BigInteger.Abs(numerator);
-                    mDenominator = BigInteger.Abs(denominator);
+                mNumerator = sign * BigInteger.Abs(numerator);
+                mDenominator = BigInteger.Abs(denominator);
             }
             else
             {
-                    BigInteger gcd = BigInteger.GreatestCommonDivisor (numerator, denominator);//Potentially expensive
-                    mNumerator = sign * BigInteger.Abs(numerator / gcd);
-                    mDenominator =  BigInteger.Abs(denominator / gcd);
+                BigInteger gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);//Potentially expensive
+                mNumerator = sign * BigInteger.Abs(numerator / gcd);
+                mDenominator = BigInteger.Abs(denominator / gcd);
             }
         }
 
         public Rational(int numerator) : this(numerator, 1, true) { }
 
-        public Rational(BigInteger  numerator):this(numerator , 1, true ) {}
+        public Rational(BigInteger numerator) : this(numerator, 1, true) { }
 
-        public Rational(BigInteger numerator, BigInteger denominator):this(numerator , denominator, false ) {}
+        public Rational(BigInteger numerator, BigInteger denominator) : this(numerator, denominator, false) { }
 
-        
+
 
         public Rational(double value)
         {
@@ -119,7 +119,7 @@ namespace MatrixCalculus
 
         public override bool Equals(object obj)
         {
-            if(obj == null)
+            if (obj == null)
             {
                 return false;
             }
@@ -138,7 +138,7 @@ namespace MatrixCalculus
         {
             unchecked
             {
-                return (mNumerator.GetHashCode()*397) ^ mDenominator.GetHashCode();
+                return (mNumerator.GetHashCode() * 397) ^ mDenominator.GetHashCode();
             }
         }
 
@@ -173,24 +173,25 @@ namespace MatrixCalculus
             return @"\dfrac{" + mNumerator + "}{" + mDenominator + "}";
 
         }
+
         /// <summary>
-        /// Returns the deimal approximation of the string in standard form
+        /// Returns the decimal approximation of the string in standard form.
         /// </summary>
         /// <param name="approximation">Are the places decimal places or significant figures</param>
         /// <param name="places">Number of places</param>
         /// <param name="padWithZeroes">Is the string approximation paddded with zeros</param>
         /// <returns>String approximation</returns>
-        public string ToString(EApproxmationType approximation,int places,bool padWithZeroes)
+        public string ToString(EApproxmationType approximation, int places, bool padWithZeroes)
         {
-            StringBuilder sb = new StringBuilder();
-            if (this.Numerator < 0)
+            StringBuilder sbRetVal = new StringBuilder();
+            if (Numerator < 0)
             {
-                sb.Append("-");
+                sbRetVal.Append("-");
             }
-            int pointIndex =this.BigIntegerPart.Magnitude() + 1;
-            if (this.BigIntegerPart == 0)
+            int pointIndex = BigIntegerPart.Magnitude() + 1;
+            if (BigIntegerPart == 0)
             {
-                sb.Append("0.");
+                sbRetVal.Append("0.");
                 pointIndex = -1;
             }
             Rational working = this;
@@ -199,72 +200,71 @@ namespace MatrixCalculus
                 working *= 10;
                 if (working.BigIntegerPart == 0)
                 {
-                    sb.Append("0");
+                    sbRetVal.Append("0");
                 }
             }
 
             bool sf = approximation == EApproxmationType.SignificantFigures;
-            int digitsNeeded = (sf) ? Math.Max(this.BigIntegerPart.Places(), places) : this.BigIntegerPart.Places() + places;
+            int digitsNeeded = (sf) ? Math.Max(BigIntegerPart.Places(), places) : BigIntegerPart.Places() + places;
 
-            int digitsToExtract = (sf) ? places : places + this.BigIntegerPart.Places();
+            int digitsToExtract = (sf) ? places : places + BigIntegerPart.Places();
             List<string> digits = Digits(working, digitsToExtract);
             if (digits.Count < digitsToExtract && !padWithZeroes)
             {
                 digitsNeeded -= (digitsToExtract - digits.Count);
             }
 
-            for (int i = 0; i < digits.Count; i++)
+            for (int digitCounter = 0; digitCounter < digits.Count; digitCounter++)
             {
-                if (i ==pointIndex)
+                if (digitCounter == pointIndex)
                 {
-                    sb.Append(".");
+                    sbRetVal.Append(".");
                 }
-                sb.Append(digits[i]);
+                sbRetVal.Append(digits[digitCounter]);
             }
-            for (int i = digits.Count(); i < digitsNeeded; i++)
+            for (int digitCounter = digits.Count(); digitCounter < digitsNeeded; digitCounter++)
             {
-                if (i == pointIndex)
+                if (digitCounter == pointIndex)
                 {
-                    sb.Append(".");
+                    sbRetVal.Append(".");
                 }
-                sb.Append("0");
+                sbRetVal.Append("0");
             }
-            return sb.ToString();
-
+            return sbRetVal.ToString();
         }
 
 
-        internal  static List<string> Digits(Rational r, int n)
+        internal static List<string> Digits(Rational r, int n)
         {
             List<string> digits = new List<string>();
+
             //Divide into integral and fractional parts
             BigInteger intPart = Abs(r).BigIntegerPart;
             Rational fracPart = Abs(r).FractionalPart;
             int intplaces = intPart.Magnitude() + 1;
 
             char[] chars = intPart.ToString().ToCharArray();
-            for (int i = 0; i < Math.Min(intplaces, n); i++)//get digits from integral part
+            for (int counter = 0; counter < Math.Min(intplaces, n); counter++) // Get digits from integral part
             {
-                if (digits.Count > 0 || chars[i] != '0')// first digit not zero
+                if (digits.Count > 0 || chars[counter] != '0') // First digit not zero
                 {
-                    digits.Add(chars[i].ToString());
+                    digits.Add(chars[counter].ToString());
                 }
             }
-            while (digits.Count() < n)//get digits from fractional part
+            while (digits.Count() < n) // Get digits from fractional part
             {
                 if (fracPart == 0)
                 {
                     break;
                 }
-                fracPart *=10;
-                if (digits.Count > 0 || fracPart.IntegerPart != 0)// first digit not zero
+                fracPart *= 10;
+                if (digits.Count > 0 || fracPart.IntegerPart != 0) // First digit not zero
                 {
                     digits.Add(fracPart.IntegerPart.ToString());
                 }
                 fracPart = fracPart.FractionalPart;
             }
             return digits;
-
         }
 
 
@@ -278,11 +278,11 @@ namespace MatrixCalculus
         {
 
             StringBuilder sb = new StringBuilder();
-            if (this.Numerator < 0)
+            if (Numerator < 0)
             {
                 sb.Append("-");
             }
-            List<string> digits = Digits(this,places);
+            List<string> digits = Digits(this, places);
 
             sb.Append(digits[0]);
             if (digits.Count > 1 || (places > 1 && padwithZeroes))
@@ -302,12 +302,11 @@ namespace MatrixCalculus
                 }
             }
             sb.Append("E");
-            
+
             if (BigIntegerPart != 0)
             {
                 sb.Append("+");
                 sb.Append(Magnitude);
-
             }
             else
             {
@@ -357,7 +356,6 @@ namespace MatrixCalculus
             return (short)value.BigIntegerPart;
         }
 
-
         static public explicit operator ushort(Rational value)
         {
             return (ushort)value.BigIntegerPart;
@@ -368,15 +366,12 @@ namespace MatrixCalculus
             return (int)value.BigIntegerPart;
         }
 
-
         static public explicit operator uint(Rational value)
         {
             return (uint)value.BigIntegerPart;
         }
 
-
-
-        static public explicit operator long (Rational value)
+        static public explicit operator long(Rational value)
         {
             return (long)value.BigIntegerPart;
         }
@@ -386,15 +381,14 @@ namespace MatrixCalculus
             return (ulong)value.BigIntegerPart;
         }
 
-        static public explicit operator BigInteger(Rational  value)
+        static public explicit operator BigInteger(Rational value)
         {
             return value.BigIntegerPart;
         }
 
-
         static public explicit operator Single(Rational value)
         {
-          
+
             return Single.Parse(value.ToScientific(8, false));
         }
 
@@ -405,12 +399,11 @@ namespace MatrixCalculus
 
         static public explicit operator decimal(Rational value)
         {
-            return   decimal.Parse(value.ToString( EApproxmationType.DecimalPlaces, 29,false)); 
+            return decimal.Parse(value.ToString(EApproxmationType.DecimalPlaces, 29, false));
         }
 
         #endregion
 
-       
         #region Operators
         public static bool operator ==(Rational r1, Rational r2)
         {
@@ -419,13 +412,13 @@ namespace MatrixCalculus
 
         public static bool operator !=(Rational r1, Rational r2)
         {
-            return ! r1.Equals(r2);
+            return !r1.Equals(r2);
         }
 
         public static Rational operator +(Rational r1, Rational r2)
         {
-            if (r1 == 0) { return  r2;}
-            if (r2 == 0) { return r1;}
+            if (r1 == 0) { return r2; }
+            if (r2 == 0) { return r1; }
             if (r1.Denominator == r2.Denominator)
             {
                 return new Rational(r1.Numerator + r2.Numerator, r1.Denominator, false);
@@ -437,7 +430,7 @@ namespace MatrixCalculus
         {
             if (r1 == 0) { return i; }
             if (i == 0) { return r1; }
-            return new Rational(r1.Numerator + i*r1.Denominator, r1.Denominator, true);
+            return new Rational(r1.Numerator + i * r1.Denominator, r1.Denominator, true);
         }
 
         public static Rational operator +(int i, Rational r1)
@@ -446,8 +439,6 @@ namespace MatrixCalculus
             if (i == 0) { return r1; }
             return new Rational(r1.Numerator + i * r1.Denominator, r1.Denominator, true);
         }
-
-
 
         public static Rational operator -(Rational r1, Rational r2)
         {
@@ -467,12 +458,10 @@ namespace MatrixCalculus
             return new Rational(r1.Numerator * r2.Denominator - r2.Numerator * r1.Denominator, r1.Denominator * r2.Denominator, false);
         }
 
-
-        public static Rational operator -(Rational r )
+        public static Rational operator -(Rational r)
         {
-                return new Rational(-1 *r.Numerator  ,  r.Denominator, true);
+            return new Rational(-1 * r.Numerator, r.Denominator, true);
         }
-
 
         public static Rational operator *(Rational r1, Rational r2)
         {
@@ -492,7 +481,7 @@ namespace MatrixCalculus
             return new Rational(r.Numerator * i, r.Denominator, false);
         }
 
-        public static Rational operator *( int i,Rational r)
+        public static Rational operator *(int i, Rational r)
         {
             if (r == 0 || i == 0)
             {
@@ -500,7 +489,6 @@ namespace MatrixCalculus
             }
             return new Rational(r.Numerator * i, r.Denominator, false);
         }
-
 
         public static Rational operator *(Rational r, long i)
         {
@@ -520,7 +508,6 @@ namespace MatrixCalculus
             return new Rational(r.Numerator * i, r.Denominator, false);
         }
 
-
         public static Rational operator /(Rational r1, Rational r2)
         {
             if (r1 == 0)
@@ -536,11 +523,11 @@ namespace MatrixCalculus
 
         public static Rational operator %(Rational r1, Rational r2)
         {
-         return   r1 - (r1 / r2).BigIntegerPart * r2;
+            return r1 - (r1 / r2).BigIntegerPart * r2;
         }
 
 
-        public static Rational operator /(Rational r , int i)
+        public static Rational operator /(Rational r, int i)
         {
             if (r == 0)
             {
@@ -553,7 +540,7 @@ namespace MatrixCalculus
             return new Rational(r.Numerator, r.Denominator * i, false);
         }
 
-        public static Rational operator /(int i,Rational r )
+        public static Rational operator /(int i, Rational r)
         {
             if (i == 0)
             {
@@ -563,36 +550,29 @@ namespace MatrixCalculus
             {
                 throw new DivideByZeroException();
             }
-            return new Rational( r.Denominator * i,r.Numerator, false);
+            return new Rational(r.Denominator * i, r.Numerator, false);
         }
 
         public static bool operator <(Rational r1, Rational r2)
         {
-            return   r1.CompareTo(r2)< 0   ;
+            return r1.CompareTo(r2) < 0;
         }
-
 
         public static bool operator <=(Rational r1, Rational r2)
         {
             return r1.CompareTo(r2) <= 0;
         }
 
-
         public static bool operator >(Rational r1, Rational r2)
         {
             return r1.CompareTo(r2) > 0;
-
         }
 
         public static bool operator >=(Rational r1, Rational r2)
         {
             return r1.CompareTo(r2) >= 0;
-
         }
         #endregion
-
-
- 
 
         #region IComparable Members
 
@@ -600,17 +580,15 @@ namespace MatrixCalculus
         {
             if (!(obj is Rational))
             {
-                throw new  ArgumentException();
+                throw new ArgumentException();
             }
-            return CompareTo( (Rational)obj);
+            return CompareTo((Rational)obj);
         }
 
         #endregion
 
-      
-
         /// <summary>
-        /// Returns the Integer part of the ratinal as an Int32
+        /// Returns the Integer part of the rational as an Int32
         /// </summary>
         public int IntegerPart
         {
@@ -625,7 +603,7 @@ namespace MatrixCalculus
         }
 
         /// <summary>
-        /// Rreterns the Integer part of the Rational expressed as a Biginteger
+        /// Returns the Integer part of the Rational expressed as a BigInteger
         /// </summary>
         public BigInteger BigIntegerPart
         {
@@ -654,9 +632,9 @@ namespace MatrixCalculus
 
         #region System.Math Members
 
-        public static Rational  Abs(Rational value)
+        public static Rational Abs(Rational value)
         {
-            return new Rational(BigInteger.Abs(value.Numerator),BigInteger.Abs( value.Denominator), true);
+            return new Rational(BigInteger.Abs(value.Numerator), BigInteger.Abs(value.Denominator), true);
         }
 
         public static Rational Ceiling(Rational value)
@@ -668,9 +646,9 @@ namespace MatrixCalculus
             }
             if (value >= 0)
             {
-                return (Rational)bi +1;
+                return (Rational)bi + 1;
             }
-            return bi  ;
+            return bi;
         }
 
         public static Rational Floor(Rational value)
@@ -682,7 +660,7 @@ namespace MatrixCalculus
             }
             if (value >= 0)
             {
-                return bi  ;
+                return bi;
             }
             return (Rational)bi - 1;
         }
@@ -701,13 +679,13 @@ namespace MatrixCalculus
         {
             if (power < 0)
             {
-                 return new Rational(BigInteger.Pow(value.Denominator ,-power), BigInteger.Pow(value.Numerator,-power), true);  
+                return new Rational(BigInteger.Pow(value.Denominator, -power), BigInteger.Pow(value.Numerator, -power), true);
             }
             if (power == 0)
             {
                 return (new Rational(1));
             }
-            return new Rational(BigInteger.Pow(value.Numerator, power), BigInteger.Pow(value.Denominator,  power), true);
+            return new Rational(BigInteger.Pow(value.Numerator, power), BigInteger.Pow(value.Denominator, power), true);
         }
 
         public static Rational Round(Rational value)
@@ -721,117 +699,105 @@ namespace MatrixCalculus
             {
                 return bi;
             }
-            if (value.FractionalPart <= (Rational) 1/2)
+            if (value.FractionalPart <= (Rational)1 / 2)
             {
                 return bi;
             }
-            return (Rational) bi + 1;
+            return (Rational)bi + 1;
         }
 
-        public static int  Sign(Rational value)
+        public static int Sign(Rational value)
         {
-            return value.Numerator.Sign ;
+            return value.Numerator.Sign;
         }
 
- 
+
         #endregion
 
 
         #region Extended Math Members
 
-        public static  Rational Floor(Rational value, int denominator)
+        public static Rational Floor(Rational value, int denominator)
         {
-            return Floor(value*denominator )/denominator ;
-
+            return Floor(value * denominator) / denominator;
         }
 
         public static Rational Floor(Rational value, BigInteger denominator)
         {
             return Floor(value * denominator) / denominator;
-
         }
 
 
         public static Rational Floor(Rational value, Rational denominator)
         {
             return Floor(value / denominator) * denominator;
-
         }
-
-
 
 
         public static Rational Ceiling(Rational value, int denominator)
         {
             return Ceiling(value * denominator) / denominator;
-
         }
 
         public static Rational Ceiling(Rational value, BigInteger denominator)
         {
             return Ceiling(value * denominator) / denominator;
-
         }
 
 
         public static Rational Ceiling(Rational value, Rational denominator)
         {
-            return Ceiling(value/ denominator) * denominator;
-
+            return Ceiling(value / denominator) * denominator;
         }
 
         public static Rational Round(Rational value, int denominator)
         {
             return Round(value * denominator) / denominator;
-
         }
 
         public static Rational Round(Rational value, BigInteger denominator)
         {
             return Round(value * denominator) / denominator;
-
         }
 
         public static Rational Round(Rational value, Rational denominator)
         {
             return Round(value / denominator) * denominator;
-
         }
-
 
         #endregion
 
 
         public static Rational Parse(String s)
         {
-
             int periodIndex = s.IndexOf(".");
             int eIndeix = s.IndexOf("E");
             int slashIndex = s.IndexOf("/");
-            if (periodIndex == -1 && eIndeix ==-1 && slashIndex == -1)// an integer such as 7
+            if (periodIndex == -1 && eIndeix == -1 && slashIndex == -1) // An integer such as 7
             {
                 return new Rational(ParseBigInteger(s));
             }
 
-            if (periodIndex == -1 && eIndeix == -1 && slashIndex != -1)// an fraction such as 3/7
+            if (periodIndex == -1 && eIndeix == -1 && slashIndex != -1) // A fraction such as 3/7
             {
 
                 return new Rational(ParseBigInteger(s.Substring(0, slashIndex)),
                                     ParseBigInteger(s.Substring(slashIndex + 1)));
             }
 
-            if (eIndeix == -1)// no scientific Notation such as 5.997
+            if (eIndeix == -1) // No scientific notation such as 5.997
             {
                 BigInteger n = ParseBigInteger(s.Replace(".", ""));
-                BigInteger d = (BigInteger)Math.Pow(10, s.Length - periodIndex-1);
+                BigInteger d = (BigInteger)Math.Pow(10, s.Length - periodIndex - 1);
                 return new Rational(n, d);
             }
-            //In scientific notation such as 2.4556E-2
+
+            // In scientific notation such as 2.4556E-2
             int characteristic = int.Parse(s.Substring(eIndeix + 1));
             BigInteger ten = 10;
             BigInteger numerator = ParseBigInteger(s.Substring(0, eIndeix).Replace(".", ""));
             BigInteger denominator = new BigInteger(Math.Pow(10, eIndeix - periodIndex - 1));
-            BigInteger charPower =BigInteger.Pow( ten,Math.Abs(characteristic));
+            BigInteger charPower = BigInteger.Pow(ten, Math.Abs(characteristic));
             if (characteristic > 0)
             {
                 numerator = numerator * charPower;
@@ -845,9 +811,9 @@ namespace MatrixCalculus
 
         internal static BigInteger ParseBigInteger(string s)
         {
-        #if !SILVERLIGHT
-                        return BigInteger.Parse(s);
-        #else // for unknown reasons the silverlight version of Biginteger lacks a Parse Method
+#if !SILVERLIGHT
+            return BigInteger.Parse(s);
+#else // for unknown reasons the Silverlight version of Biginteger lacks a Parse Method
                     bool isNegative = s.StartsWith("-");
                     if (isNegative) s = s.Substring(1);
 
@@ -867,8 +833,7 @@ namespace MatrixCalculus
                         bi += long.Parse(s.Substring(parts * 18));
                     }
                     return (isNegative) ? -1 * bi : bi;
-        #endif
-
+#endif
         }
 
         public double ToDouble()
@@ -876,11 +841,8 @@ namespace MatrixCalculus
             const int significantFigures = 17;
             string doublestring = ToScientific(significantFigures, false);
             return Double.Parse(doublestring);
- 
         }
 
-
- 
 
         #region IEquatable<Rational> Members
 
@@ -900,19 +862,19 @@ namespace MatrixCalculus
 
         public int CompareTo(Rational other)
         {
-                if (this == other)
-                {
-                    return 0;
-                }
-                if (Sign(this) < Sign(other))
-                {
-                    return -1;
-                }
-                if (Sign(this) > Sign(other))
-                {
-                    return 1;
-                }
-               
+            if (this == other)
+            {
+                return 0;
+            }
+            if (Sign(this) < Sign(other))
+            {
+                return -1;
+            }
+            if (Sign(this) > Sign(other))
+            {
+                return 1;
+            }
+
             if (Sign(this) > 0 && Sign(other) > 0)
             {
                 if (Numerator >= other.Numerator && Denominator <= other.Denominator)
@@ -930,26 +892,21 @@ namespace MatrixCalculus
             {
                 if (BigInteger.Abs(Numerator) <= BigInteger.Abs(other.Numerator) && Denominator >= other.Denominator)
                 {
-                    return   1;
+                    return 1;
                 }
-                if (BigInteger.Abs(Numerator) <= BigInteger.Abs(other.Numerator )&& Denominator <= other.Denominator)
+                if (BigInteger.Abs(Numerator) <= BigInteger.Abs(other.Numerator) && Denominator <= other.Denominator)
                 {
-                    return  -1;
+                    return -1;
                 }
-                return - Sign(BigInteger.Abs(Numerator) * other.Denominator - BigInteger.Abs(other.Numerator) * Denominator)  ;
+                return -Sign(BigInteger.Abs(Numerator) * other.Denominator - BigInteger.Abs(other.Numerator) * Denominator);
             }
-           
-            }
-         
-
+        }
         #endregion
     }
 
-        public enum EApproxmationType
-        {
-            DecimalPlaces,
-            SignificantFigures
-        }
-      
-
+    public enum EApproxmationType
+    {
+        DecimalPlaces,
+        SignificantFigures
+    }
 }

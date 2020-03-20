@@ -24,25 +24,25 @@ namespace MatrixCalculus
             int rows = input.GetLength(0);
             int columns = input.GetLength(0);
 
-            Symbol[,] ret = new Symbol[rows, columns];
+            Symbol[,] retVal = new Symbol[rows, columns];
 
-            for (int i = 0; i < rows; i++)
+            for (int rowCount = 0; rowCount < rows; rowCount++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int colCount = 0; colCount < columns; colCount++)
                 {
-                    ret[i, j] = input[i][j];
+                    retVal[rowCount, colCount] = input[rowCount][colCount];
                 }
             }
 
-            return ret;
+            return retVal;
         }
         
         public static Symbol[][] MatrixCreate(int rows, int cols)
         {
-            Symbol[][] result = new Symbol[rows][];
-            for (int i = 0; i < rows; ++i)
-                result[i] = new Symbol[cols];
-            return result;
+            Symbol[][] retVal = new Symbol[rows][];
+            for (int rowCount = 0; rowCount < rows; ++rowCount)
+                retVal[rowCount] = new Symbol[cols];
+            return retVal;
         }
 
         public static SymbolMatrix C3()
@@ -54,21 +54,20 @@ namespace MatrixCalculus
                 "b", "c", "a" 
             };
 
-            SymbolMatrix ret = new SymbolMatrix(3, 3);
+            SymbolMatrix retVal = new SymbolMatrix(3, 3);
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rows = 0; rows < retVal.Rows; rows++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int cols = 0; cols < retVal.Columns; cols++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rows, cols] = sym;
                 }
             }
             
-            ret.FullRep = @"C_3 = " + ret.ToLatex();
-            return ret;
-
+            retVal.FullRep = @"C_3 = " + retVal.ToLatex();
+            return retVal;
         }
 
         public static SymbolMatrix C3(List<string> variables)
@@ -82,24 +81,23 @@ namespace MatrixCalculus
 
             List<string> mapper = kgL.Take(3).ToList();
 
-            SymbolMatrix ret = new SymbolMatrix(3, 3);
+            SymbolMatrix retVal = new SymbolMatrix(3, 3);
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     int ind = mapper.FindIndex(t => t == kgL[cnt]);
 
                     Symbol sym = new Symbol(variables[ind]); 
                     cnt++;
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"C_3 = " + ret.ToLatex();
-            return ret;
-
+            retVal.FullRep = @"C_3 = " + retVal.ToLatex();
+            return retVal;
         }
 
         public static SymbolMatrix C3RowColumn()
@@ -111,21 +109,20 @@ namespace MatrixCalculus
                 "g", "h", "i" 
             };
 
-            SymbolMatrix ret = new SymbolMatrix(3, 3);
+            SymbolMatrix retVal = new SymbolMatrix(3, 3);
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"C_2 = " + ret.ToLatex();
-            return ret;
-
+            retVal.FullRep = @"C_2 = " + retVal.ToLatex();
+            return retVal;
         }
 
         public static SymbolMatrix C4RowColumn()
@@ -138,21 +135,20 @@ namespace MatrixCalculus
                 "m", "n", "o", "p",
             };
 
-            SymbolMatrix ret = new SymbolMatrix(4, 4);
+            SymbolMatrix retVal = new SymbolMatrix(4, 4);
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"C_4 = " + ret.ToLatex();
-            return ret;
-
+            retVal.FullRep = @"C_4 = " + retVal.ToLatex();
+            return retVal;
         }
 
 
@@ -164,20 +160,20 @@ namespace MatrixCalculus
                 "b", "a" 
             };
 
-            SymbolMatrix ret = new SymbolMatrix(2, 2);
+            SymbolMatrix retVal = new SymbolMatrix(2, 2);
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"C_2 = " + ret.ToLatex();
-            return ret;
+            retVal.FullRep = @"C_2 = " + retVal.ToLatex();
+            return retVal;
 
         }
         public static SymbolMatrix KleinGroup()
@@ -190,21 +186,21 @@ namespace MatrixCalculus
                 "d", "c", "b", "a"
             };
 
-            SymbolMatrix ret = new SymbolMatrix(4, 4);
+            SymbolMatrix retVal = new SymbolMatrix(4, 4);
 
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"C_2\;\times\;C_2 = " + ret.ToLatex();
-            return ret;
+            retVal.FullRep = @"C_2\;\times\;C_2 = " + retVal.ToLatex();
+            return retVal;
         }
 
         public static SymbolMatrix LeftChiralQuaternion()
@@ -217,21 +213,21 @@ namespace MatrixCalculus
                 "-d", "-c", "b", "a"
             };
 
-            SymbolMatrix ret = new SymbolMatrix(4, 4);
+            SymbolMatrix retVal = new SymbolMatrix(4, 4);
 
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retVal[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"\mathbb{H}_{L\chi} = " + ret.ToLatex();
-            return ret;
+            retVal.FullRep = @"\mathbb{H}_{L\chi} = " + retVal.ToLatex();
+            return retVal;
         }
 
         public static SymbolMatrix RightChiralQuaternion()
@@ -244,108 +240,106 @@ namespace MatrixCalculus
                 "-d", "c", "-b", "a"
             };
 
-            SymbolMatrix ret = new SymbolMatrix(4, 4);
+            SymbolMatrix retval = new SymbolMatrix(4, 4);
 
             int cnt = 0;
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retval.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retval.Columns; colCount++)
                 {
                     Symbol sym = new Symbol(kgL[cnt++]); 
                     sym.IsExpression = true;
-                    ret[i, j] = sym;
+                    retval[rowCount, colCount] = sym;
                 }
             }
             
-            ret.FullRep = @"\mathbb{H}_{R\chi} = " + ret.ToLatex();
-            return ret;
+            retval.FullRep = @"\mathbb{H}_{R\chi} = " + retval.ToLatex();
+            return retval;
         }
 
         public static SymbolMatrix KroneckerProduct(SymbolMatrix a, SymbolMatrix b)
         {
-            int Rows = a.Rows * b.Rows; //calculate number of rows.
-            int Columns = a.Columns * b.Rows; // calculate number of columns
-            int incC = 0; //increment variable for column of b matrix
-            int incR = 0; //increment variable for row of b matrix
-            int incAMC = 0;//increment variable for column of a matrix
-            int incAMR = 0;//increment variable for row of a matrix
-            SymbolMatrix ret = new SymbolMatrix(Rows, Columns);
-            int i = 0;
-            int j = 0;
+            int Rows = a.Rows * b.Rows;         // calculate number of rows.
+            int Columns = a.Columns * b.Rows;   // calculate number of columns
+            int incC = 0;                       // increment variable for column of b matrix
+            int incR = 0;                       // increment variable for row of b matrix
+            int incAMC = 0;                     // increment variable for column of a matrix
+            int incAMR = 0;                     // increment variable for row of a matrix
+            SymbolMatrix retVal = new SymbolMatrix(Rows, Columns);
+            int rowCount;
+            int colCount;
             string exp = string.Empty;
 
-            for(i = 0; i < ret.Rows; i++)
+            for(rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                if(incR > b.Rows - 1)//reached end of rows of b matrix
+                if(incR > b.Rows - 1)           // reached end of rows of b matrix
                 {
                     incR = 0;
                     incAMR++; 
                 }
                 incAMC = 0;
-                for(j = 0; j < ret.Columns; j++)
+                for(colCount = 0; colCount < retVal.Columns; colCount++)
                 {
                     exp = a[incAMR, incAMC].Expression + b[incR, incC].Expression;
                     incC++;
-                    if(incC > b.Columns - 1)////reached end of columns of b matrix
+                    if(incC > b.Columns - 1)    // reached end of columns of b matrix
                     {
                         incC = 0;
                         incAMC++;    
                     }
 
-                    ret[i, j] = new Symbol(exp);
+                    retVal[rowCount, colCount] = new Symbol(exp);
                 }
                 incR++;
 
             }
 
-            ret.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + ret.ToLatex(); //produce latex string
-            return ret;
+            retVal.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + retVal.ToLatex(); //produce latex string
+            return retVal;
         }
         
         public static SymbolMatrix D3()
         {
-            SymbolMatrix ret = new SymbolMatrix(6, 6);
+            SymbolMatrix retVal = new SymbolMatrix(6, 6);
             
             SymbolMatrix smC3 = C3();
             SymbolMatrix C3Flip = SymbolMatrixUtilities.C3().Flip().ReName(new List<string>{"d", "e", "f"});
 
-            int i = 0;
-            int j = 0;
-            for(i = 0; i < smC3.Rows; i++)
+            int rowCount;
+            int colCount;
+            for(rowCount = 0; rowCount < smC3.Rows; rowCount++)
             {
-                for(j = 0; j < smC3.Columns; j++)
+                for(colCount = 0; colCount < smC3.Columns; colCount++)
                 {
-                    ret[i, j] = smC3[i, j];
+                    retVal[rowCount, colCount] = smC3[rowCount, colCount];
                 }
             }
 
-            for(i = 3; i < smC3.Rows + 3; i++)
+            for(rowCount = 3; rowCount < smC3.Rows + 3; rowCount++)
             {
-                for(j = 0; j < smC3.Columns; j++)
+                for(colCount = 0; colCount < smC3.Columns; colCount++)
                 {
-                    ret[i, j] = C3Flip[i - 3, j];
+                    retVal[rowCount, colCount] = C3Flip[rowCount - 3, colCount];
                 }
             }
 
-            for(i = 3; i < smC3.Rows + 3; i++)
+            for(rowCount = 3; rowCount < smC3.Rows + 3; rowCount++)
             {
-                for(j = 3; j < smC3.Columns + 3; j++)
+                for(colCount = 3; colCount < smC3.Columns + 3; colCount++)
                 {
-                    ret[i, j] = smC3[i - 3, j - 3];
+                    retVal[rowCount, colCount] = smC3[rowCount - 3, colCount - 3];
                 }
             }
 
-            for(i = 0; i < smC3.Rows; i++)
+            for(rowCount = 0; rowCount < smC3.Rows; rowCount++)
             {
-                for(j = 3; j < smC3.Columns + 3; j++)
+                for(colCount = 3; colCount < smC3.Columns + 3; colCount++)
                 {
-                    ret[i, j] = C3Flip[i, j - 3];
+                    retVal[rowCount, colCount] = C3Flip[rowCount, colCount - 3];
                 }
             }
             
-            return ret;
+            return retVal;
         }
     }
-
-    
 }

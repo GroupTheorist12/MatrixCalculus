@@ -1,3 +1,4 @@
+//TODO: let dead code die. GPG
         public static Symbol operator *(Symbol a, Symbol b)
         {
             Symbol combine = new Symbol(a.NakedTokenString + " * " + b.NakedTokenString);

@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MatrixCalculus
 {
@@ -10,15 +6,15 @@ namespace MatrixCalculus
     {
         public SymbolList()
         {
-            
         }
+
         public SymbolList(List<Token> tokens)        
         {
             bool SymbolEnd = false;
             Symbol sym = new Symbol();
-            for (int i = 0; i < tokens.Count; i++)
+            for (int tokenCount = 0; tokenCount < tokens.Count; tokenCount++)
             {
-                Token t = tokens[i];
+                Token t = tokens[tokenCount];
                 if(sym == null && SymbolEnd)
                 {
                     sym = new Symbol();
@@ -32,13 +28,12 @@ namespace MatrixCalculus
                 {
                     sym = new Symbol();
                     sym.Tokens.Add(t);
-
                 }
                 else if(sym != null && t.SymbolEnd)
                 {
                     sym.Tokens.Add(t);
                     sym.Expression = sym.NakedTokenString;
-                    this.Add(sym);
+                    Add(sym);
                     SymbolEnd = true;
                     sym = null;
                 }
@@ -51,9 +46,8 @@ namespace MatrixCalculus
             if(sym != null && sym.Tokens.Count > 0)
             {
                 sym.Expression = sym.NakedTokenString;
-                this.Add(sym);
+                Add(sym);
             }
-
         }
     }
 }

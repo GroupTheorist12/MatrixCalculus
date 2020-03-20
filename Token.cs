@@ -110,17 +110,17 @@ namespace MatrixCalculus
         public void ParseExpression(string FunctionString)
         {
 
-            int i = 0;
+            int charcounter = 0;
             TokenList.Clear();
 
             Symbol sym = new Symbol();
 
             bool InBracket = false;
             Tokenizer tokes = new Tokenizer();
-            while (i < FunctionString.Length)
+            while (charcounter < FunctionString.Length)
             {
-                char ch = FunctionString[i];
-                if (ch == '-' && FunctionString[i + 1] != ' ') //negative number. Parser needs space for +-*/
+                char ch = FunctionString[charcounter];
+                if (ch == '-' && FunctionString[charcounter + 1] != ' ') //negative number. Parser needs space for +-*/
                 {
                     numberBuffer.Add(ch.ToString());
 
@@ -144,9 +144,9 @@ namespace MatrixCalculus
                     {
                         letterBuffer.Add(ch.ToString());
                         emptyLetterBufferAsVariables();
-                        if (i - 1 > 0)
+                        if (charcounter - 1 > 0)
                         {
-                            char ch2 = FunctionString[i - 1];
+                            char ch2 = FunctionString[charcounter - 1];
                             if (ch2 == ' ' && !InBracket)//(ch != '^')
                             {
                                 TokenList[TokenList.Count - 1].SymbolEnd = true;
@@ -164,7 +164,7 @@ namespace MatrixCalculus
                 {
                     emptyNumberBufferAsLiteral();
                     emptyLetterBufferAsVariables();
-                    char ch2 = FunctionString[i - 1];
+                    char ch2 = FunctionString[charcounter - 1];
                     if (ch2 == ' ' && !InBracket)//(ch != '^')
                     {
                         if(TokenList.Count - 1 >= 0)
@@ -213,7 +213,7 @@ namespace MatrixCalculus
                 }
 
 
-                i++;
+                charcounter++;
             }
 
             emptyNumberBufferAsLiteral(true);
@@ -322,9 +322,9 @@ namespace MatrixCalculus
             letterBuffer.Clear();
             numberBuffer.Clear();
 
-            for (int i = 0; i < str.Length; i++)
+            for (int charcounter = 0; charcounter < str.Length; charcounter++)
             {
-                char ch = str[i];
+                char ch = str[charcounter];
                 if (isDigit(ch))
                 {
                     numberBuffer.Add(ch.ToString());
@@ -495,24 +495,24 @@ namespace MatrixCalculus
 
         public string Parse()
         {
-            string ret = string.Empty;
+            string retVal = string.Empty;
 
             switch (FactoryString)
             {
                 case "VariableOperator*Variable": //a*b
                     if (lstTokens[0].Value[0] > lstTokens[2].Value[0])
                     {
-                        ret = lstTokens[2].Value + lstTokens[0].Value;
+                        retVal = lstTokens[2].Value + lstTokens[0].Value;
 
                     }
                     else
                     {
-                        ret = lstTokens[0].Value + lstTokens[2].Value;
+                        retVal = lstTokens[0].Value + lstTokens[2].Value;
 
                     }
                     break;
             }
-            return ret;
+            return retVal;
         }
     }
     public class RPN
