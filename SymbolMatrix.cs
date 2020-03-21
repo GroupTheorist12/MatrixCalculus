@@ -218,6 +218,10 @@ namespace MatrixCalculus
         public static List<CoFactorInfo> GetAllMatrixCoFactors(SymbolMatrix ParentMatrix)
         {
             List<CoFactorInfo> cfList = SymbolMatrix.GetCoFactors(ParentMatrix);
+            if(cfList[0].Minor.Rows == 2) //At two go back
+            {
+                return cfList;
+            }
             int inc = 0;
             CoFactorInfo cfi = null;
             CoFactorInfo cfiChild = null;

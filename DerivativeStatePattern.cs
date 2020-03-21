@@ -47,6 +47,31 @@ namespace MatrixCalculus
 
         }
 
+        private static string CleanUpEnds(string Exp)
+        {
+            string ret = Exp.Trim();
+            if(ret.LastIndexOf('+') != -1 && ret.LastIndexOf('+') == ret.Length - 1)
+            {
+                return ret.Substring(0, ret.Length - 1);
+            }
+
+            if(ret.LastIndexOf('-') != -1 && ret.LastIndexOf('-') == ret.Length - 1)
+            {
+                return ret.Substring(0, ret.Length - 1);
+            }
+
+            if(ret.LastIndexOf('*') != -1 && ret.LastIndexOf('*') == ret.Length - 1)
+            {
+                return ret.Substring(0, ret.Length - 1);
+            }
+
+            if(ret.LastIndexOf('/') != -1 && ret.LastIndexOf('/') == ret.Length - 1)
+            {
+                return ret.Substring(0, ret.Length - 1);
+            }
+
+            return ret;
+        }
         private static string Poly(SymbolList symAgg)
         {
             StringBuilder sb = new StringBuilder();
@@ -64,7 +89,7 @@ namespace MatrixCalculus
                 sb.Clear();
                 sb.Append(DF(symCheck, true));
             }
-            return sb.ToString();
+            return CleanUpEnds(sb.ToString());
         }
         public static string DF(Symbol sym, bool SkipPoly = false)
         {

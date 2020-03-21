@@ -335,7 +335,7 @@ namespace MatrixCalculus
 
         public static int Test_Flip()
         {
-            SymbolMatrix C3Flip = SymbolMatrixUtilities.C3().Flip().ReName(new List<string>{"d", "e", "f"});
+            SymbolMatrix C3Flip = SymbolMatrixUtilities.C3().Flip().ReName(new List<string> { "d", "e", "f" });
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
             sb.AppendFormat(@"&{0} \\ \\", SymbolMatrixUtilities.C3().ToLatex());
@@ -350,19 +350,19 @@ namespace MatrixCalculus
         public static int Test_KroneckerSum()
         {
             RealFactory rf = new RealFactory();
-            SquareRealMatrix A = rf[2, 2, 
+            SquareRealMatrix A = rf[2, 2,
                     1, -1,
                     0, 2
             ];
 
-            SquareRealMatrix B =  rf[2, 2,
+            SquareRealMatrix B = rf[2, 2,
                     1, 0,
                     2, -1
             ];
 
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
-            
+
             sb.AppendFormat(@"&A = {0}\;B = {1}", A.ToLatex(), B.ToLatex() + @" \\ \\");
             sb.AppendFormat(@"&C = A\;\oplus\;B = {0}", SquareRealMatrix.KroneckerSum(A, B).ToLatex());
 
@@ -377,14 +377,14 @@ namespace MatrixCalculus
             SymbolMatrix A1 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with symbols a,b,c,d
             new List<Symbol>
             {
-                new Symbol("a"), new Symbol("b"), 
+                new Symbol("a"), new Symbol("b"),
                 new Symbol("c"), new Symbol("d")
             });
 
             SymbolMatrix A2 = new SymbolMatrix(2, 2, //create a 2 X 2 symbol matrix with symbols e,f,g,h
             new List<Symbol>
             {
-                new Symbol("e"), new Symbol("f"), 
+                new Symbol("e"), new Symbol("f"),
                 new Symbol("g"), new Symbol("h")
             });
             StringBuilder sb = new StringBuilder();//Start building latex
@@ -395,7 +395,7 @@ namespace MatrixCalculus
         }
         public static int Test_C3()
         {
-            SymbolMatrix C3 = SymbolMatrixUtilities.C3(new List<string>{"x", "y", "z"});
+            SymbolMatrix C3 = SymbolMatrixUtilities.C3(new List<string> { "x", "y", "z" });
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.AppendFormat(@"{0}", C3.ToLatex());
 
@@ -418,16 +418,16 @@ namespace MatrixCalculus
             SymbolFactory sf = new SymbolFactory(SymbolType.Rational);
 
             SymbolMatrix A1 = sf[2, 2, //create a 2 X 2 symbol matrix with rationals
-                "1/2", "1/5", 
+                "1/2", "1/5",
                 "2/3", "7/8"
             ];
-            
+
 
             SymbolMatrix A2 = sf[2, 2, //create a 2 X 2 symbol with rationals
-                "1/4", "7/9", 
+                "1/4", "7/9",
                 "3/10", "4/7"
             ];
-            
+
             SymbolMatrix symMul = A1 * A2; //multiply the matrices
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.AppendFormat(@"{0}", symMul.ToLatex("F"));
@@ -443,12 +443,12 @@ namespace MatrixCalculus
             SquareRealMatrix A = rf[3, 3, //create a 3 X 3 real matrix
             1, 2, 3,
             7, 8, 9,
-            6, 5, 4 
+            6, 5, 4
             ];
 
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
-            
+
             sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
             sb.AppendFormat(@"&tr A = {0}", A.Trace() + @" \\ \\"); //display trace
             sb.Append(@"\end{aligned}");
@@ -469,16 +469,16 @@ namespace MatrixCalculus
             "2", "-1", "2"
             ];
 
-            SquareRealMatrix SA = rff[3,3,
+            SquareRealMatrix SA = rff[3, 3,
             7, 2, -2,
             3, 1, 3,
-            8,-1, 2
+            8, -1, 2
             ];
             RationalVector rv = rf["7", "3", "8"];
 
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
-            
+
             sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
             A[0] = rv;
             sb.AppendFormat(@"&Ab = {0}", A.ToLatex()); //display Vec A
@@ -495,19 +495,19 @@ namespace MatrixCalculus
 
             SquareRealMatrix A = rf[2, 2, //create a 2 X 2 real matrix
             1, 2,
-            3, 4 
+            3, 4
             ];
 
             RealVector VecA = A.Vec("A"); //use Vec operator giving the matrix a name
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
-            
+
             sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
             sb.AppendFormat(@"&{0}", VecA.ToLatex("F")); //display Vec A
             sb.Append(@"\end{aligned}");
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_VecOperator.html"); //display Latex via mathjax
-            
+
             return 0;
 
         }
@@ -516,20 +516,20 @@ namespace MatrixCalculus
             SymbolFactory sf = new SymbolFactory(SymbolType.Rational);
 
             SymbolMatrix A1 = sf[2, 2, //create a 2 X 2 symbol matrix with rationals
-                "1/2", "1/5", 
+                "1/2", "1/5",
                 "2/3", "7/8"
             ];
-            
+
 
             SymbolMatrix A2 = sf[2, 2, //create a 2 X 2 symbol with rationals
-                "1/4", "7/9", 
+                "1/4", "7/9",
                 "3/10", "4/7"
             ];
-            
+
             SymbolMatrix symMul = A1 * A2; //multiply the matrices
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
-            
+
             sb.AppendFormat(@"&{0}", (A1 * A2).ToLatex("F") + @" \\ \\");
             sb.AppendFormat(@"&{0}", (A1 + A2).ToLatex("F") + @" \\ \\");
             sb.AppendFormat(@"&{0}", (A1 - A2).ToLatex("F"));
@@ -548,12 +548,12 @@ namespace MatrixCalculus
 
             SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
 
-            Symbol sym = sf["x - x"];
+            Symbol sym = sf["2x^2 - 5x - 5"];
             Console.WriteLine(sym.Expression);
             Console.WriteLine(sym.HashTokenString);
-            Console.WriteLine(ArithmeticStatePattern.Add(sym));
+            //Console.WriteLine(ArithmeticStatePattern.Add(sym));
 
-            //Console.WriteLine(DerivativeStatePattern.DF(sym));
+            Console.WriteLine(DerivativeStatePattern.DF(sym));
 
             /*
             tokes.ParseExpression("2xsin(2x)");
@@ -577,11 +577,51 @@ namespace MatrixCalculus
             }
             
             */
-            
+
 
             return 0;
         }
 
+        public static int Test_Rational_Determinant()
+        {
+            RationalFactory rf = new RationalFactory();
+
+            RationalSquareMatrix A = rf[3, 3,
+            "1", "2", "-2",
+            "-1", "1", "3",
+            "2", "-1", "2"
+            ];
+
+            List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetAllMatrixCoFactors(A);
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            sb.AppendFormat(@"&{0} \\ \\", A.ToLatex());
+
+            foreach (RationalCoFactorInfo ci in cfList)
+            {
+
+                sb.AppendFormat(@"&{0} \\ \\",  ci.CoFactor.ToLatex() + ci.Minor.ToLatex());
+
+                foreach (List<RationalCoFactorInfo> lstChild in ci.ListOfLists)
+                {
+                    foreach (RationalCoFactorInfo ci2 in lstChild)
+                    {
+                        //if (ci2.Minor.Rows == 4)
+                        {
+
+                            sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.ToLatex() + ci2.CoFactor.ToLatex() + ci2.Minor.ToLatex());
+                        }
+                    }
+
+                }
+            }
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Rational_Determinant.html"); //display Latex via mathjax
+
+
+            return 0;
+        }
         public static int Test_Symbol_Determinant()
         {
             //SymbolMatrix C3 = SymbolMatrixUtilities.C3RowColumn();
@@ -591,7 +631,7 @@ namespace MatrixCalculus
             //Symbol det = smK.Determinant();
 
 
-            SymbolMatrix smK = SymbolMatrixUtilities.D3();
+            SymbolMatrix smK = SymbolMatrixUtilities.C3RowColumn();
             List<CoFactorInfo> cfList = SymbolMatrix.GetAllMatrixCoFactors(smK);
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
@@ -659,7 +699,7 @@ namespace MatrixCalculus
                     {
                         //if (ci2.Minor.Rows == 4)
                         {
-                            
+
                             sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.Tokens[0].Value + ci2.CoFactor.Tokens[0].Value + ci2.Minor.ToLatex());
                             /*
                             string det = string.Format("({0} - {1})", 

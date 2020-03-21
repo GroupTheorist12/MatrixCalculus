@@ -6,6 +6,16 @@ using System.Text;
 
 namespace MatrixCalculus
 {
+
+    public class RationalCoFactorInfo
+    {
+        public RationalSquareMatrix Minor = null;
+        public int Sign = 0;
+
+        public Rational CoFactor = 1;
+
+        public List<List<RationalCoFactorInfo>> ListOfLists = new List<List<RationalCoFactorInfo>>();
+    }
     public class RationalSquareMatrix
     {
         private Rational[,] InternalRep = null;
@@ -14,7 +24,7 @@ namespace MatrixCalculus
         public RationalFactory Parent { get; set; }
         public int Rows = 0;
         public int Columns = 0;
-        private List<double> Vector = null;
+        private List<Rational> Vector = null;
         private void Zero()
         {
             for (int i = 0; i < Rows; i++)
@@ -73,7 +83,7 @@ namespace MatrixCalculus
             }
         }
 
-        public RationalSquareMatrix(int rows, int columns, List<double> V)
+        public RationalSquareMatrix(int rows, int columns, List<Rational> V)
         {
             if (rows != columns)
             {
@@ -239,6 +249,105 @@ namespace MatrixCalculus
                 return det;
             }
 
+        }
+
+        public static RationalCoFactorInfo GetCoFactor(RationalSquareMatrix symIn, int Column)
+        {
+            RationalCoFactorInfo cfi = new RationalCoFactorInfo();
+            cfi.Sign = (int)Math.Pow(-1, Column + 1);
+            RationalVector col = symIn[Column - 1];
+            cfi.CoFactor = col[0];
+            List<Rational> symList = new List<Rational>();
+
+            for (int i = 1; i < symIn.Rows; i++)
+            {
+                for (int j = 0; j < symIn.Columns; j++)
+                {
+                    if (j + 1 != Column)
+                    {
+                        symList.Add(symIn[i, j]);
+                    }
+                }
+            }
+
+            cfi.Minor = new RationalSquareMatrix(symIn.Rows - 1, symIn.Columns - 1, symList);
+            return cfi;
+        }
+
+        public static List<RationalCoFactorInfo> GetCoFactors(RationalSquareMatrix ParentMatrix)
+        {
+            List<RationalCoFactorInfo> cfiL = new List<RationalCoFactorInfo>();
+            int Order = ParentMatrix.Rows;
+
+            for (int i = 0; i < ParentMatrix.Columns; i++)
+            {
+                cfiL.Add(GetCoFactor(ParentMatrix, i + 1));
+            }
+            return cfiL;
+        }
+
+        public static List<RationalCoFactorInfo> GetAllMatrixCoFactors(RationalSquareMatrix ParentMatrix)
+        {
+            List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetCoFactors(ParentMatrix);
+            if(cfList[0].Minor.Rows == 2) //At two go back
+            {
+                return cfList;
+            }
+            int inc = 0;
+            RationalCoFactorInfo cfi = null;
+            RationalCoFactorInfo cfiChild = null;
+            List<RationalCoFactorInfo> cfListChild = null;
+            while (inc < cfList.Count)
+            {
+                if (cfi == null)
+                {
+                    cfi = cfList[inc];
+                }
+                else if (cfi != null && cfi.ListOfLists.Count == 0) //init value
+                {
+                    List<RationalCoFactorInfo> cfListTmp = RationalSquareMatrix.GetCoFactors(cfi.Minor);
+                    cfi.ListOfLists.Add(cfListTmp);
+                    cfListChild = new List<RationalCoFactorInfo>(cfListTmp);
+                    if (cfListChild[0].Minor.Rows == 2) //end of line
+                    {
+                        cfList[inc] = cfi;
+                        cfi = null;
+                        inc++;
+                    }
+                }
+                else if (cfi != null && cfi.ListOfLists.Count > 0) //have value
+                {
+                    List<RationalCoFactorInfo> cfListTmp = null;
+                    cfiChild = new RationalCoFactorInfo();
+                    foreach (RationalCoFactorInfo cfiC in cfListChild)
+                    {
+                        cfListTmp = RationalSquareMatrix.GetCoFactors(cfiC.Minor);
+                        cfi.ListOfLists.Add(cfListTmp);
+                        cfiChild.ListOfLists.Add(cfListTmp);
+                    }
+
+                    cfListChild = new List<RationalCoFactorInfo>();
+                    foreach (List<RationalCoFactorInfo> cfl in cfiChild.ListOfLists)
+                    {
+                        foreach (RationalCoFactorInfo cfiC in cfl)
+                        {
+                            cfListChild.Add(cfiC);
+                        }
+                    }
+
+                    cfiChild = null;
+
+                    if (cfListChild[0].Minor.Rows == 2) //end of line
+                    {
+                        cfList[inc] = cfi;
+                        cfi = null;
+                        inc++;
+                    }
+                }
+
+            }
+
+            return cfList;
         }
 
     }
