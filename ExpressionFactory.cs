@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace MatrixCalculus
@@ -69,15 +65,15 @@ namespace MatrixCalculus
 
         private string TrigDF(string trigValue)
         {
-            string ret = string.Empty;
             Hashtable ht = new Hashtable();
             ht["sin"] = "cos";
             ht["cos"] = "-sin";
             return (string)ht[trigValue];
         }
+
         public Symbol DF(Symbol sym)
         {
-            Symbol ret = new Symbol();
+            Symbol retVal = new Symbol();
             List<Token> lstCopy = new List<Token>();
             List<string> LiteralBuffer = new List<string>();
             List<string> OperatorBuffer = new List<string>();
@@ -91,20 +87,20 @@ namespace MatrixCalculus
 
             lstCopy.Reverse();
 
-            int i = 0;
+            int counter = 0;
             Rational pow = 0;
             Rational accum = 0;
 
-            while (i < lstCopy.Count)
+            while (counter < lstCopy.Count)
             {
-                Token t = lstCopy[i];
+                Token t = lstCopy[counter];
                 if (t.Type == "Literal")
                 {
                     LiteralBuffer.Add(t.Value);
                 }
                 else if (t.Type == "Operator")
                 {
-                    if (t.Value == "^") //Power
+                    if (t.Value == "^") // Exponent
                     {
                         pow = Rational.Parse(string.Join("", LiteralBuffer.ToArray())) - 1;
                         accum += Rational.Parse(string.Join("", LiteralBuffer.ToArray()));
@@ -148,11 +144,9 @@ namespace MatrixCalculus
                         Rational tmp = Rational.Parse(string.Join("", LiteralBuffer.ToArray()));
                         newList.Add(new Token("Literal", tmp.ToString()));
                         LiteralBuffer.Clear();
-
                     }
-
                 }
-                i++;
+                counter++;
             }
 
             if (LiteralBuffer.Count > 0)
@@ -162,25 +156,23 @@ namespace MatrixCalculus
                 if (pow > 0)
                 {
                     newList.Add(new Token("Operator", "*"));
-
                 }
 
                 newList.Add(new Token("Literal", accum.ToString()));
 
             }
-            else if(accum > 0)
+            else if (accum > 0)
             {
                 newList.Add(new Token("Literal", accum.ToString()));
-
             }
             newList.Reverse();
             newList[newList.Count - 1].SymbolEnd = true;
-            ret.Tokens = newList;
-            return ret;
+            retVal.Tokens = newList;
+            return retVal;
         }
         public void ParseExpression(string FunctionString)
         {
-            int i = 0;
+            int element = 0;
             TokenList.Clear();
 
             Symbol sym = new Symbol();
@@ -188,20 +180,20 @@ namespace MatrixCalculus
             bool InBracket = false;
             bool InUnderScore = false;
 
-            while (i < FunctionString.Length)
+            while (element < FunctionString.Length)
             {
-                char ch = FunctionString[i];
-                if (ch == '-' && FunctionString[i + 1] != ' ') //negative number. Parser needs space for +-*/
+                char ch = FunctionString[element];
+                if (ch == '-' && FunctionString[element + 1] != ' ') // Negative number. Parser needs space for +-*/
                 {
                     numberBuffer.Add("-1");
 
                 }
                 else if (isDigit(ch))
                 {
-                    if (InUnderScore)//subscript variables such as x_1
+                    if (InUnderScore) // Subscript variables such as x_1
                     {
                         InUnderScore = false;
-                        letterBuffer.Clear(); //contained in variable buffer. subscript
+                        letterBuffer.Clear(); // Contained in variable buffer. subscript
                         variableBuffer.Add(ch.ToString());
                         Token t = new Token("Variable", string.Join("", variableBuffer.ToArray()));
                         t.SymbolEnd = false;
@@ -232,12 +224,12 @@ namespace MatrixCalculus
 
                     if (Variables.Exists(v => v == ch.ToString()))
                     {
-                        letterBuffer.Clear(); //contained in variable buffer. subscript
+                        letterBuffer.Clear(); // Contained in variable buffer. subscript
                         variableBuffer.Add(ch.ToString());
                         Token t = new Token("Variable", string.Join("", variableBuffer.ToArray()));
                         t.SymbolEnd = false;
                         TokenList.Add(t);
-                        if(i != FunctionString.Length - 1 && !InBracket)
+                        if (element != FunctionString.Length - 1 && !InBracket)
                         {
                             TokenList.Add(new Token("Operator", "*"));
                         }
@@ -250,7 +242,7 @@ namespace MatrixCalculus
                     }
 
                 }
-                else if (ch == '^') //numbers coming
+                else if (ch == '^') // Number's coming
                 {
                     TokenList.Add(new Token("Operator", ch.ToString()));
                 }
@@ -259,10 +251,10 @@ namespace MatrixCalculus
                     emptyNumberBufferAsLiteral();
                     TokenList.Add(new Token("Operator", ch.ToString()));
                 }
-                else if (ch == ' ') //space denotes polynomial. everything before is complete
+                else if (ch == ' ') // Space denotes polynomial, everything before is complete
                 {
                     //TokenList[TokenList.Count - 1].SymbolEnd = true;
-
+                    // Is this else if block necessary? GPG
                 }
                 else if (ch == '+')
                 {
@@ -270,12 +262,11 @@ namespace MatrixCalculus
                     TokenList[TokenList.Count - 1].SymbolEnd = (InBracket) ? false : true;
                     TokenList.Add(new Token("Operator", " " + ch.ToString() + " "));
                 }
-                else if (ch == '-' && FunctionString[i + 1] == ' ')
+                else if (ch == '-' && FunctionString[element + 1] == ' ')
                 {
                     emptyNumberBufferAsLiteral();
                     TokenList[TokenList.Count - 1].SymbolEnd = true;
                     TokenList.Add(new Token("Operator", " " + ch.ToString() + " "));
-
                 }
                 else if (isLeftParenthesis(ch))
                 {
@@ -300,8 +291,7 @@ namespace MatrixCalculus
                     TokenList.Add(new Token("Right Parenthesis", ch.ToString()));
                 }
 
-
-                i++;
+                element++;
             }
 
             emptyNumberBufferAsLiteral();

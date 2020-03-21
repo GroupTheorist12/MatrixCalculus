@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Text;
 
 namespace MatrixCalculus
 {
@@ -13,17 +9,17 @@ namespace MatrixCalculus
             int rows = input.GetLength(0);
             int columns = input.GetLength(1);
 
-            int[,] ret = new int[rows, columns];
+            int[,] retVal = new int[rows, columns];
 
-            for (int i = 0; i < rows; i++)
+            for (int rowCount = 0; rowCount < rows; rowCount++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int colCount = 0; colCount < columns; colCount++)
                 {
-                    ret[i, j] = (int)input[i][j];
+                    retVal[rowCount, colCount] = (int)input[rowCount][colCount];
                 }
             }
 
-            return ret;
+            return retVal;
         }
 
         public static double[][] DoubleArrayFromInt(int[,] input)
@@ -31,17 +27,17 @@ namespace MatrixCalculus
             int rows = input.GetLength(0);
             int columns = input.GetLength(1);
 
-            double[][] ret = MatrixCreate(rows, columns);
+            double[][] retVal = MatrixCreate(rows, columns);
 
-            for (int i = 0; i < rows; i++)
+            for (int rowIndex = 0; rowIndex < rows; rowIndex++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int colIndex = 0; colIndex < columns; colIndex++)
                 {
-                    ret[i][j] = (double)input[i, j];
+                    retVal[rowIndex][colIndex] = (double)input[rowIndex, colIndex];
                 }
             }
 
-            return ret;
+            return retVal;
         }
 
 
@@ -50,17 +46,17 @@ namespace MatrixCalculus
             int rows = input.GetLength(0);
             int columns = input.GetLength(0);
 
-            double[,] ret = new double[rows, columns];
+            double[,] retVal = new double[rows, columns];
 
-            for (int i = 0; i < rows; i++)
+            for (int rowIndex = 0; rowIndex < rows; rowIndex++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int colIndex = 0; colIndex < columns; colIndex++)
                 {
-                    ret[i, j] = input[i][j];
+                    retVal[rowIndex, colIndex] = input[rowIndex][colIndex];
                 }
             }
 
-            return ret;
+            return retVal;
         }
 
         public static double[][] DoubleArrayFromDouble(double[,] input)
@@ -68,17 +64,17 @@ namespace MatrixCalculus
             int rows = input.GetLength(0);
             int columns = input.GetLength(1);
 
-            double[][] ret = MatrixCreate(rows, columns);
+            double[][] retVal = MatrixCreate(rows, columns);
 
-            for (int i = 0; i < rows; i++)
+            for (int rowIndex = 0; rowIndex < rows; rowIndex++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int colIndex = 0; colIndex < columns; colIndex++)
                 {
-                    ret[i][j] = input[i, j];
+                    retVal[rowIndex][colIndex] = input[rowIndex, colIndex];
                 }
             }
 
-            return ret;
+            return retVal;
         }
 
 
@@ -142,74 +138,78 @@ namespace MatrixCalculus
         public static void ShowVector(int[] vector)
         {
             Console.Write("   ");
-            for (int i = 0; i < vector.Length; ++i)
-                Console.Write(vector[i] + " ");
+            for (int vectorCount = 0; vectorCount < vector.Length; ++vectorCount)
+                Console.Write(vector[vectorCount] + " ");
             Console.WriteLine("\n");
         }
 
         public static double[][] MatrixInverse(double[][] matrix)
         {
-            // assumes determinant is not 0
+            // Assumes determinant is not 0
             // that is, the matrix does have an inverse
-            int n = matrix.Length;
-            double[][] result = MatrixCreate(n, n); // make a copy of matrix
-            for (int i = 0; i < n; ++i)
-                for (int j = 0; j < n; ++j)
-                    result[i][j] = matrix[i][j];
+            int mtxLength = matrix.Length;
+            double[][] result = MatrixCreate(mtxLength, mtxLength); // Make a copy of matrix
+            for (int rowCount = 0; rowCount < mtxLength; ++rowCount)
+                for (int colCount = 0; colCount < mtxLength; ++colCount)
+                    result[rowCount][colCount] = matrix[rowCount][colCount];
 
-            double[][] lum; // combined lower & upper
+            double[][] lum; // Combined lower & upper
             int[] perm;
             int toggle;
             toggle = MatrixDecompose(matrix, out lum, out perm);
 
-            double[] b = new double[n];
-            for (int i = 0; i < n; ++i)
+            double[] b = new double[mtxLength];
+            for (int rowCount = 0; rowCount < mtxLength; ++rowCount)
             {
-                for (int j = 0; j < n; ++j)
-                    if (i == perm[j])
-                        b[j] = 1.0;
+                for (int colCount = 0; colCount < mtxLength; ++colCount)
+                    if (rowCount == perm[colCount])
+                        b[colCount] = 1.0;
                     else
-                        b[j] = 0.0;
+                        b[colCount] = 0.0;
 
-                double[] x = Helper(lum, b); // 
-                for (int j = 0; j < n; ++j)
-                    result[j][i] = x[j];
+                double[] x = Helper(lum, b);  
+                for (int colCount = 0; colCount < mtxLength; ++colCount)
+                    result[colCount][rowCount] = x[colCount];
             }
             return result;
-        } // MatrixInverse
+        }
 
-        public static int MatrixDecompose(double[][] m, out double[][] lum, out int[] perm)
+        /// <summary>
+        /// Crout's LU decomposition for matrix determinant and inverse
+        /// stores combined lower & upper in lum[][]
+        /// stores row permuations into perm[]
+        /// returns +1 or -1 according to even or odd number of row permutations
+        /// lower gets dummy 1.0s on diagonal (0.0s above)
+        /// upper gets lum values on diagonal (0.0s below)
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="lum"></param>          //TODO: need more descriptive name for lum, not well explained in the code. GPG
+        /// <param name="permutations"></param>
+        /// <returns></returns>
+        public static int MatrixDecompose(double[][] m, out double[][] lum, out int[] permutations)
         {
-            // Crout's LU decomposition for matrix determinant and inverse
-            // stores combined lower & upper in lum[][]
-            // stores row permuations into perm[]
-            // returns +1 or -1 according to even or odd number of row permutations
-            // lower gets dummy 1.0s on diagonal (0.0s above)
-            // upper gets lum values on diagonal (0.0s below)
-
             int toggle = +1; // even (+1) or odd (-1) row permutatuions
-            int n = m.Length;
+            int mtxLength = m.Length;
 
             // make a copy of m[][] into result lu[][]
-            lum = MatrixCreate(n, n);
-            for (int i = 0; i < n; ++i)
-                for (int j = 0; j < n; ++j)
-                    lum[i][j] = m[i][j];
-
+            lum = MatrixCreate(mtxLength, mtxLength);
+            for (int rowCount = 0; rowCount < mtxLength; ++rowCount)
+                for (int colCount = 0; colCount < mtxLength; ++colCount)
+                    lum[rowCount][colCount] = m[rowCount][colCount];
 
             // make perm[]
-            perm = new int[n];
-            for (int i = 0; i < n; ++i)
-                perm[i] = i;
+            permutations = new int[mtxLength];
+            for (int rowCount = 0; rowCount < mtxLength; ++rowCount)
+                permutations[rowCount] = rowCount;
 
-            for (int j = 0; j < n - 1; ++j) // process by column. note n-1 
+            for (int colCount = 0; colCount < mtxLength - 1; ++colCount) // Process by column. note n-1 
             {
-                double max = Math.Abs(lum[j][j]);
-                int piv = j;
+                double max = Math.Abs(lum[colCount][colCount]);
+                int piv = colCount;
 
-                for (int i = j + 1; i < n; ++i) // find pivot index
+                for (int i = colCount + 1; i < mtxLength; ++i) // Find pivot index
                 {
-                    double xij = Math.Abs(lum[i][j]);
+                    double xij = Math.Abs(lum[i][colCount]);
                     if (xij > max)
                     {
                         max = xij;
@@ -217,85 +217,83 @@ namespace MatrixCalculus
                     }
                 } // i
 
-                if (piv != j)
+                if (piv != colCount)
                 {
-                    double[] tmp = lum[piv]; // swap rows j, piv
-                    lum[piv] = lum[j];
-                    lum[j] = tmp;
+                    double[] tmp = lum[piv]; // Swap rows j, piv
+                    lum[piv] = lum[colCount];
+                    lum[colCount] = tmp;
 
-                    int t = perm[piv]; // swap perm elements
-                    perm[piv] = perm[j];
-                    perm[j] = t;
+                    int t = permutations[piv]; // Swap perm elements
+                    permutations[piv] = permutations[colCount];
+                    permutations[colCount] = t;
 
                     toggle = -toggle;
                 }
 
-                double xjj = lum[j][j];
+                double xjj = lum[colCount][colCount];
                 if (xjj != 0.0)
                 {
-                    for (int i = j + 1; i < n; ++i)
+                    for (int i = colCount + 1; i < mtxLength; ++i)
                     {
-                        double xij = lum[i][j] / xjj;
-                        lum[i][j] = xij;
-                        for (int k = j + 1; k < n; ++k)
-                            lum[i][k] -= xij * lum[j][k];
+                        double xij = lum[i][colCount] / xjj;
+                        lum[i][colCount] = xij;
+                        for (int k = colCount + 1; k < mtxLength; ++k)
+                            lum[i][k] -= xij * lum[colCount][k];
                     }
                 }
 
             } // j
 
             return toggle;
-        } // MatrixDecompose
+        }
 
-        public static double[] Helper(double[][] luMatrix, double[] b) // helper
+        public static double[] Helper(double[][] luMatrix, double[] b)
         {
-            int n = luMatrix.Length;
-            double[] x = new double[n];
+            int mtxLength = luMatrix.Length;
+            double[] x = new double[mtxLength];
             b.CopyTo(x, 0);
 
-            for (int i = 1; i < n; ++i)
+            for (int rowCount = 1; rowCount < mtxLength; ++rowCount)
             {
-                double sum = x[i];
-                for (int j = 0; j < i; ++j)
-                    sum -= luMatrix[i][j] * x[j];
-                x[i] = sum;
+                double sum = x[rowCount];
+                for (int colCount = 0; colCount < rowCount; ++colCount)
+                    sum -= luMatrix[rowCount][colCount] * x[colCount];
+                x[rowCount] = sum;
             }
 
-            x[n - 1] /= luMatrix[n - 1][n - 1];
-            for (int i = n - 2; i >= 0; --i)
+            x[mtxLength - 1] /= luMatrix[mtxLength - 1][mtxLength - 1];
+            for (int rowcount = mtxLength - 2; rowcount >= 0; --rowcount)
             {
-                double sum = x[i];
-                for (int j = i + 1; j < n; ++j)
-                    sum -= luMatrix[i][j] * x[j];
-                x[i] = sum / luMatrix[i][i];
+                double sum = x[rowcount];
+                for (int colCount = rowcount + 1; colCount < mtxLength; ++colCount)
+                    sum -= luMatrix[rowcount][colCount] * x[colCount];
+                x[rowcount] = sum / luMatrix[rowcount][rowcount];
             }
 
             return x;
-        } // Helper
+        }
 
+        //TODO: need more descriptive name for lum; can't suss out what we're iterating over here. GPG
         public static double MatrixDeterminant(double[][] matrix)
         {
             double[][] lum;
             int[] perm;
             int toggle = MatrixDecompose(matrix, out lum, out perm);
-            double result = toggle;
-            for (int i = 0; i < lum.Length; ++i)
-                result *= lum[i][i];
-            return result;
+            double retVal = toggle;
+            for (int elementCount = 0; elementCount < lum.Length; ++elementCount)
+                retVal *= lum[elementCount][elementCount];
+            return retVal;
         }
-
-        // ----------------------------------------------------------------
 
         public static double[][] MatrixCreate(int rows, int cols)
         {
-            double[][] result = new double[rows][];
-            for (int i = 0; i < rows; ++i)
-                result[i] = new double[cols];
-            return result;
+            double[][] retVal = new double[rows][];
+            for (int rowCount = 0; rowCount < rows; ++rowCount)
+                retVal[rowCount] = new double[cols];
+            return retVal;
         }
 
-        public static double[][] MatrixProduct(double[][] matrixA,
-          double[][] matrixB)
+        public static double[][] MatrixProduct(double[][] matrixA, double[][] matrixB)
         {
             int aRows = matrixA.Length;
             int aCols = matrixA[0].Length;
@@ -306,60 +304,73 @@ namespace MatrixCalculus
 
             double[][] result = MatrixCreate(aRows, bCols);
 
-            for (int i = 0; i < aRows; ++i) // each row of A
-                for (int j = 0; j < bCols; ++j) // each col of B
-                    for (int k = 0; k < aCols; ++k) // could use k < bRows
-                        result[i][j] += matrixA[i][k] * matrixB[k][j];
+            for (int ARowCount = 0; ARowCount < aRows; ++ARowCount) // Each row of A
+                for (int BColCount = 0; BColCount < bCols; ++BColCount) // Each col of B
+                    for (int AColCount = 0; AColCount < aCols; ++AColCount) // Could use k < bRows
+                        result[ARowCount][BColCount] += matrixA[ARowCount][AColCount] * matrixB[AColCount][BColCount];
 
             return result;
         }
 
         public static string MatrixAsString(double[][] matrix)
         {
-            string s = "";
-            for (int i = 0; i < matrix.Length; ++i)
+            string retval = string.Empty;
+            for (int rowCount = 0; rowCount < matrix.Length; ++rowCount)
             {
-                for (int j = 0; j < matrix[i].Length; ++j)
-                    s += matrix[i][j].ToString("F3").PadLeft(8) + " ";
-                s += Environment.NewLine;
+                for (int colCount = 0; colCount < matrix[rowCount].Length; ++colCount)
+                {
+                    retval += matrix[rowCount][colCount].ToString("F3").PadLeft(8) + " ";
+                }
+
+                retval += Environment.NewLine;
             }
-            return s;
+            return retval;
         }
 
+        /// <summary>
+        /// Extracts the lower part of an LU Doolittle composition
+        /// </summary>
+        /// <param name="lum"></param>
+        /// <returns>lower part of an LU Doolittle decomposition (dummy 1.0s on diagonal, 0.0s above)</returns>
+        //TODO: need more descriptive name for lum; can't suss out what we're iterating over here. GPG
+        //TODO: don't understand why you're starting with the 0th element of the row or column and then prefix-incrementing the counter of the loops GPG
         public static double[][] ExtractLower(double[][] lum)
         {
-            // lower part of an LU Doolittle decomposition (dummy 1.0s on diagonal, 0.0s above)
-            int n = lum.Length;
-            double[][] result = MatrixCreate(n, n);
-            for (int i = 0; i < n; ++i)
+            int totalElements = lum.Length;
+            double[][] retVal = MatrixCreate(totalElements, totalElements);
+            for (int rowCount = 0; rowCount < totalElements; ++rowCount)
             {
-                for (int j = 0; j < n; ++j)
+                for (int colCount = 0; colCount < totalElements; ++colCount)
                 {
-                    if (i == j)
-                        result[i][j] = 1.0;
-                    else if (i > j)
-                        result[i][j] = lum[i][j];
+                    if (rowCount == colCount)
+                        retVal[rowCount][colCount] = 1.0;
+                    else if (rowCount > colCount)
+                        retVal[rowCount][colCount] = lum[rowCount][colCount];
                 }
             }
-            return result;
+            return retVal;
         }
 
+        /// <summary>
+        /// Extracts the upper part of an LU Doolittle composition
+        /// </summary>
+        /// <param name="lum"></param>
+        /// <returns>upper part of an LU (lu values on diagional and above, 0.0s below)</returns>
+        //TODO: need more descriptive name for lum; can't suss out what we're iterating over here. GPG
+        //TODO: don't understand why you're starting with the 0th element of the row or column and then prefix-incrementing the counter of the loops GPG
         public static double[][] ExtractUpper(double[][] lum)
         {
-            // upper part of an LU (lu values on diagional and above, 0.0s below)
-            int n = lum.Length;
-            double[][] result = MatrixCreate(n, n);
-            for (int i = 0; i < n; ++i)
+            int totalElements = lum.Length;
+            double[][] result = MatrixCreate(totalElements, totalElements);
+            for (int rowCount = 0; rowCount < totalElements; ++rowCount)
             {
-                for (int j = 0; j < n; ++j)
+                for (int colCount = 0; colCount < totalElements; ++colCount)
                 {
-                    if (i <= j)
-                        result[i][j] = lum[i][j];
+                    if (rowCount <= colCount)
+                        result[rowCount][colCount] = lum[rowCount][colCount];
                 }
             }
             return result;
         }
-
-
     }
 }

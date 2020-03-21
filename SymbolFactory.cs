@@ -1,23 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-
 namespace MatrixCalculus
 {
     public class SymbolFactory
     {
         private SymbolFactory()
         {
-
         }
 
         public SymbolType FactorySymbolType { get; private set; }
         public RowColumn FactoryRowColumn {get;set;}
 
         public TokenFactory tokenFactory  {get;}
+
         public SymbolFactory(SymbolType st, TokenFactory epf = null)
         {
             FactorySymbolType = st;
@@ -56,29 +49,28 @@ namespace MatrixCalculus
                     sv.Add(this[exp]);
                 }
 
-
                 return sv;
             }
         }
+
         public SymbolMatrix this[int Rows, int Columns, params string[] exps]
         {
             get
             {
-                SymbolMatrix ret = new SymbolMatrix(Rows, Columns);
-                ret.Parent = this;
-                ret.SymbolMatrixSymbolType = FactorySymbolType;
+                SymbolMatrix retVal = new SymbolMatrix(Rows, Columns);
+                retVal.Parent = this;
+                retVal.SymbolMatrixSymbolType = FactorySymbolType;
                 int cnt = 0;
 
-                for (int i = 0; i < Rows; i++)
+                for (int rowCount = 0; rowCount < Rows; rowCount++)
                 {
-                    for (int j = 0; j < Columns; j++)
+                    for (int colCount = 0; colCount < Columns; colCount++)
                     {
-                        ret[i, j] = this[exps[cnt++]];
+                        retVal[rowCount, colCount] = this[exps[cnt++]];
                     }
                 }
 
-                return ret;
-
+                return retVal;
             }
         }
     }

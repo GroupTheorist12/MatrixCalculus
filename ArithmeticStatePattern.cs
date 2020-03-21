@@ -1,36 +1,31 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-using System.Collections;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.CodeDom.Compiler;
-using System.CodeDom;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace MatrixCalculus
 {
-/*
-using System.CodeDom.Compiler;
-using System.Reflection;
-using System;
-public class J
-{
-    public static void Main()
-    {       
-        System.CodeDom.Compiler.CompilerParameters parameters = new CompilerParameters();
-        parameters.GenerateExecutable = false;
-        parameters.OutputAssembly = "AutoGen.dll";
+    // I assume the following Main() declaration is test code; I would remove but cannot be sure GPG.
+    /*
+    using System.CodeDom.Compiler;
+    using System.Reflection;
+    using System;
+    public class J
+    {
+        public static void Main()
+        {       
+            System.CodeDom.Compiler.CompilerParameters parameters = new CompilerParameters();
+            parameters.GenerateExecutable = false;
+            parameters.OutputAssembly = "AutoGen.dll";
 
-        CompilerResults r = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(parameters, "public class B {public static int k=7;}");
+            CompilerResults r = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(parameters, "public class B {public static int k=7;}");
 
-        //verify generation
-        Console.WriteLine(Assembly.LoadFrom("AutoGen.dll").GetType("B").GetField("k").GetValue(null));
+            //verify generation
+            Console.WriteLine(Assembly.LoadFrom("AutoGen.dll").GetType("B").GetField("k").GetValue(null));
+        }
     }
-}
-*/
+    */
     public class ArithmeticStatePattern
     {
         private static Hashtable htTestFuncs = new Hashtable();
@@ -61,30 +56,26 @@ public class J
                 }
 
                 string miKey = methodInfo.Name.Replace(ArithmeticOps[ind], "");
-                //Console.WriteLine(miKey);
 
                 htTestFuncs[miKey] = methodInfo;
             }
-
-
         }
+
         public static string Add(Symbol sym, bool SkipPoly = false)
         {
             SymbolList symList = new SymbolList(sym.Tokens);
 
-            if (!SkipPoly && symList.Count > 1) //Do polynomials 
+            if (!SkipPoly && symList.Count > 1) // Do polynomials 
             {
-                //return Poly(symList);
+                //return Poly(symList);     //TODO:Work in progress, maybe?  GPG
             }
             MethodInfo mi = (MethodInfo)htTestFuncs[sym.HashTokenString];
             if (mi != null)
             {
                 return (string)mi.Invoke(null, new object[] { sym });
-
             }
 
             return sym.NakedTokenString;
-
         }
 
         public static string Add_VariableOperator_Plus_Variable(Symbol sym)
@@ -108,6 +99,5 @@ public class J
             }
             return FunctionString;
         }
-
     }
 }

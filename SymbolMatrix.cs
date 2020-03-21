@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 
 namespace MatrixCalculus
 {
@@ -14,6 +11,7 @@ namespace MatrixCalculus
         public List<CoFactorInfo> cfLinks;
         public List<CoFactorInfoList> Links;
     }
+
     public class CoFactorInfo
     {
         public SymbolMatrix Minor = null;
@@ -23,6 +21,7 @@ namespace MatrixCalculus
 
         public List<List<CoFactorInfo>> ListOfLists = new List<List<CoFactorInfo>>();
     }
+
     public class SymbolMatrix
     {
         private Symbol[,] InternalRep = null;
@@ -38,24 +37,23 @@ namespace MatrixCalculus
 
         private void Zero()
         {
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    InternalRep[i, j] = new Symbol("0");
+                    InternalRep[rowCount, colCount] = new Symbol("0");
                 }
             }
-
         }
 
         private void FromVector()
         {
             int cnt = 0;
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    InternalRep[i, j] = Vector[cnt++];
+                    InternalRep[rowCount, colCount] = Vector[cnt++];
                 }
             }
         }
@@ -67,7 +65,6 @@ namespace MatrixCalculus
             if (rows != columns)
             {
                 throw new Exception("rows and columns must be equal for square matrix");
-
             }
 
             this.Rows = rows;
@@ -94,11 +91,11 @@ namespace MatrixCalculus
 
             Vector = V;
 
-            this.Rows = rows;
-            this.Columns = columns;
-            InternalRep = new Symbol[this.Rows, this.Columns];
+            Rows = rows;
+            Columns = columns;
+            InternalRep = new Symbol[Rows, Columns];
             SymbolMatrixSymbolType = V[0].symbolType;
-            this.Parent = V[0].Parent;
+            Parent = V[0].Parent;
             FromVector();
         }
 
@@ -119,21 +116,21 @@ namespace MatrixCalculus
         {
             get
             {
-                SymbolVector ret = new SymbolVector();
+                SymbolVector retVal = new SymbolVector();
 
                 if (rc.rowColumn == RowColumn.Column)
                 {
-                    ret = this[rc.Val];
+                    retVal = this[rc.Val];
                 }
                 else
                 {
-                    for (int i = 0; i < this.Columns; i++)
+                    for (int colCount = 0; colCount < this.Columns; colCount++)
                     {
-                        ret.Add(InternalRep[rc.Val, i]);
+                        retVal.Add(InternalRep[rc.Val, colCount]);
                     }
 
                 }
-                return ret;
+                return retVal;
             }
             set
             {
@@ -143,9 +140,9 @@ namespace MatrixCalculus
                 }
                 else
                 {
-                    for (int i = 0; i < this.Columns; i++)
+                    for (int colCount = 0; colCount < this.Columns; colCount++)
                     {
-                        InternalRep[rc.Val, i] = value[i];
+                        InternalRep[rc.Val, colCount] = value[colCount];
                     }
 
                 }
@@ -157,20 +154,20 @@ namespace MatrixCalculus
         {
             get
             {
-                SymbolVector ret = new SymbolVector();
+                SymbolVector retVal = new SymbolVector();
 
-                for (int i = 0; i < this.Rows; i++)
+                for (int rowCount = 0; rowCount < this.Rows; rowCount++)
                 {
-                    ret.Add(InternalRep[i, Column]);
+                    retVal.Add(InternalRep[rowCount, Column]);
                 }
 
-                return ret;
+                return retVal;
             }
             set
             {
-                for (int i = 0; i < this.Rows; i++)
+                for (int rowCount = 0; rowCount < this.Rows; rowCount++)
                 {
-                    InternalRep[i, Column] = value[i];
+                    InternalRep[rowCount, Column] = value[rowCount];
                 }
 
             }
@@ -283,9 +280,9 @@ namespace MatrixCalculus
             List<CoFactorInfo> cfiL = new List<CoFactorInfo>();
             int Order = ParentMatrix.Rows;
 
-            for (int i = 0; i < ParentMatrix.Columns; i++)
+            for (int colCount = 0; colCount < ParentMatrix.Columns; colCount++)
             {
-                cfiL.Add(GetCoFactor(ParentMatrix, i + 1));
+                cfiL.Add(GetCoFactor(ParentMatrix, colCount + 1));
             }
             return cfiL;
         }
@@ -297,13 +294,13 @@ namespace MatrixCalculus
             cfi.CoFactor = col[0];
             List<Symbol> symList = new List<Symbol>();
 
-            for (int i = 1; i < symIn.Rows; i++)
+            for (int rowCount = 1; rowCount < symIn.Rows; rowCount++)
             {
-                for (int j = 0; j < symIn.Columns; j++)
+                for (int colCount = 0; colCount < symIn.Columns; colCount++)
                 {
-                    if (j + 1 != Column)
+                    if (colCount + 1 != Column)
                     {
-                        symList.Add(symIn[i, j]);
+                        symList.Add(symIn[rowCount, colCount]);
                     }
                 }
             }
@@ -350,14 +347,14 @@ namespace MatrixCalculus
             rc.Val = 0;
 
             SymbolVector oldSymbols = this[rc];
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    int ind = oldSymbols.FindIndex(f => f.Expression == this[i, j].Expression);
+                    int ind = oldSymbols.FindIndex(f => f.Expression == this[rowCount, colCount].Expression);
                     Symbol sym = new Symbol(newSymbols[ind]);
                     sym.IsExpression = true;
-                    flipper[i, j] = sym;
+                    flipper[rowCount, colCount] = sym;
                 }
             }
             return flipper;
@@ -367,29 +364,25 @@ namespace MatrixCalculus
 
         private static SymbolMatrix MultiplyRational(SymbolMatrix a, SymbolMatrix b)
         {
-            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
-            ret.SymbolMatrixSymbolType = SymbolType.Rational;
+            SymbolMatrix retVal = new SymbolMatrix(a.Rows, a.Columns);
+            retVal.SymbolMatrixSymbolType = SymbolType.Rational;
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
 
-                    for (int k = 0; k < ret.Columns; k++)
+                    for (int retColCount = 0; retColCount < retVal.Columns; retColCount++)
                     {
 
-                        Rational inter = Rational.Parse(ret.InternalRep[i, j].Expression);
-                        inter += Rational.Parse(a.InternalRep[i, k].Expression) * Rational.Parse(b.InternalRep[k, j].Expression);
+                        Rational inter = Rational.Parse(retVal.InternalRep[rowCount, colCount].Expression);
+                        inter += Rational.Parse(a.InternalRep[rowCount, retColCount].Expression) * Rational.Parse(b.InternalRep[retColCount, colCount].Expression);
                         Symbol sym = new Symbol(inter.ToString());
                         sym.LatexString = inter.ToLatex();
-                        ret.InternalRep[i, j] = sym;
+                        retVal.InternalRep[rowCount, colCount] = sym;
 
                     }
-
                 }
-
-
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -397,26 +390,23 @@ namespace MatrixCalculus
             sb.Append(a.ToLatex());
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
 
-            ret.FullRep = sb.ToString();
+            retVal.FullRep = sb.ToString();
 
-            return ret;
+            return retVal;
         }
 
         public static SymbolMatrix operator +(SymbolMatrix a, SymbolMatrix b)
         {
-            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
+            SymbolMatrix retVal = new SymbolMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] + b.InternalRep[i, j];
-
+                    retVal.InternalRep[rowCount, colCount] = a.InternalRep[rowCount, colCount] + b.InternalRep[rowCount, colCount];
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -425,26 +415,23 @@ namespace MatrixCalculus
             sb.Append(@"\;+\;");
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
 
-            ret.FullRep = sb.ToString();
+            retVal.FullRep = sb.ToString();
 
-            return ret;
+            return retVal;
 
         }
         public static SymbolMatrix operator -(SymbolMatrix a, SymbolMatrix b)
         {
-            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
+            SymbolMatrix retVal = new SymbolMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    ret.InternalRep[i, j] = a.InternalRep[i, j] - b.InternalRep[i, j];
-
+                    retVal.InternalRep[rowCount, colCount] = a.InternalRep[rowCount, colCount] - b.InternalRep[rowCount, colCount];
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -453,11 +440,11 @@ namespace MatrixCalculus
             sb.Append(@"\;-\;");
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
 
-            ret.FullRep = sb.ToString();
+            retVal.FullRep = sb.ToString();
 
-            return ret;
+            return retVal;
 
         }
 
@@ -466,15 +453,15 @@ namespace MatrixCalculus
             SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
 
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < ret.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < ret.Columns; colCount++)
                 {
 
-                    for (int k = 0; k < ret.Columns; k++)
+                    for (int retColCount = 0; retColCount < ret.Columns; retColCount++)
                     {
 
-                        ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
+                        ret.InternalRep[rowCount, colCount] += a.InternalRep[rowCount, retColCount] * b.InternalRep[retColCount, colCount];
 
                     }
 
@@ -498,23 +485,17 @@ namespace MatrixCalculus
 
         public static SymbolMatrix operator /(SymbolMatrix a, SymbolMatrix b)
         {
-            SymbolMatrix ret = new SymbolMatrix(a.Rows, a.Columns);
+            SymbolMatrix retVal = new SymbolMatrix(a.Rows, a.Columns);
 
-
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
-
-                    for (int k = 0; k < ret.Columns; k++)
+                    for (int retColCount = 0; retColCount < retVal.Columns; retColCount++)
                     {
-
-                        ret.InternalRep[i, j] += a.InternalRep[i, k] / b.InternalRep[k, j];
-
+                        retVal.InternalRep[rowCount, colCount] += a.InternalRep[rowCount, retColCount] / b.InternalRep[retColCount, colCount];
                     }
-
                 }
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -522,13 +503,10 @@ namespace MatrixCalculus
             sb.Append(a.ToLatex());
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.ToLatex());
 
-            ret.FullRep = sb.ToString();
-
-
-            return ret;
-
+            retVal.FullRep = sb.ToString();
+            return retVal;
         }
 
         /***************************End of Operators**********************************/
@@ -536,12 +514,12 @@ namespace MatrixCalculus
         public SymbolMatrix Flip()
         {
             SymbolMatrix flipper = new SymbolMatrix(this.Rows, this.Columns);
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
                 int MaxColumn = this.Columns - 1;
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    flipper[i, MaxColumn] = this[i, j];
+                    flipper[rowCount, MaxColumn] = this[rowCount, colCount];
                     --MaxColumn;
                 }
             }
@@ -551,17 +529,17 @@ namespace MatrixCalculus
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\\begin{bmatrix}");
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    if (j < Columns - 1)
+                    if (colCount < Columns - 1)
                     {
-                        sb.AppendFormat("{0} &", InternalRep[i, j].LatexString);
+                        sb.AppendFormat("{0} &", InternalRep[rowCount, colCount].LatexString);
                     }
                     else
                     {
-                        sb.AppendFormat("{0}", InternalRep[i, j].LatexString);
+                        sb.AppendFormat("{0}", InternalRep[rowCount, colCount].LatexString);
                     }
 
                 }
@@ -575,25 +553,25 @@ namespace MatrixCalculus
 
         public string ToLatex(string Rep)
         {
-            string ret = ToLatex();
+            string retVal = ToLatex();
 
             switch (Rep)
             {
                 case "F":
                     if (FullRep != string.Empty) //Set outside current object
                     {
-                        ret = FullRep;
+                        retVal = FullRep;
                     }
                     else
                     {
-                        ret = LatexName + " = " + ToLatex();
+                        retVal = LatexName + " = " + ToLatex();
                     }
                     break;
                 default:
                     break;
             }
 
-            return ret;
+            return retVal;
         }
 
     }

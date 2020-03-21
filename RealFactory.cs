@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-
 namespace MatrixCalculus
 {
     public class RealFactory
@@ -13,23 +6,20 @@ namespace MatrixCalculus
         {
             get
             {
-                SquareRealMatrix ret = new SquareRealMatrix(Rows, Columns);
-                ret.Parent = this;
-                
+                SquareRealMatrix retVal = new SquareRealMatrix(Rows, Columns);
+                retVal.Parent = this;
                 int cnt = 0;
 
-                for (int i = 0; i < Rows; i++)
+                for (int rowCount = 0; rowCount < Rows; rowCount++)
                 {
-                    for (int j = 0; j < Columns; j++)
+                    for (int colCount = 0; colCount < Columns; colCount++)
                     {
-                        ret[i, j] = exps[cnt++];
+                        retVal[rowCount, colCount] = exps[cnt++];
                     }
                 }
 
-                return ret;
-
+                return retVal;
             }
         }
-        
     }
 }

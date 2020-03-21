@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 
 namespace MatrixCalculus
 {
@@ -21,21 +18,20 @@ namespace MatrixCalculus
         private List<double> Vector = null;
         private void Zero()
         {
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    InternalRep[i, j] = 0;
+                    InternalRep[rowCount, colCount] = 0;
                 }
             }
-
         }
 
         private void Init()
         {
             if (this.Name[0] != 'E')
             {
-                throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices");
+                throw new Exception("Name of ElementaryMatrix must begin with a capital 'E' followed by two number indices");
             }
 
             int oI1 = 0;
@@ -45,13 +41,13 @@ namespace MatrixCalculus
             {
                 if (!int.TryParse(this.Name[1].ToString(), out oI1))
                 {
-                    throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 1 bad.");
+                    throw new Exception("Name of ElementaryMatrix must begin with a capital 'E' followed by two number indices, index 1 bad.");
 
                 }
 
                 if (!int.TryParse(this.Name[2].ToString(), out oI2))
                 {
-                    throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices, index 2 bad");
+                    throw new Exception("Name of ElementaryMatrix must begin with a capital 'E' followed by two number indices, index 2 bad");
 
                 }
 
@@ -60,7 +56,7 @@ namespace MatrixCalculus
             }
             catch (Exception)
             {
-                throw new Exception("Name of ElementaryMatrix must begin with capitol E followed by two numer indices. Could not parse indices.");
+                throw new Exception("Name of ElementaryMatrix must begin with a capital 'E' followed by two number indices. Could not parse indices.");
             }
 
             Major = oI1;
@@ -94,7 +90,6 @@ namespace MatrixCalculus
             Major = 0;
             Minor = 0;
             Zero();
-
         }
 
         public static implicit operator int(ElementaryMatrix em) => em[0, 0];
@@ -132,32 +127,27 @@ namespace MatrixCalculus
 
         public static ElementaryMatrix operator *(ElementaryMatrix a, ElementaryMatrix b)
         {
-            ElementaryMatrix ret = new ElementaryMatrix(a.Rows, a.Columns);
+            ElementaryMatrix retVal = new ElementaryMatrix(a.Rows, a.Columns);
 
-            for (int i = 0; i < ret.Rows; i++)
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
             {
-                for (int j = 0; j < ret.Columns; j++)
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
                 {
 
-                    for (int k = 0; k < ret.Columns; k++)
+                    for (int k = 0; k < retVal.Columns; k++)
                     {
 
-                        ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
+                        retVal.InternalRep[rowCount, colCount] += a.InternalRep[rowCount, k] * b.InternalRep[k, colCount];
 
-                        if(ret.InternalRep[i, j] == 1)
+                        if(retVal.InternalRep[rowCount, colCount] == 1)
                         {
-                            ret.Major = i + 1;
-                            ret.Minor = j + 1;
-                            ret.Name = "E" + ret.Major.ToString(); ret.Minor.ToString();
-                            ret.m_LatexName = @"E_{" + (ret.Major).ToString() + (ret.Minor).ToString() + "}";
-
+                            retVal.Major = rowCount + 1;
+                            retVal.Minor = colCount + 1;
+                            retVal.Name = $"E{retVal.Major.ToString()}{retVal.Minor.ToString()}";
+                            retVal.m_LatexName = $"E_{{{(retVal.Major).ToString() + (retVal.Minor).ToString()}}}";
                         }
                     }
-
                 }
-
-
-
             }
 
             StringBuilder sb = new StringBuilder();
@@ -166,45 +156,43 @@ namespace MatrixCalculus
             sb.Append(a.ToLatex());
             sb.Append(b.ToLatex());
             sb.Append(" = ");
-            sb.Append(ret.LatexName + " = ");
-            sb.Append(ret.ToLatex());
+            sb.Append(retVal.LatexName + " = ");
+            sb.Append(retVal.ToLatex());
 
-            ret.FullRep = sb.ToString();
+            retVal.FullRep = sb.ToString();
 
-
-            return ret;
+            return retVal;
         }
 
         public static UnitVector operator*(UnitVector uv, ElementaryMatrix em)
         {
-            UnitVector ret = new UnitVector(0);
-            ret.Clear();
+            UnitVector retVal = new UnitVector(0);
+            retVal.Clear();
             if (uv.Order != em.Rows)
             {
                 throw new Exception("Vector length must be same as number of columns and rows of matrix");
             }
 
-            for (int i = 0; i < em.Rows; i++)
+            for (int rowCount = 0; rowCount < em.Rows; rowCount++)
             {
                 int SumOfRow = 0;
-                for (int j = 0; j < em.Columns; j++)
+                for (int colCount = 0; colCount < em.Columns; colCount++)
                 {
-                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                    SumOfRow += (em.InternalRep[rowCount, colCount] * uv[colCount]);
                 }
 
-                ret.Add(SumOfRow);
+                retVal.Add(SumOfRow);
             }
 
-            return ret;
-        
+            return retVal;
         }
 
         public static UnitVector operator*(ElementaryMatrix em, UnitVector uv)
         {
-            UnitVector ret = new UnitVector(0);
-            ret.Clear();
+            UnitVector retVal = new UnitVector(0);
+            retVal.Clear();
 
-            //Elementary Matrix private default constructor called from implicit method. It is a value
+            // Elementary Matrix private default constructor called from implicit method. It is a value.
             if(em.Name == "E" && em.Rows == 1 && em.Columns == 1)
             {
                 return em[0, 0] * uv;
@@ -215,35 +203,35 @@ namespace MatrixCalculus
                 throw new Exception("Vector length must be same as number of columns and rows of matrix");
             }
 
-            for (int i = 0; i < em.Rows; i++)
+            for (int rowCount = 0; rowCount < em.Rows; rowCount++)
             {
                 int SumOfRow = 0;
-                for (int j = 0; j < em.Columns; j++)
+                for (int colCount = 0; colCount < em.Columns; colCount++)
                 {
-                    SumOfRow += (em.InternalRep[i, j] * uv[j]);
+                    SumOfRow += (em.InternalRep[rowCount, colCount] * uv[colCount]);
                 }
 
-                ret.Add(SumOfRow);
+                retVal.Add(SumOfRow);
             }
 
-            return ret;
-        
+            return retVal;  
         }
+
         public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\\begin{bmatrix}");
-            for (int i = 0; i < Rows; i++)
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    if (j < Columns - 1)
+                    if (colCount < Columns - 1)
                     {
-                        sb.AppendFormat("{0} &", InternalRep[i, j]);
+                        sb.AppendFormat("{0} &", InternalRep[rowCount, colCount]);
                     }
                     else
                     {
-                        sb.AppendFormat("{0}", InternalRep[i, j]);
+                        sb.AppendFormat("{0}", InternalRep[rowCount, colCount]);
                     }
 
                 }
@@ -252,32 +240,29 @@ namespace MatrixCalculus
 
             sb.Append(" \\end{bmatrix}");
             return sb.ToString();
-
         }
 
         public string ToLatex(string Rep)
         {
-            string ret = ToLatex();
+            string retVal = ToLatex();
 
             switch (Rep)
             {
                 case "F":
-                    if (FullRep != string.Empty) //Set outside current object
+                    if (FullRep != string.Empty) // Set outside current object
                     {
-                        ret = FullRep;
+                        retVal = FullRep;
                     }
                     else
                     {
-                        ret = LatexName + " = " + ToLatex();
+                        retVal = LatexName + " = " + ToLatex();
                     }
                     break;
                 default:
                     break;
             }
 
-            return ret;
+            return retVal;
         }
-
-
     }
 }
