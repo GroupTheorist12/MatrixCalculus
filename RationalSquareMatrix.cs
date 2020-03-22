@@ -83,6 +83,14 @@ namespace MatrixCalculus
             }
         }
 
+        public RationalSquareMatrix Clone()
+        {
+            RationalSquareMatrix ret = new RationalSquareMatrix(this.Rows, this.Columns);
+            ret.InternalRep = this.InternalRep;
+            ret.Name = this.Name;
+            ret.LatexName = this.LatexName;
+            return ret;
+        }
         public RationalSquareMatrix(int rows, int columns, List<Rational> V)
         {
             if (rows != columns)
@@ -149,7 +157,39 @@ namespace MatrixCalculus
 
         public Rational Det()
         {
-            return (new SubRationalMatrix(this.InternalRep, this[0])).Det();
+            Rational ret = 0;
+            RationalSquareMatrix A = this.Clone();
+            RationalSquareMatrix I = IdentityMatrix(this.Rows);
+            int sign = 1;
+
+            int i = 0;
+            int j = 0;
+            for (i = 1; i < A.Rows; i++)
+            {
+                for (j = 0; j < A.Columns - 1; j++)
+                {
+                    if (i != j)
+                    {
+                        sign = (A[i, j] < 0) ? 1 : -1;
+                        Rational r = A[i, j] / A[i - 1, j];
+                        Rational rS = sign * Rational.Abs(r);
+                        I[i, j] = r;
+                        A = I * A;
+                        I[i, j]  = 0;
+                    }
+                }
+            }
+            for (i = 0; i < A.Rows; i++)
+            {
+                for (j = 0; j < A.Columns; j++)
+                {
+                    if (i == j)
+                    {
+                        ret *= A[i, j];
+                    }
+                }
+            }
+            return ret;
         }
 
         public RationalVector KramersRule(RationalVector VectorToSolve)
@@ -251,6 +291,56 @@ namespace MatrixCalculus
 
         }
 
+        public static RationalSquareMatrix operator *(RationalSquareMatrix a, RationalSquareMatrix b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
+
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
+            {
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
+                {
+                    for (int retColCount = 0; retColCount < retVal.Columns; retColCount++)
+                    {
+                        retVal.InternalRep[rowCount, colCount] += a.InternalRep[rowCount, retColCount] * b.InternalRep[retColCount, colCount];
+                    }
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+
+            return retVal;
+        }
+
+        public static RationalSquareMatrix IdentityMatrix(int Order)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(Order, Order);
+            for (int rowCount = 0; rowCount < retVal.Rows; rowCount++)
+            {
+                for (int colCount = 0; colCount < retVal.Columns; colCount++)
+                {
+                    if (rowCount == colCount)
+                    {
+                        retVal[rowCount, colCount] = 1;
+                    }
+                }
+            }
+            return retVal;
+        }
+
+        public static Rational Det2X2(RationalSquareMatrix rsm2X2, string CoFactor = "1")
+        {
+            Rational rCoFactor = Rational.Parse(CoFactor);
+            Rational ret = (rsm2X2[0, 0] * rsm2X2[1, 1] - rsm2X2[0, 1] * rsm2X2[1, 0]) * rCoFactor;
+
+            return ret;
+        }
         public static RationalCoFactorInfo GetCoFactor(RationalSquareMatrix symIn, int Column)
         {
             RationalCoFactorInfo cfi = new RationalCoFactorInfo();
@@ -289,7 +379,7 @@ namespace MatrixCalculus
         public static List<RationalCoFactorInfo> GetAllMatrixCoFactors(RationalSquareMatrix ParentMatrix)
         {
             List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetCoFactors(ParentMatrix);
-            if(cfList[0].Minor.Rows == 2) //At two go back
+            if (cfList[0].Minor.Rows == 2) //At two go back
             {
                 return cfList;
             }

@@ -579,6 +579,51 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_EMatrix()
+        {
+            RationalFactory rf = new RationalFactory();
+            RationalSquareMatrix I = RationalSquareMatrix.IdentityMatrix(3);
+
+
+            RationalSquareMatrix A = rf[3, 3,
+            "1", "2", "-2",
+            "-1", "1", "3",
+            "2", "-1", "2"
+            ];
+
+            Rational r = A.Det();
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+
+            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+
+            I[1, 0]  = 1;
+            A = (I * A);
+            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+            
+            I[1, 0]  = 0;
+            I[2, 0]  = -2;
+            A = (I * A);
+            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+
+            I[2, 0]  = 0;
+            I[2, 1]  = Rational.Parse("5/3");
+            A = (I * A);
+            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+
+            /*
+            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
+            I[2, 0]  = 0;
+            I[2, 2]  = -5/3;
+            A = (I * A);
+            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
+            */
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_EMatrix.html"); //display Latex via mathjax
+
+            return 0;
+        }
         public static int Test_Rational_Determinant()
         {
             RationalFactory rf = new RationalFactory();
