@@ -586,9 +586,9 @@ namespace MatrixCalculus
 
 
             RationalSquareMatrix ACopy = rf[3, 3,
-            "1", "-7", "-2",
-            "-1", "3", "3",
-            "2", "8", "2"
+            "1", "2", "-2",
+            "-1", "1", "3",
+            "2", "-1", "2"
             ];
 
             RationalSquareMatrix ACopy2 = rf[3, 3,
@@ -605,17 +605,10 @@ namespace MatrixCalculus
 "1", "4", "2", "3"
 ];
 
-            RationalSquareMatrix A = ACopy3.Clone();
+            RationalSquareMatrix A = ACopy.Clone();
             //Console.Write(A);
             //Console.WriteLine();
 
-            Rational r = RationalSquareMatrix.Det(A);
-            int v = 0;
-            if(v == 0)
-            {
-                Console.WriteLine("Det = {0}", r.ToString());
-                return 0;
-            }
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
 

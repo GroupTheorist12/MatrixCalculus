@@ -208,8 +208,6 @@ namespace MatrixCalculus
             int j = 0;
 
             List<int[]> inds = LowerEchelonIndexes(I);
-            Console.Write(A);
-            Console.WriteLine();
 
             foreach (int[] arr in inds)
             {
@@ -227,11 +225,7 @@ namespace MatrixCalculus
 
 
                 I[i, j] = r;
-                Console.Write(I);
-                Console.WriteLine();
                 A = I * A;
-                Console.Write(A);
-                Console.WriteLine();
                 I[i, j] = 0;
 
             }
