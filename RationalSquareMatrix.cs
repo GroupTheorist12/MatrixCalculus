@@ -86,7 +86,14 @@ namespace MatrixCalculus
         public RationalSquareMatrix Clone()
         {
             RationalSquareMatrix ret = new RationalSquareMatrix(this.Rows, this.Columns);
-            ret.InternalRep = this.InternalRep;
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    ret.InternalRep[i, j] = this.InternalRep[i, j];
+                }
+            }
+
             ret.Name = this.Name;
             ret.LatexName = this.LatexName;
             return ret;
@@ -155,29 +162,78 @@ namespace MatrixCalculus
         public string Name { get; set; }
         public string LatexName { get; private set; }
 
-        public Rational Det()
+        public override string ToString()
         {
-            Rational ret = 0;
-            RationalSquareMatrix A = this.Clone();
-            RationalSquareMatrix I = IdentityMatrix(this.Rows);
-            int sign = 1;
-
-            int i = 0;
-            int j = 0;
-            for (i = 1; i < A.Rows; i++)
+            StringBuilder sb = new StringBuilder();
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
             {
-                for (j = 0; j < A.Columns - 1; j++)
+                for (int colCount = 0; colCount < Columns; colCount++)
                 {
-                    if (i != j)
+                    sb.AppendFormat("{0}\t", InternalRep[rowCount, colCount]);
+                }
+
+                sb.Append("\r\n");
+            }
+
+            return sb.ToString();
+        }
+
+        public static List<int[]> LowerEchelonIndexes(RationalSquareMatrix A)
+        {
+            List<int[]> Indexes = new List<int[]>();
+            for (int i = 1; i < A.Rows; i++)
+            {
+                for (int j = 0; j < A.Columns; j++)
+                {
+                    if (i == j)
                     {
-                        sign = (A[i, j] < 0) ? 1 : -1;
-                        Rational r = A[i, j] / A[i - 1, j];
-                        Rational rS = sign * Rational.Abs(r);
-                        I[i, j] = r;
-                        A = I * A;
-                        I[i, j]  = 0;
+                        int ind = 0;
+                        while(ind < j)
+                        {
+                            Indexes.Add(new int[] { i, ind });
+                            ind++;
+                        }
                     }
                 }
+            }
+
+            return Indexes;
+        }
+        public static Rational Det(RationalSquareMatrix A)
+        {
+            Rational ret = 1;
+            RationalSquareMatrix I = IdentityMatrix(A.Rows);
+            
+            int i = 0;
+            int j = 0;
+
+            List<int[]> inds = LowerEchelonIndexes(I);
+            Console.Write(A);
+            Console.WriteLine();
+
+            foreach (int[] arr in inds)
+            {
+                i = arr[0];
+                j = arr[1];
+                Rational r = Rational.Abs(A[i, j]) / Rational.Abs(A[j, j]);
+                if(A[i, j] > 0 && A[j, j] > 0)
+                {
+                    r = r * -1;
+                }
+                if(A[i, j] < 0 && A[j, j] < 0)
+                {
+                    r = r * -1;
+                }
+
+
+                I[i, j] = r;
+                Console.Write(I);
+                Console.WriteLine();
+                A = I * A;
+                Console.Write(A);
+                Console.WriteLine();
+                I[i, j] = 0;
+
             }
             for (i = 0; i < A.Rows; i++)
             {
@@ -189,6 +245,7 @@ namespace MatrixCalculus
                     }
                 }
             }
+
             return ret;
         }
 

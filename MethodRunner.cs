@@ -585,31 +585,84 @@ namespace MatrixCalculus
             RationalSquareMatrix I = RationalSquareMatrix.IdentityMatrix(3);
 
 
-            RationalSquareMatrix A = rf[3, 3,
-            "1", "2", "-2",
-            "-1", "1", "3",
-            "2", "-1", "2"
+            RationalSquareMatrix ACopy = rf[3, 3,
+            "1", "-7", "-2",
+            "-1", "3", "3",
+            "2", "8", "2"
             ];
 
-            Rational r = A.Det();
+            RationalSquareMatrix ACopy2 = rf[3, 3,
+            "-7", "2", "-2",
+            "-3", "1", "3",
+            "8", "-1", "2"
+            ];
+
+                 RationalSquareMatrix ACopy3 = rf[4, 4,
+
+"4", "7", "2", "3",
+"1", "3", "1", "2",
+"2", "5", "3", "4",
+"1", "4", "2", "3"
+];
+
+            RationalSquareMatrix A = ACopy3.Clone();
+            //Console.Write(A);
+            //Console.WriteLine();
+
+            Rational r = RationalSquareMatrix.Det(A);
+            int v = 0;
+            if(v == 0)
+            {
+                Console.WriteLine("Det = {0}", r.ToString());
+                return 0;
+            }
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
 
-            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+            sb.AppendFormat(@"&A = {0} I = {1}", A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
 
-            I[1, 0]  = 1;
+            I[1, 0] = 1;
+            sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix
             A = (I * A);
-            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
-            
-            I[1, 0]  = 0;
-            I[2, 0]  = -2;
-            A = (I * A);
-            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+            //Console.Write(A);
+            //Console.WriteLine();
 
-            I[2, 0]  = 0;
-            I[2, 1]  = Rational.Parse("5/3");
+            sb.AppendFormat(@"{0}", A.ToLatex() + @" \\ \\");//display A matrix
+
+            I[1, 0] = 0;
+            I[2, 0] = -2;
+            sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix
+            //Console.Write(A);
+            //Console.WriteLine();
+
             A = (I * A);
-            sb.AppendFormat(@"&A = {0} I = {1}",  A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
+            //Console.Write(A);
+            //Console.WriteLine();
+            sb.AppendFormat(@"{0}", A.ToLatex() + @" \\ \\");//display A matrix
+
+            I[2, 0] = 0;
+            I[2, 1] = Rational.Parse("5/3");
+            sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix
+            //Console.Write(A);
+            //Console.WriteLine();
+            A = (I * A);
+            //Console.Write(A);
+            //Console.WriteLine();
+
+            sb.AppendFormat(@"{0}", A.ToLatex() + @" \\ \\");//display A matrix
+
+            Rational ret = 1;
+            for (int i = 0; i < A.Rows; i++)
+            {
+                for (int j = 0; j < A.Columns; j++)
+                {
+                    if (i == j)
+                    {
+                        ret *= A[i, j];
+                    }
+                }
+            }
+            sb.AppendFormat(@"&Det = {0}", ret.ToLatex());//display A matrix
 
             /*
             sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
@@ -642,7 +695,7 @@ namespace MatrixCalculus
             foreach (RationalCoFactorInfo ci in cfList)
             {
 
-                sb.AppendFormat(@"&{0} \\ \\",  ci.CoFactor.ToLatex() + ci.Minor.ToLatex());
+                sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.ToLatex() + ci.Minor.ToLatex());
 
                 foreach (List<RationalCoFactorInfo> lstChild in ci.ListOfLists)
                 {
