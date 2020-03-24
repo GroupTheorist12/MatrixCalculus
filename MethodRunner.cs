@@ -579,6 +579,32 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_CramersRule()
+        {
+            RationalFactory rf = new RationalFactory();
+            RationalSquareMatrix ACopy = rf[3, 3,
+            "1", "2", "-2",
+            "-1", "1", "3",
+            "2", "-1", "2"
+            ];
+
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+
+            sb.AppendFormat(@"&x_1 + 2x_2 - 2x_3 = -7 \\ \\");
+            sb.AppendFormat(@"&-x_1 + x_2 + 3x_3 = 3 \\ \\");
+            sb.AppendFormat(@"&2x_1 - x_2 + 2x_3 = 8 \\ \\");
+            RationalVector rvSolved = ACopy.CramersRule(new RationalVector{-7, 3, 8});
+
+            sb.AppendFormat(@"&x_1 = {0}, x_2 = {1}, x_3 = {2}", rvSolved[0].ToLatex(), rvSolved[1].ToLatex(), rvSolved[2].ToLatex());
+
+            sb.Append(@"\end{aligned}");
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_CramersRule.html"); //display Latex via mathjax
+
+            return 0;
+        }
+
         public static int Test_EMatrix()
         {
             RationalFactory rf = new RationalFactory();
@@ -604,69 +630,8 @@ namespace MatrixCalculus
 "2", "5", "3", "4",
 "1", "4", "2", "3"
 ];
-
-            RationalSquareMatrix A = ACopy.Clone();
-            //Console.Write(A);
-            //Console.WriteLine();
-
-            StringBuilder sb = new StringBuilder();//Start building latex
-            sb.Append(@"\begin{aligned}");
-
-            sb.AppendFormat(@"&A = {0} I = {1}", A.ToLatex(), I.ToLatex() + @" \\ \\");//display A matrix
-
-            I[1, 0] = 1;
-            sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix
-            A = (I * A);
-            //Console.Write(A);
-            //Console.WriteLine();
-
-            sb.AppendFormat(@"{0}", A.ToLatex() + @" \\ \\");//display A matrix
-
-            I[1, 0] = 0;
-            I[2, 0] = -2;
-            sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix
-            //Console.Write(A);
-            //Console.WriteLine();
-
-            A = (I * A);
-            //Console.Write(A);
-            //Console.WriteLine();
-            sb.AppendFormat(@"{0}", A.ToLatex() + @" \\ \\");//display A matrix
-
-            I[2, 0] = 0;
-            I[2, 1] = Rational.Parse("5/3");
-            sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix
-            //Console.Write(A);
-            //Console.WriteLine();
-            A = (I * A);
-            //Console.Write(A);
-            //Console.WriteLine();
-
-            sb.AppendFormat(@"{0}", A.ToLatex() + @" \\ \\");//display A matrix
-
-            Rational ret = 1;
-            for (int i = 0; i < A.Rows; i++)
-            {
-                for (int j = 0; j < A.Columns; j++)
-                {
-                    if (i == j)
-                    {
-                        ret *= A[i, j];
-                    }
-                }
-            }
-            sb.AppendFormat(@"&Det = {0}", ret.ToLatex());//display A matrix
-
-            /*
-            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
-            I[2, 0]  = 0;
-            I[2, 2]  = -5/3;
-            A = (I * A);
-            sb.AppendFormat(@"&A = {0}", A.ToLatex() + @" \\ \\");//display A matrix
-            */
-            sb.Append(@"\end{aligned}");
-
-            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_EMatrix.html"); //display Latex via mathjax
+            string ll = RationalSquareMatrix.DetFullRep(ACopy);
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(ll, "Test_EMatrix.html"); //display Latex via mathjax
 
             return 0;
         }

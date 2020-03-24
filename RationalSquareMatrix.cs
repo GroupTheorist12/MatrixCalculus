@@ -188,7 +188,7 @@ namespace MatrixCalculus
                     if (i == j)
                     {
                         int ind = 0;
-                        while(ind < j)
+                        while (ind < j)
                         {
                             Indexes.Add(new int[] { i, ind });
                             ind++;
@@ -199,11 +199,110 @@ namespace MatrixCalculus
 
             return Indexes;
         }
+
+        public static RationalSquareMatrix KroneckerProduct(RationalSquareMatrix a, RationalSquareMatrix b)
+        {
+            int Rows = a.Rows * b.Rows;         // calculate number of rows.
+            int Columns = a.Columns * b.Rows;   // calculate number of columns
+            int incC = 0;                       // increment variable for column of b matrix
+            int incR = 0;                       // increment variable for row of b matrix
+            int incAMC = 0;                     // increment variable for column of a matrix
+            int incAMR = 0;                     // increment variable for row of a matrix
+            RationalSquareMatrix retVal = new RationalSquareMatrix(Rows, Columns);
+            int rowCount;
+            int colCount;
+            string exp = string.Empty;
+
+            for(rowCount = 0; rowCount < retVal.Rows; rowCount++)
+            {
+                if(incR > b.Rows - 1)           // reached end of rows of b matrix
+                {
+                    incR = 0;
+                    incAMR++; 
+                }
+                incAMC = 0;
+                for(colCount = 0; colCount < retVal.Columns; colCount++)
+                {
+                    incC++;
+                    if(incC > b.Columns - 1)    // reached end of columns of b matrix
+                    {
+                        incC = 0;
+                        incAMC++;    
+                    }
+
+                    retVal[rowCount, colCount] = a[incAMR, incAMC] * b[incR, incC];
+                }
+                incR++;
+
+            }
+
+            retVal.FullRep = a.ToLatex() + @"\;\otimes\;" + b.ToLatex() + " = " + retVal.ToLatex(); //produce latex string
+            return retVal;
+        }
+
+        public static string DetFullRep(RationalSquareMatrix A)
+        {
+            StringBuilder sb = new StringBuilder();//Start building latex
+
+            Rational ret = 1;
+            RationalSquareMatrix I = IdentityMatrix(A.Rows);
+
+            int i = 0;
+            int j = 0;
+
+            sb.Append(@"\begin{aligned}");
+
+            sb.AppendFormat(@"&A = {0} I = {1}", A.ToLatex(), I.ToLatex() + @"\textrm{Initial matrix and identity matrix} \\ \\");//display A and I matrices before
+
+            List<int[]> inds = LowerEchelonIndexes(I);
+
+            foreach (int[] arr in inds)
+            {
+                i = arr[0];
+                j = arr[1];
+                Rational r = Rational.Abs(A[i, j]) / Rational.Abs(A[j, j]);
+                if (A[i, j] > 0 && A[j, j] > 0)
+                {
+                    r = r * -1;
+                }
+                if (A[i, j] < 0 && A[j, j] < 0)
+                {
+                    r = r * -1;
+                }
+
+                string comment = string.Format(@"R_{0} \rightarrow R_{0} + {1}R_{2}", (i + 1), r.ToLatex(), (j + 1));
+                I[i, j] = r;
+                sb.AppendFormat(@"&{0}{1} = ", A.ToLatex(), I.ToLatex());//display A matrix and augmented I matrix
+
+                A = I * A;
+                sb.AppendFormat(@"{0}", A.ToLatex() + comment + @" \\ \\");//display A matrix after elementary operation
+
+                I[i, j] = 0;
+
+            }
+            string combo = string.Empty;
+            for (i = 0; i < A.Rows; i++)
+            {
+                for (j = 0; j < A.Columns; j++)
+                {
+                    if (i == j)
+                    {
+                        combo += A[i, j].ToLatex() + @"\cdot";
+                        ret *= A[i, j];
+                    }
+                }
+            }
+
+            sb.AppendFormat(@"&Det = {0} = {1}", combo.Substring(0, combo.Length - 5), ret.ToLatex());//display det of A matrix
+            sb.Append(@"\end{aligned}");
+
+            return sb.ToString();
+        }
         public static Rational Det(RationalSquareMatrix A)
         {
             Rational ret = 1;
             RationalSquareMatrix I = IdentityMatrix(A.Rows);
-            
+
             int i = 0;
             int j = 0;
 
@@ -214,11 +313,11 @@ namespace MatrixCalculus
                 i = arr[0];
                 j = arr[1];
                 Rational r = Rational.Abs(A[i, j]) / Rational.Abs(A[j, j]);
-                if(A[i, j] > 0 && A[j, j] > 0)
+                if (A[i, j] > 0 && A[j, j] > 0)
                 {
                     r = r * -1;
                 }
-                if(A[i, j] < 0 && A[j, j] < 0)
+                if (A[i, j] < 0 && A[j, j] < 0)
                 {
                     r = r * -1;
                 }
@@ -243,24 +342,23 @@ namespace MatrixCalculus
             return ret;
         }
 
-        public RationalVector KramersRule(RationalVector VectorToSolve)
+        public RationalVector CramersRule(RationalVector VectorToSolve)
         {
-            return Solve(new SubRationalMatrix(this.InternalRep, VectorToSolve));
-        }
+            RationalVector Deltas = new RationalVector();
 
-        private static RationalVector Solve(SubRationalMatrix matrix)
-        {
-            Rational det = matrix.Det();
-            if (det == 0) throw new ArgumentException("The determinant is zero.");
-
-            RationalVector answer = new RationalVector();
-            for (int i = 0; i < matrix.Size; i++)
+            RationalSquareMatrix A = this.Clone();
+            Rational Delta = RationalSquareMatrix.Det(A);
+            for(int i = 0; i < this.Rows; i++)
             {
-                matrix.ColumnIndex = i;
-                answer.Add(matrix.Det() / det);
+                RationalVector rvSave = A[i];
+                A[i] = VectorToSolve;
+                Deltas.Add(RationalSquareMatrix.Det(A)/Delta);
+                A[i] = rvSave;
+
             }
-            return answer;
+            return Deltas;
         }
+
         public string ToLatex()
         {
             StringBuilder sb = new StringBuilder();
@@ -287,60 +385,6 @@ namespace MatrixCalculus
 
         }
 
-        private class SubRationalMatrix
-        {
-            private Rational[,] source;
-            private SubRationalMatrix prev;
-            private RationalVector replaceColumn;
-
-            public SubRationalMatrix(Rational[,] source, RationalVector replaceColumn)
-            {
-                this.source = source;
-                this.replaceColumn = replaceColumn;
-                this.prev = null;
-                this.ColumnIndex = -1;
-                Size = replaceColumn.Count;
-            }
-
-            private SubRationalMatrix(SubRationalMatrix prev, int deletedColumnIndex = -1)
-            {
-                this.source = null;
-                this.prev = prev;
-                this.ColumnIndex = deletedColumnIndex;
-                Size = prev.Size - 1;
-            }
-
-            public int ColumnIndex { get; set; }
-            public int Size { get; }
-
-            public Rational this[int row, int column]
-            {
-                get
-                {
-                    if (source != null) return column == ColumnIndex ? replaceColumn[row] : source[row, column];
-                    return prev[row + 1, column < ColumnIndex ? column : column + 1];
-                }
-            }
-
-
-            public Rational Det()
-            {
-                if (Size == 1) return this[0, 0];
-                if (Size == 2) return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
-                SubRationalMatrix m = new SubRationalMatrix(this);
-                Rational det = 0;
-                int sign = 1;
-                for (int c = 0; c < Size; c++)
-                {
-                    m.ColumnIndex = c;
-                    Rational d = m.Det();
-                    det += this[0, c] * d * sign;
-                    sign = -sign;
-                }
-                return det;
-            }
-
-        }
 
         public static RationalSquareMatrix operator *(RationalSquareMatrix a, RationalSquareMatrix b)
         {

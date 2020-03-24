@@ -1,0 +1,23 @@
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Equation</title>
+        <meta charset="utf-8" />
+        <script type='text/javascript' async src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+        <script type='text/x-mathjax-config'>
+            MathJax.Hub.Register.StartupHook('End', function()
+            {
+                var x = document.getElementById('pLatex');
+                x.style.display = 'block';
+            });
+        </script>
+    </head>
+    <body>
+        <p id='pLatex' style='height: 300px; width: 300px; display:none;'>
+            \begin{equation}      
+            \begin{aligned}&x_1 + 2x_2 - 2x_3 = -7 \\ \\&-x_1 + x_2 + 3x_3 = 3 \\ \\&2x_1 - x_2 + 2x_3 = 8 \\ \\&x_1 = 1, x_2 = -2, x_3 = 2\end{aligned}
+            \end{equation}      
+        </p>
+    </body>
+</html>
