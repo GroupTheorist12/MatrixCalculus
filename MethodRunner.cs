@@ -581,22 +581,24 @@ namespace MatrixCalculus
 
         public static int Test_CramersRule()
         {
-            RationalFactory rf = new RationalFactory();
-            RationalSquareMatrix ACopy = rf[3, 3,
+            RationalFactory rf = new RationalFactory();//Create rational factory
+            RationalSquareMatrix ACopy = rf[3, 3, //Matrix to solve
             "1", "2", "-2",
             "-1", "1", "3",
             "2", "-1", "2"
             ];
 
+            RationalVector rv = new RationalVector{-7, 3, 8}; //values to solve for
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
 
+            //Start system of linear equations
             sb.AppendFormat(@"&x_1 + 2x_2 - 2x_3 = -7 \\ \\");
             sb.AppendFormat(@"&-x_1 + x_2 + 3x_3 = 3 \\ \\");
             sb.AppendFormat(@"&2x_1 - x_2 + 2x_3 = 8 \\ \\");
-            RationalVector rvSolved = ACopy.CramersRule(new RationalVector{-7, 3, 8});
+            RationalVector rvSolved = ACopy.CramersRule(rv); //solve system of linear equations
 
-            sb.AppendFormat(@"&x_1 = {0}, x_2 = {1}, x_3 = {2}", rvSolved[0].ToLatex(), rvSolved[1].ToLatex(), rvSolved[2].ToLatex());
+            sb.AppendFormat(@"&x_1 = {0}, x_2 = {1}, x_3 = {2}", rvSolved[0].ToLatex(), rvSolved[1].ToLatex(), rvSolved[2].ToLatex()); //output values
 
             sb.Append(@"\end{aligned}");
 
