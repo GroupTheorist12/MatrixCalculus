@@ -545,10 +545,10 @@ namespace MatrixCalculus
 
             SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
 
-            Symbol sym = sf["2x^2 - 5x - 5"];
+            Symbol sym = sf["e(x^2)"];
             Console.WriteLine(sym.Expression);
             Console.WriteLine(sym.HashTokenString);
-            //Console.WriteLine(ArithmeticStatePattern.Add(sym));
+            Console.WriteLine(ArithmeticStatePattern.Add(sym));
 
             Console.WriteLine(DerivativeStatePattern.DF(sym));
 

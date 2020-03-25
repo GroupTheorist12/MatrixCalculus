@@ -10,11 +10,13 @@ namespace MatrixCalculus
     {
         private static Hashtable htTestFuncs = new Hashtable();
 
-        private static Dictionary<string, string> dicTrigFunctions = new Dictionary<string, string>
+        private static Dictionary<string, string> dicFunctions = new Dictionary<string, string>
         {
             {"sin", "cos"},
             {"cos", "-sin"},
-            {"tan", "sec,2"}
+            {"tan", "sec,2"},
+            {"e", "e"},
+            {"ln", "1/"}
         };
         static DerivativeStatePattern()
         {
@@ -125,9 +127,10 @@ namespace MatrixCalculus
         public static string DF_VariableOperatorCaretLiteral(Symbol sym)
         {
             Rational exp = Rational.Parse(sym.Tokens[2].Value) - 1;
+            Rational lit = Rational.Parse(sym.Tokens[2].Value);
             string strExp = (exp == 1) ? "" : "^" + exp.ToString();
 
-            return $"{sym.Tokens[0].Value}{strExp}";
+            return $"{lit}{sym.Tokens[0].Value}{strExp}";
         }
 
         public static string DF_LiteralOperatorMulVariable(Symbol sym)
@@ -182,9 +185,9 @@ namespace MatrixCalculus
         {
             string funcDF = sym.Tokens[0].Value.ToLower();
             string exp = "";
-            if(dicTrigFunctions.ContainsKey(sym.Tokens[0].Value.ToLower()))
+            if(dicFunctions.ContainsKey(sym.Tokens[0].Value.ToLower()))
             {
-                string[] arr =  dicTrigFunctions[sym.Tokens[0].Value.ToLower()].Split(",");
+                string[] arr =  dicFunctions[sym.Tokens[0].Value.ToLower()].Split(",");
                 if(arr != null && arr.Length > 1) //power
                 {
                     funcDF = arr[0];
@@ -192,7 +195,7 @@ namespace MatrixCalculus
                 }
                 else
                 {
-                    funcDF = dicTrigFunctions[sym.Tokens[0].Value.ToLower()];
+                    funcDF = dicFunctions[sym.Tokens[0].Value.ToLower()];
                 }
             }
 
@@ -201,7 +204,35 @@ namespace MatrixCalculus
 
         }
 
-        // TODO: Holy fuckballs, what a method name! GPG
+        public static string DF_FunctionLeft_ParenthesisVariableOperatorCaretLiteralRight_Parenthesis(Symbol sym)
+        {
+            string funcDF = sym.Tokens[0].Value.ToLower();
+            string exp = "";
+            if(dicFunctions.ContainsKey(sym.Tokens[0].Value.ToLower()))
+            {
+                string[] arr =  dicFunctions[sym.Tokens[0].Value.ToLower()].Split(",");
+                if(arr != null && arr.Length > 1) //power
+                {
+                    funcDF = arr[0];
+                    exp = "^" + arr[1];
+                }
+                else
+                {
+                    funcDF = dicFunctions[sym.Tokens[0].Value.ToLower()];
+                }
+            }
+
+            Symbol symInner = new Symbol();
+            symInner.Tokens.Add(sym.Tokens[2]); //variable
+            symInner.Tokens.Add(sym.Tokens[3]); //caret
+            symInner.Tokens.Add(sym.Tokens[4]); //power
+
+            
+            string pow = DF(symInner);
+            string DerivativeString = $"{pow}{funcDF}({symInner.NakedTokenString}){exp}";
+            return DerivativeString;
+        }
+        // TODO: Holy fuckballs, what a method name! GPG. Product rule 2x^2sin(x) => 2x^2cos(x) + 4xsin(x)
         public static string DF_LiteralOperatorMulVariableOperatorCaretLiteralOperatorMulFunctionLeft_ParenthesisVariableRight_Parenthesis(Symbol sym)
         {
             string DerivativeString = sym.NakedTokenString;

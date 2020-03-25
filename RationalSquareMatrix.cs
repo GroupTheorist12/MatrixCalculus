@@ -342,6 +342,16 @@ namespace MatrixCalculus
             return ret;
         }
 
+        public Rational Trace()
+        {
+            Rational retVal = 0;
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
+            {
+                retVal += this[rowCount, rowCount];
+            }
+            return retVal;
+        }
+
         public RationalVector CramersRule(RationalVector VectorToSolve)
         {
             RationalVector Deltas = new RationalVector();
