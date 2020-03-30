@@ -14,12 +14,14 @@ namespace MatrixCalculus
         public string Type { get; set; }
         public string Value { get; set; }
 
+        public string MetaData{get; set;}
         public bool SymbolEnd { get; set; }
         public Token(string t, string v)
         {
             this.Type = t;
             this.Value = v;
             SymbolEnd = false;
+            MetaData = string.Empty;
         }
     }
 

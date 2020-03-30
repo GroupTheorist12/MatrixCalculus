@@ -352,6 +352,12 @@ namespace MatrixCalculus
             return retVal;
         }
 
+        public static RationalSquareMatrix FaddevasMethod(RationalSquareMatrix AIn, out RationalVector CharacteristicEquation)
+        {
+            RationalSquareMatrix A = AIn.Clone();
+            CharacteristicEquation = new RationalVector();
+            return A;
+        }
         public RationalVector CramersRule(RationalVector VectorToSolve)
         {
             RationalVector Deltas = new RationalVector();

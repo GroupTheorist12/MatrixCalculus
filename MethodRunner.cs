@@ -399,6 +399,17 @@ namespace MatrixCalculus
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_C3.html"); //display Latex via mathjax
             return 0;
         }
+
+        public static int Test_ES()
+        {
+            EinsteinSummation es = new EinsteinSummation(3);
+            Symbol s = es["a{ij}x_ix_j"];
+            //string ss = es.Expand("a{ij}x_ix_j");
+            //HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(s.NakedTokenString, "Test_ES.html"); //display Latex via mathjax
+            Console.WriteLine(s.NakedTokenString);
+            Console.WriteLine(s.HashTokenString);
+            return 0;
+        }
         public static int Test_D3()
         {
             SymbolMatrix D3 = SymbolMatrixUtilities.D3();
@@ -545,12 +556,12 @@ namespace MatrixCalculus
 
             SymbolFactory sf = new SymbolFactory(SymbolType.Expression, tokes);
 
-            Symbol sym = sf["e(x^2)"];
+            Symbol sym = sf["e(xy^2)"];
             Console.WriteLine(sym.Expression);
             Console.WriteLine(sym.HashTokenString);
-            Console.WriteLine(ArithmeticStatePattern.Add(sym));
+            //Console.WriteLine(ArithmeticStatePattern.Add(sym));
 
-            Console.WriteLine(DerivativeStatePattern.DF(sym));
+            //Console.WriteLine(DerivativeStatePattern.DF(sym));
 
             /*
             tokes.ParseExpression("2xsin(2x)");

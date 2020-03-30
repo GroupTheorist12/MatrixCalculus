@@ -204,6 +204,7 @@ namespace MatrixCalculus
 
         }
 
+        //sin(x^2) => 2xcos(x^2)
         public static string DF_FunctionLeft_ParenthesisVariableOperatorCaretLiteralRight_Parenthesis(Symbol sym)
         {
             string funcDF = sym.Tokens[0].Value.ToLower();
