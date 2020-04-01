@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Text;
+using System.Collections;
 
 namespace MatrixCalculus
 {
@@ -80,6 +81,11 @@ namespace MatrixCalculus
                         sym.Tokens.Add(new Token("CoefficentSum", string.Join("", CoefficentBuffer.ToArray())));
                         CoefficentBuffer.Clear();
                     }
+                    if (IndicesBuffer.Count > 0)
+                    {
+                        sym.Tokens[sym.Tokens.Count - 1].MetaData = string.Join(",", IndicesBuffer.ToArray());
+                        IndicesBuffer.Clear();
+                    }
 
                     VariableBuffer.Add(ch.ToString());
                 }
@@ -94,6 +100,11 @@ namespace MatrixCalculus
                     {
                         sym.Tokens.Add(new Token("CoefficentSum", string.Join("", CoefficentBuffer.ToArray())));
                         CoefficentBuffer.Clear();
+                    }
+                    if (IndicesBuffer.Count > 0)
+                    {
+                        sym.Tokens[sym.Tokens.Count - 1].MetaData = string.Join(",", IndicesBuffer.ToArray());
+                        IndicesBuffer.Clear();
                     }
                     CoefficentBuffer.Add(ch.ToString());
                 }
@@ -200,29 +211,55 @@ namespace MatrixCalculus
             return sym;
         }
 
-        public string Expand(string Expression)
+        public string FormatQuadratic(List<ITensor> lstT)
         {
-            string ret = string.Empty;
+            StringBuilder sb = new StringBuilder();
+
+            if (lstT.Count == 3)
+            {
+                var sortL = from element in lstT
+                            orderby element.Rank
+                            select element;
+
+                PseudoRank1Tensor p1 = (PseudoRank1Tensor)sortL.ToList()[0];
+                p1.IsRowOrColumn = RowColumn.Row;
+
+                PseudoRank1Tensor p2 = (PseudoRank1Tensor)sortL.ToList()[1];
+                PseudoRank2Tensor p3 = (PseudoRank2Tensor)sortL.ToList()[2];
+                sb.Append(p1.Expand());
+                sb.Append(p3.Expand());
+                sb.Append(p2.Expand());
+
+            }
+
+            return sb.ToString();
+        }
+        public List<ITensor> ExpandToList(string Expression)
+        {
+            List<ITensor> lstT = new List<ITensor>();
             Symbol sym = ParseExpression(Expression);
 
-            SymbolList symList = new SymbolList();
-            foreach(Token t in sym.Tokens)
+            foreach (Token t in sym.Tokens)
             {
                 string[] arr = t.MetaData.Split(",".ToCharArray());
-                if(arr.Length == 1) // one indice
-                {
-                    for(int i = 1; i < Dimension + 1; i++)
-                    {
-                        Symbol symNew = new Symbol();
-                        symNew.Tokens.Add(new Token("Variable", t.Value.Replace(arr[0], i.ToString())));
-                        symList.Add(symNew);
 
-                    }
+                if (arr.Length == 1)
+                {
+                    PseudoTensor p = new PseudoTensor(t.Value[0].ToString(), 1, this.Dimension, TensorType.Covariant);
+
+                    lstT.Add(p.Tensor);
+                }
+
+                if (arr.Length == 2)
+                {
+                    PseudoTensor p = new PseudoTensor(t.Value[0].ToString(), 2, this.Dimension, TensorType.Covariant);
+                    lstT.Add(p.Tensor);
                 }
             }
-            return ret;
+
+            return lstT;
         }
-        
+
         public Symbol this[string Expression]
         {
             get
@@ -232,7 +269,7 @@ namespace MatrixCalculus
                 return sym;
             }
         }
-        
+
 
     }
 }

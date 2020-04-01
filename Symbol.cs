@@ -14,6 +14,8 @@ namespace MatrixCalculus
         public bool IsRational { get; set; }
         public bool IsOperator { get; set; }
 
+        public string Name{get; set;}
+
         public Symbol()
         {
             Tokens = new List<Token>();

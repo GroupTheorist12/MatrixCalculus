@@ -403,11 +403,17 @@ namespace MatrixCalculus
         public static int Test_ES()
         {
             EinsteinSummation es = new EinsteinSummation(3);
-            Symbol s = es["a{ij}x_ix_j"];
-            //string ss = es.Expand("a{ij}x_ix_j");
+            //Symbol s = es["a{ij}x_ix_j"];
+            List<ITensor> lstT = es.ExpandToList("a_{ij}x_ix_j");
+
+            string s = es.FormatQuadratic(lstT);
+            
             //HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(s.NakedTokenString, "Test_ES.html"); //display Latex via mathjax
-            Console.WriteLine(s.NakedTokenString);
-            Console.WriteLine(s.HashTokenString);
+            //Console.WriteLine(s);
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(s, "Test_ES.html"); //display Latex via mathjax
+
+            //Console.WriteLine(p.Tensor.Expand());
             return 0;
         }
         public static int Test_D3()
