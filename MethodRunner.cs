@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-
+using System.Linq;
 namespace MatrixCalculus
 {
     public class MethodRunner
@@ -664,15 +664,24 @@ namespace MatrixCalculus
             "2", "-1", "2"
             ];
 
-            List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetAllMatrixCoFactors(A);
+                 RationalSquareMatrix ACopy3 = rf[4, 4,
+                "4", "7", "2", "3",
+                "1", "3", "1", "2",
+                "2", "5", "3", "4",
+                "1", "4", "2", "3"
+                ];
+
+            List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetAllMatrixCoFactors(ACopy3);
+            
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
-            sb.AppendFormat(@"&{0} \\ \\", A.ToLatex());
+            sb.AppendFormat(@"&{0} \\ \\", ACopy3.ToLatex());
 
+            //foreach(IGrouping<string, RationalCoFactorInfo> funk in q.ToList())
             foreach (RationalCoFactorInfo ci in cfList)
             {
 
-                sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.ToLatex() + ci.Minor.ToLatex());
+                sb.AppendFormat(@"&{0} \\ \\", ci.Minor.MinorName + " = " + ((ci.Sign < 0) ? "-" : "") + ci.CoFactor.ToLatex() + ci.Minor.ToLatex());
 
                 foreach (List<RationalCoFactorInfo> lstChild in ci.ListOfLists)
                 {
@@ -681,12 +690,13 @@ namespace MatrixCalculus
                         //if (ci2.Minor.Rows == 4)
                         {
 
-                            sb.AppendFormat(@"&{0} \\ \\", ci.CoFactor.ToLatex() + ci2.CoFactor.ToLatex() + ci2.Minor.ToLatex());
+                            sb.AppendFormat(@"&{0} \\ \\", ci.Minor.MinorName + " = " + ((ci.Sign < 0) ? "-" : "") + ci.CoFactor.ToLatex() + ci2.CoFactor.ToLatex() + ci2.Minor.ToLatex());
                         }
                     }
 
                 }
             }
+            sb.Append(@"&Det = " + RationalSquareMatrix.Det(ACopy3));
             sb.Append(@"\end{aligned}");
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Rational_Determinant.html"); //display Latex via mathjax

@@ -86,7 +86,7 @@ namespace MatrixCalculus
 
             int scaleX = (int)rv[0] + (int)(rv[0] / 10);
             int scaleY = (int)rv[1] + (int)(rv[1] / 10);
-            
+
             return Ds3.Replace("REPLACE_X", scaleX.ToString()).Replace("REPLACE_Y", scaleY.ToString());
         }
 
@@ -235,5 +235,37 @@ namespace MatrixCalculus
             File.WriteAllText(fil, text);
             OpenBrowser(fil);
         }
+
+        public static string RepeatCharacter(char c, int times)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            for (int i = 0; i < times; i++)
+            {
+                sb.Append(c.ToString());
+            }
+            return sb.ToString();
+        }
+
+        public static string RepeatString(string s, int times)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            for (int i = 0; i < times; i++)
+            {
+                sb.Append(s);
+            }
+            return sb.ToString();
+        }
+
+        public static string GetTabularRow(string LatexIn, bool Last)
+        {
+            string box = "\\({REPLACE_ME}\\)";
+            string ret = box.Replace("{REPLACE_ME}", LatexIn);
+
+            if (!Last)
+                ret += "\\\\\\\\";
+
+            return ret;
+        }
     }
+
 }

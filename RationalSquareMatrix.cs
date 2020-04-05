@@ -22,6 +22,7 @@ namespace MatrixCalculus
         public string FullRep { get; set; }
 
         public RationalFactory Parent { get; set; }
+        public string MinorName { get; set; }
         public int Rows = 0;
         public int Columns = 0;
         private List<Rational> Vector = null;
@@ -189,6 +190,28 @@ namespace MatrixCalculus
                     {
                         int ind = 0;
                         while (ind < j)
+                        {
+                            Indexes.Add(new int[] { i, ind });
+                            ind++;
+                        }
+                    }
+                }
+            }
+
+            return Indexes;
+        }
+
+        public static List<int[]> UpperEchelonIndexes(RationalSquareMatrix A)
+        {
+            List<int[]> Indexes = new List<int[]>();
+            for (int i = 0; i < A.Rows; i++)
+            {
+                for (int j = 1; j < A.Columns; j++)
+                {
+                    if (i == j)
+                    {
+                        int ind = j + 1;
+                        while (ind < A.Columns)
                         {
                             Indexes.Add(new int[] { i, ind });
                             ind++;
@@ -472,6 +495,7 @@ namespace MatrixCalculus
             }
 
             cfi.Minor = new RationalSquareMatrix(symIn.Rows - 1, symIn.Columns - 1, symList);
+            cfi.Minor.MinorName = symIn.MinorName;
             return cfi;
         }
 
@@ -490,6 +514,7 @@ namespace MatrixCalculus
         public static List<RationalCoFactorInfo> GetAllMatrixCoFactors(RationalSquareMatrix ParentMatrix)
         {
             List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetCoFactors(ParentMatrix);
+            ParentMatrix.MinorName = "M1";
             if (cfList[0].Minor.Rows == 2) //At two go back
             {
                 return cfList;
@@ -498,11 +523,15 @@ namespace MatrixCalculus
             RationalCoFactorInfo cfi = null;
             RationalCoFactorInfo cfiChild = null;
             List<RationalCoFactorInfo> cfListChild = null;
+            string TopMinorName = string.Empty;
+
             while (inc < cfList.Count)
             {
                 if (cfi == null)
                 {
                     cfi = cfList[inc];
+                    TopMinorName = "M" + (inc + 1).ToString();
+                    cfi.Minor.MinorName = TopMinorName;
                 }
                 else if (cfi != null && cfi.ListOfLists.Count == 0) //init value
                 {
