@@ -121,62 +121,85 @@ namespace MatrixCalculus
             return ret;
         }
 
-    public PermutationMatrix Inverse()
-    {
-      PermutationMatrix ret = this.Transpose();
-      StringBuilder sb = new StringBuilder();
-
-      sb.Append(this.ToLatex() + "^{-1}");
-      sb.Append(" = ");
-      sb.Append(ret.ToLatex());
-
-      ret.FullRep = sb.ToString();
-
-      return ret;
-    }
-    public PermutationMatrix Transpose()
-    {
-      PermutationMatrix ret = new PermutationMatrix(this.Rows, this.Columns);
-
-      for(int i = 0; i < this.Columns; i++)
-      {
-        for(int j = 0; j < this.Rows; j++)
+        public PermutationMatrix Inverse()
         {
-          ret.InternalRep[j, i] = this.InternalRep[i, j];
-        }
-      }
-      return ret;
-    }
-    public static PermutationMatrix operator *(PermutationMatrix a, PermutationMatrix b)
-    {
-      PermutationMatrix ret = new PermutationMatrix(a.Rows, a.Columns);
-      for (int i = 0; i < ret.Rows; i++)
-      {
-        for (int j = 0; j < ret.Columns; j++)
-        {
+            PermutationMatrix ret = this.Transpose();
+            StringBuilder sb = new StringBuilder();
 
-          for (int k = 0; k < ret.Columns; k++)
-          {
+            sb.Append(this.ToLatex() + "^{-1}");
+            sb.Append(" = ");
+            sb.Append(ret.ToLatex());
 
-            ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
-          }
+            ret.FullRep = sb.ToString();
 
+            return ret;
         }
 
-      }
+        public int this[int r, int c]
+        {
+            get
+            {
+                if (!(r < Rows && c < Columns))
+                {
+                    throw new Exception("Rows and Columns are out of range of square matrix");
+                }
+                return (InternalRep[r, c]);
+            }
+        }
 
-      StringBuilder sb = new StringBuilder();
+        public int Trace()
+        {
+            int retVal = 0;
+            for (int rowCount = 0; rowCount < Rows; rowCount++)
+            {
+                retVal += this[rowCount, rowCount];
+            }
+            return retVal;
+        }
 
-      sb.Append(a.ToLatex());
-      sb.Append(b.ToLatex());
-      sb.Append(" = ");
-      sb.Append(ret.ToLatex());
- 
-      ret.FullRep = sb.ToString();
+        public PermutationMatrix Transpose()
+        {
+            PermutationMatrix ret = new PermutationMatrix(this.Rows, this.Columns);
+
+            for (int i = 0; i < this.Columns; i++)
+            {
+                for (int j = 0; j < this.Rows; j++)
+                {
+                    ret.InternalRep[j, i] = this.InternalRep[i, j];
+                }
+            }
+            return ret;
+        }
+        public static PermutationMatrix operator *(PermutationMatrix a, PermutationMatrix b)
+        {
+            PermutationMatrix ret = new PermutationMatrix(a.Rows, a.Columns);
+            for (int i = 0; i < ret.Rows; i++)
+            {
+                for (int j = 0; j < ret.Columns; j++)
+                {
+
+                    for (int k = 0; k < ret.Columns; k++)
+                    {
+
+                        ret.InternalRep[i, j] += a.InternalRep[i, k] * b.InternalRep[k, j];
+                    }
+
+                }
+
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(ret.ToLatex());
+
+            ret.FullRep = sb.ToString();
 
 
-      return ret;
-    }
+            return ret;
+        }
 
 
     }

@@ -12,15 +12,19 @@ namespace MatrixCalculus
         public override string FullRep { get; set; }
         public override string Name { get; set; }
         public int Order { get; set; }
+
+        public bool DisplayMatrix{get;set;}
         public PermutationSet()
         {
             Order = 0;
+            DisplayMatrix = false;
         }
 
         public PermutationSet(int o)
         {
             Order = o;
             Permute();
+            DisplayMatrix = false;
 
         }
         private static void Swap(List<int> set, int index1, int index2)
@@ -124,11 +128,26 @@ namespace MatrixCalculus
                 {
                     if(j < cols - 1)
                     {
-                        sb.Append(this.ToArray()[cnt++].ToLatex() + "&");        
+                        if(DisplayMatrix)
+                        {
+                            sb.Append(this.ToArray()[cnt++].Matrix.ToLatex() + "&");        
+                        }
+                        else
+                        {
+                            sb.Append(this.ToArray()[cnt++].ToLatex() + "&");        
+
+                        }
                     }    
                     else
                     {
-                        sb.Append(this.ToArray()[cnt++].ToLatex());        
+                        if(DisplayMatrix)
+                        {
+                            sb.Append(this.ToArray()[cnt++].Matrix.ToLatex());        
+                        }
+                        else
+                        {
+                            sb.Append(this.ToArray()[cnt++].ToLatex());        
+                        }
                     }    
                 }
 
