@@ -6,10 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
+using AbstractAlgebraSpace;
 
 namespace MatrixCalculus
 {
-    public class SymetricGroup : PermutationSet
+    public class SymetricGroup : PermutationSet, IFiniteGroup<Permutation>
     {
 
         public SymetricGroup(int GO) : base(GO)
@@ -17,6 +18,34 @@ namespace MatrixCalculus
 
         }
 
+        public Permutation Operation(Permutation a, Permutation b)
+        {
+            return Closure(a, b);
+        }
+        public Permutation Inverse(Permutation a)
+        {
+            return a.Inverse();
+        }
+
+        public Permutation Closure(Permutation a, Permutation b)
+        {
+            Permutation ret = a * b;
+
+            if(!this.Contains(ret))
+            {
+                throw new Exception("Group not closed");
+            }
+
+            return ret;
+        }
+
+        public Permutation Identity
+        {
+            get
+            {
+                return this.ToList().FindAll(i => i.IsIdentity)[0];
+            }
+        }
         public IEnumerable<Permutation> SortedGroup()
         {
             IEnumerable<Permutation> ret = null;
@@ -32,13 +61,22 @@ namespace MatrixCalculus
             for (i = 1; i < this.Order; i++)
             {
                 IEnumerable<Permutation> tmp = cyclic.ToList().FindAll(f => f.Matrix[0, i] == 1);
-                lstGather.Add(tmp.ToList()[0]);
+                foreach(Permutation pp in tmp)
+                {
+                    lstGather.Add(pp);
+                }
+                //lstGather.Add(tmp.ToList()[0]);
             }
 
             for (i = 0; i < this.Order; i++)
             {
                 IEnumerable<Permutation> tmp = therest.ToList().FindAll(f => f.Matrix[0, i] == 1);
-                lstGather.Add(tmp.ToList()[0]);
+                foreach(Permutation pp in tmp)
+                {
+                    lstGather.Add(pp);
+                }
+
+                //lstGather.Add(tmp.ToList()[0]);
             }
 
             ret = lstGather;

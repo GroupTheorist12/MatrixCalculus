@@ -12,6 +12,8 @@ namespace MatrixCalculus
     {
         //For composite operations such as product operator such as A * B = C
         public string FullRep { get; set; }  
+
+        public string ElementName { get; set; }  
         
         //permutation matrix represented by this permutation
         public PermutationMatrix Matrix{get;private set;} 

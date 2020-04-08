@@ -657,10 +657,8 @@ namespace MatrixCalculus
 
         public static int Test_Permutations()
         {
-            PermutationSet ps = new PermutationSet(3);
-            ps.DisplayMatrix = true;
 
-            SymetricGroup sg = new SymetricGroup(3);
+            SymetricGroup sg = new SymetricGroup(4);
             sg.DisplayMatrix = true;
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sg.ToLatex(), "Test_Permutations.html"); //display Latex via mathjax
 

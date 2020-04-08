@@ -14,6 +14,8 @@ namespace MatrixCalculus
         private int[,] InternalRep = null;
         public string FullRep { get; set; }
 
+        public string ElementName { get; set; }  
+
         public Permutation Permutation { get; }
         public int Rows { get; }
         public int Columns { get; }
