@@ -659,8 +659,42 @@ namespace MatrixCalculus
         {
 
             SymetricGroup sg = new SymetricGroup(4);
-            sg.DisplayMatrix = true;
-            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sg.ToLatex(), "Test_Permutations.html"); //display Latex via mathjax
+            //sg.DisplayMatrix = true;
+
+            PermutationSet ps = new PermutationSet();
+            
+            ps.Order = 4;
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {1,2,3,4}
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {4,1,2,3}
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {3,4,1,2}
+                    )
+            );
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {2,3,4,1}
+                    )
+            );
+
+            //ps.DisplayMatrix = true;
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(ps.ToLatex(), "Test_Permutations.html"); //display Latex via mathjax
 
             return 0;
         }
