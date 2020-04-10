@@ -46,6 +46,20 @@ namespace MatrixCalculus
                 return this.ToList().FindAll(i => i.IsIdentity)[0];
             }
         }
+
+        public PermutationList CyclicPermutations()
+        {
+            PermutationList perms = new PermutationList();
+
+            foreach(Permutation p in this)
+            {
+                if(p.Matrix.Trace() == 0)
+                {
+                    perms.Add(p);
+                }
+            }
+            return perms;
+        }
         public IEnumerable<Permutation> SortedGroup()
         {
             IEnumerable<Permutation> ret = null;

@@ -659,10 +659,12 @@ namespace MatrixCalculus
         {
 
             SymetricGroup sg = new SymetricGroup(4);
-            //sg.DisplayMatrix = true;
+            sg.DisplayMatrix = true;
 
-            PermutationSet ps = new PermutationSet();
-            
+            PermutationList ps2 = new PermutationList(4);
+            ps2.DisplayMatrix = true;            
+
+            PermutationList ps = new PermutationList();
             ps.Order = 4;
 
             ps.Add(
@@ -692,8 +694,66 @@ namespace MatrixCalculus
                     )
             );
 
-            //ps.DisplayMatrix = true;
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {1,2,3,4}
+                    )
+            );
 
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {2,1,4,3}
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {4,3,1,2}
+                    )
+            );
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {3,4,2,1}
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {1,2,3,4}
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {3,1,4,2}
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {2,4,1,3}
+                    )
+            );
+            ps.Add(
+                new Permutation(
+                    new int[] {1,2,3,4}, 
+                    new int[] {4,3,2,1}
+                    )
+            );
+
+
+            ps.DisplayMatrix = true;
+
+            ps = ps2.CyclicPermutations();
+            ps.DisplayMatrix = true;
+            ps.Order = 4;
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(ps.ToLatex(), "Test_Permutations.html"); //display Latex via mathjax
 
             return 0;

@@ -58,6 +58,52 @@ namespace MatrixCalculus
             return ret;
 
         }
+
+        public static Permutation Pow(Permutation Per, int Exp)
+        {
+            Permutation ret = new Permutation(Per.TopRow, Per.BottomRow);
+
+            if(Exp < -1 || Exp > Per.TopRow.Length)
+            {
+                throw new Exception("Invalid exponent value");
+
+            }
+            switch(Exp)
+            {
+                case -1:
+                    ret = Per.Inverse();
+                    break;
+                case 0:
+                    ret = new Permutation(Per.TopRow, Per.TopRow);
+                    break;
+                case 1:
+                    break; //already set    
+                default:
+                    {
+                        int i = 0;
+                        while(i++ < Exp)
+                        {
+                            ret *= Per;
+                        }
+                    }
+                    break;    
+
+            }
+            if(Exp == -1)
+            {
+                ret = Per.Inverse();
+            }
+            else if(Exp == 0)
+            {
+                ret = new Permutation(Per.TopRow, Per.TopRow);
+            }
+            else if(Exp == 1)
+            {
+                // already set
+            }
+
+            return ret;
+        }
         public string ToString(string Op)
         {
             string ret = ToString();
