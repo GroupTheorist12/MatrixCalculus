@@ -754,6 +754,12 @@ namespace MatrixCalculus
             ps = ps2.CyclicPermutations();
             ps.DisplayMatrix = true;
             ps.Order = 4;
+
+            ps = new PermutationList();
+            ps.Order = 4;
+            ps.DisplayMatrix = true;
+            ps.AddRange(ps2.OrderBy(o => o.ElementNameValue).ToList());
+
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(ps.ToLatex(), "Test_Permutations.html"); //display Latex via mathjax
 
             return 0;

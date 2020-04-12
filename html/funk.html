@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <style>
+        .noBorder {
+            border: 0px;
+            padding: 0;
+            margin: 0;
+            border-collapse: collapse;
+        }
+    </style>
+    <script>
+
+        function myFunction() 
+        {
+            var table = document.getElementById("tblMatrix");
+            var row = table.insertRow();
+            var cell = row.insertCell();
+            cell.innerHTML = "&boxdr;";
+            for(var k = 0; k < 24; k++)
+            {
+                cell = row.insertCell();
+                cell.innerHTML = "&nbsp;";
+            }
+            cell = row.insertCell();
+            cell.innerHTML = "&boxdl;";
+ 
+            for (var i = 0; i < 24; i++)
+            {
+                row = table.insertRow();
+                cell = row.insertCell();
+                cell.innerHTML = "&boxv;";
+                for (var j = 0; j < 24; j++)
+                 {
+                    cell = row.insertCell();
+                    if (j == i)
+                     {
+                        cell.innerHTML = "1";
+                    }
+                    else
+                    {
+                        cell.innerHTML = "0";
+                    }
+                }
+
+                cell = row.insertCell();
+                cell.innerHTML = "&boxv;";
+            }
+
+            row = table.insertRow();
+            cell = row.insertCell();
+            cell.innerHTML = "&boxur;";
+            for(var k = 0; k < 24; k++)
+            {
+                cell = row.insertCell();
+                cell.innerHTML = "&nbsp;";
+            }
+            cell = row.insertCell();
+            cell.innerHTML = "&boxul;";
+
+        }
+
+    </script>
+</head>
+
+<body onload="myFunction()">
+    <!--     <button type="button" onclick="myFunction()">Try it</button>
+<br/>
+ -->
+    <table class="noBorder" id="tblMatrix">
+    </table>
+</body>
+
+</html>

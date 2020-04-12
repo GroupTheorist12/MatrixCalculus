@@ -14,6 +14,7 @@ namespace MatrixCalculus
         public string FullRep { get; set; }  
 
         public string ElementName { get; set; }  
+        public long ElementNameValue { get; set; }  
         
         //permutation matrix represented by this permutation
         public PermutationMatrix Matrix{get;private set;} 
@@ -37,6 +38,8 @@ namespace MatrixCalculus
             BottomRow = BR;
 
             IsIdentity = BR.SequenceEqual(TR);
+            ElementName = string.Join("", BR);
+            ElementNameValue = long.Parse(ElementName);
             Matrix = new PermutationMatrix(this);
         }
 
