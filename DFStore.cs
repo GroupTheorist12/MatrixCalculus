@@ -50,6 +50,8 @@ namespace MatrixCalculus
             using (var db = new LiteDatabase(Path.Combine(path, "DFExp.db")))
             {
                  var col = db.GetCollection<DFTestCase>("dftestcases");
+                 col.DeleteAll();
+                 
                 foreach(string exp in DF1TestCaseList)
                 {
 
