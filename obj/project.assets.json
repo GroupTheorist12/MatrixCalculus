@@ -23,6 +23,15 @@
           "lib/netstandard2.0/AWSSDK.DynamoDBv2.dll": {}
         }
       },
+      "LiteDB/5.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/LiteDB.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/LiteDB.dll": {}
+        }
+      },
       "System.CodeDom/4.7.0": {
         "type": "package",
         "compile": {
@@ -124,6 +133,26 @@
         "tools/uninstall.ps1"
       ]
     },
+    "LiteDB/5.0.5": {
+      "sha512": "R2d0SzfD787wH1dfSDdbGZETFW7osC330oowKDUvDujB2Hh8DgMpDNFJYARvXO7ikperYKkrQ2XBiEooZlAUxQ==",
+      "type": "package",
+      "path": "litedb/5.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "AppVeyorSettings.json",
+        "LICENSE",
+        "icon_64x64.png",
+        "lib/net45/LiteDB.dll",
+        "lib/net45/LiteDB.xml",
+        "lib/netstandard1.3/LiteDB.dll",
+        "lib/netstandard1.3/LiteDB.xml",
+        "lib/netstandard2.0/LiteDB.dll",
+        "lib/netstandard2.0/LiteDB.xml",
+        "litedb.5.0.5.nupkg.sha512",
+        "litedb.nuspec"
+      ]
+    },
     "System.CodeDom/4.7.0": {
       "sha512": "Hs9pw/kmvH3lXaZ1LFKj3pLQsiGfj2xo3sxSzwiLlRL6UcMZUTeCfoJ9Udalvn3yq5dLlPEZzYegrTQ1/LhPOQ==",
       "type": "package",
@@ -151,6 +180,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
       "AWSSDK.DynamoDBv2 >= 3.3.105.1",
+      "LiteDB >= 5.0.5",
       "System.CodeDom >= 4.7.0"
     ]
   },
@@ -197,6 +227,10 @@
           "AWSSDK.DynamoDBv2": {
             "target": "Package",
             "version": "[3.3.105.1, )"
+          },
+          "LiteDB": {
+            "target": "Package",
+            "version": "[5.0.5, )"
           },
           "System.CodeDom": {
             "target": "Package",

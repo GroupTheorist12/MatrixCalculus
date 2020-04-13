@@ -13,3 +13,4 @@ c:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\AWSSDK.Core.dll
 c:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\AWSSDK.DynamoDBv2.dll
 C:\Math\MatrixCalculus\obj\Debug\netcoreapp3.0\MatrixCalculus.csproj.CopyComplete
 C:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\System.CodeDom.dll
+C:\Math\MatrixCalculus\bin\Debug\netcoreapp3.0\LiteDB.dll

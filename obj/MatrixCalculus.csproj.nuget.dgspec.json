@@ -44,6 +44,10 @@
               "target": "Package",
               "version": "[3.3.105.1, )"
             },
+            "LiteDB": {
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
             "System.CodeDom": {
               "target": "Package",
               "version": "[4.7.0, )"

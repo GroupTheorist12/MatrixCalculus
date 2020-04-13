@@ -9,6 +9,7 @@
       "MatrixCalculus/1.0.0": {
         "dependencies": {
           "AWSSDK.DynamoDBv2": "3.3.105.1",
+          "LiteDB": "5.0.5",
           "System.CodeDom": "4.7.0"
         },
         "runtime": {
@@ -31,6 +32,14 @@
           "lib/netstandard2.0/AWSSDK.DynamoDBv2.dll": {
             "assemblyVersion": "3.3.0.0",
             "fileVersion": "3.3.105.1"
+          }
+        }
+      },
+      "LiteDB/5.0.5": {
+        "runtime": {
+          "lib/netstandard2.0/LiteDB.dll": {
+            "assemblyVersion": "5.0.5.0",
+            "fileVersion": "5.0.5.0"
           }
         }
       },
@@ -63,6 +72,13 @@
       "sha512": "sha512-RV9GpYLCJXHdBMcpHpED3KHiZI0mbcYW1B9QrHwaU656SjLukSR6WvNNfDaAqaTmZLVDyujjFXfMR4x7Rzz1ag==",
       "path": "awssdk.dynamodbv2/3.3.105.1",
       "hashPath": "awssdk.dynamodbv2.3.3.105.1.nupkg.sha512"
+    },
+    "LiteDB/5.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-R2d0SzfD787wH1dfSDdbGZETFW7osC330oowKDUvDujB2Hh8DgMpDNFJYARvXO7ikperYKkrQ2XBiEooZlAUxQ==",
+      "path": "litedb/5.0.5",
+      "hashPath": "litedb.5.0.5.nupkg.sha512"
     },
     "System.CodeDom/4.7.0": {
       "type": "package",

@@ -655,6 +655,11 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_LiteDB()
+        {
+            DFStore.CreateTestCases();
+            return 0;
+        }
         public static int Test_Permutations()
         {
 
