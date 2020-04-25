@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "gcwxRY3OD6IUDbjoGSKYm3gpAav+TWJaAdyvccLtbX5rFPBrWrO0MpvVHhXzFkBWhlVBQxaJsD4ZAgX4HbQMVA==",
+  "success": true,
+  "projectFilePath": "C:\\Math\\MatrixCalculus\\MatrixCalculus.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Owner\\.nuget\\packages\\awssdk.core\\3.3.104.27\\awssdk.core.3.3.104.27.nupkg.sha512",
+    "C:\\Users\\Owner\\.nuget\\packages\\awssdk.dynamodbv2\\3.3.105.1\\awssdk.dynamodbv2.3.3.105.1.nupkg.sha512",
+    "C:\\Users\\Owner\\.nuget\\packages\\litedb\\5.0.5\\litedb.5.0.5.nupkg.sha512",
+    "C:\\Users\\Owner\\.nuget\\packages\\system.codedom\\4.7.0\\system.codedom.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}
