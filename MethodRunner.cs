@@ -655,6 +655,16 @@ namespace MatrixCalculus
             return 0;
         }
 
+        public static int Test_SymbolStuff()
+        {
+            PSymbol x = new PSymbol("x");
+            PSymbol y = new PSymbol("x");
+
+            PSymbol r = x + 2;
+
+            return 0;
+        }
+
         public static int Test_LiteDB()
         {
             DFStore.CreateTestCases();

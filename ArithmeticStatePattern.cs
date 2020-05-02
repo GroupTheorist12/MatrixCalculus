@@ -82,6 +82,9 @@ namespace MatrixCalculus
         {
             string ret = string.Empty;
             string LeftL = string.Empty;
+            Rational LeftLV = 1;
+            Rational RightLV = 1;
+
             string RightL = string.Empty;
             string LeftV = string.Empty;
             string RightV = string.Empty;
@@ -105,6 +108,8 @@ namespace MatrixCalculus
         }
         public static string Add_VariableOperator_Plus_Variable(Symbol sym)
         {
+            //a + b
+            //[0] => a Variable[1] =>  + Operator[2] => bVariable
             string FunctionString = sym.NakedTokenString;
 
             if (sym.Tokens[0].Value == sym.Tokens[2].Value)
@@ -127,20 +132,36 @@ namespace MatrixCalculus
 
         public static string Add_LiteralOperatorMulVariableOperator_Plus_Variable(Symbol sym)
         {
+            //2a + b
+            //[0] => 2 [1] => * [2] => a [3] =>  +  [4] => b 
             string AddString = sym.Expression;
+            if(sym.Tokens[2].Value == sym.Tokens[4].Value) //2a +  a = 3a
+            {
+                Rational r = Rational.Parse(sym.Tokens[0].Value) + 1;
+                AddString = r.ToString() + sym.Tokens[2].Value; 
+            }
 
             return AddString;
         }
 
         public static string Add_VariableOperator_Plus_LiteralOperatorMulVariable(Symbol sym)
         {
+            //a + 2b
+            //[0] => a [1] =>  +  [2] => 2 [3] => * [4] => b 
             string AddString = sym.Expression;
+            if(sym.Tokens[0].Value == sym.Tokens[4].Value) //a +  2a = 3a
+            {
+                Rational r = Rational.Parse(sym.Tokens[2].Value) + 1;
+                AddString = r.ToString() + sym.Tokens[0].Value; 
+            }
 
             return AddString;
         }
 
         public static string Add_LiteralOperatorMulVariableOperator_Plus_LiteralOperatorMulVariable(Symbol sym)
         {
+            //2a + 2b
+            //[0] => 2 [1] => * [2] => a [3] =>  +  [4] => 2 [5] => * [6] => b 
             string AddString = sym.Expression;
 
             return AddString;
@@ -148,6 +169,8 @@ namespace MatrixCalculus
 
         public static string Add_VariableOperatorCaretLiteralOperator_Plus_VariableOperatorCaretLiteral(Symbol sym)
         {
+            //a^2 + b^2
+            //[0] => a [1] => ^ [2] => 2 [3] =>  +  [4] => b [5] => ^ [6] => 2 
             string AddString = sym.Expression;
 
             return AddString;
@@ -155,6 +178,8 @@ namespace MatrixCalculus
 
         public static string Add_LiteralOperatorMulVariableOperatorCaretLiteralOperator_Plus_VariableOperatorCaretLiteral(Symbol sym)
         {
+            //2a^2 + b^2
+            //[0] => 2 [1] => * [2] => a [3] => ^ [4] => 2 [5] =>  +  [6] => b [7] => ^ [8] => 2 
             string AddString = sym.Expression;
 
             return AddString;
@@ -162,6 +187,8 @@ namespace MatrixCalculus
 
         public static string Add_VariableOperatorCaretLiteralOperator_Plus_LiteralOperatorMulVariableOperatorCaretLiteral(Symbol sym)
         {
+            //a^2 + 2b^2
+            //[0] => a [1] => ^ [2] => 2 [3] =>  +  [4] => 2 [5] => * [6] => b [7] => ^ [8] => 2 
             string AddString = sym.Expression;
 
             return AddString;
@@ -169,10 +196,15 @@ namespace MatrixCalculus
 
         public static string Add_LiteralOperatorMulVariableOperatorCaretLiteralOperator_Plus_LiteralOperatorMulVariableOperatorCaretLiteral(Symbol sym)
         {
+            //2a^2 + 2b^2
+            //[0] => 2 [1] => * [2] => a [3] => ^ [4] => 2 [5] =>  +  [6] => 2 [7] => * [8] => b [9] => ^ [10] => 2 
             string AddString = sym.Expression;
 
             return AddString;
         }
+
+
+
 
 
     }

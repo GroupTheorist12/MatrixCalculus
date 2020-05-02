@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs/MatrixCalculus/v16/Server/sqlite3
+*.dll
+*.dll
+bin/Debug/netcoreapp3.0/funk.txt
+obj/Debug/netcoreapp3.1/MatrixCalculus.pdb
