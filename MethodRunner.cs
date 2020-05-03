@@ -663,7 +663,7 @@ namespace MatrixCalculus
             Sin sin = new Sin();
 
             PSymbol r = 4*x + 5;
-            PSymbol r2 = r^2;
+            PSymbol r2 = r^3;
             Console.WriteLine("{0}", r2.Expression);
             return 0;
         }
