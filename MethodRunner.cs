@@ -658,10 +658,13 @@ namespace MatrixCalculus
         public static int Test_SymbolStuff()
         {
             PSymbol x = new PSymbol("x");
-            PSymbol y = new PSymbol("x");
+            PSymbol y = new PSymbol("y");
 
-            PSymbol r = x + 2;
+            Sin sin = new Sin();
 
+            PSymbol r = 4*x + 5;
+            PSymbol r2 = r^2;
+            Console.WriteLine("{0}", r2.Expression);
             return 0;
         }
 

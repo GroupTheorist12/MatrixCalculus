@@ -7,3 +7,7 @@
 *.dll
 bin/Debug/netcoreapp3.0/funk.txt
 obj/Debug/netcoreapp3.1/MatrixCalculus.pdb
+bin/Debug/netcoreapp3.1/MatrixCalculus.dll
+bin/Debug/netcoreapp3.1/MatrixCalculus.pdb
+obj/Debug/netcoreapp3.1/MatrixCalculus.dll
+obj/Debug/netcoreapp3.1/MatrixCalculus.pdb

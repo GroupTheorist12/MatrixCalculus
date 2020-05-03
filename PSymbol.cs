@@ -5,12 +5,26 @@ using System.Threading.Tasks;
 
 namespace MatrixCalculus
 {
+
+    public class Sin
+    {
+        public PSymbol this[PSymbol value]
+        {
+            get
+            {
+                PSymbol ret = new PSymbol("sin(" + value.Expression + ")");
+                return ret;
+            }
+        }
+    }
     public class PSymbol
     {
         private List<Rational> lstLiterals = new List<Rational>();
-        public string Variable
+        private List<PSymbol> lstSymbols = new List<PSymbol>();
+
+        public string Expression
         {
-            get;private set;
+            get; protected set;
         }
         public PSymbol()
         {
@@ -19,25 +33,26 @@ namespace MatrixCalculus
 
         public PSymbol(string v)
         {
-            Variable = v;
+            Expression = v;
         }
 
         private PSymbol(Rational r)
         {
-            Variable = r.ToString();
+            Expression = r.ToString();
         }
         private PSymbol(int value)
         {
-            Variable = value.ToString();
+            Expression = value.ToString();
             lstLiterals.Add(new Rational(value));
         }
 
-        static public implicit  operator PSymbol(Rational value)
+        static public implicit operator PSymbol(Rational value)
         {
-            return new PSymbol(value);
+            PSymbol psym = new PSymbol(value);
+            return psym;
         }
 
-        static public implicit  operator PSymbol(int value)
+        static public implicit operator PSymbol(int value)
         {
             return new PSymbol(value);
         }
@@ -45,17 +60,43 @@ namespace MatrixCalculus
         public static PSymbol operator +(PSymbol a, PSymbol b)
         {
             PSymbol ret = null;
-            string strA = nameof(a);
-            string strB = nameof(b);
-            if(strA == strB)
+            if (a.Expression == b.Expression)
             {
-                ret = new PSymbol("2" + strA);
+                ret = new PSymbol("2" + a.Expression);
             }
             else
             {
-                ret = new PSymbol(strA + " + " + strB);
+                ret = new PSymbol(a.Expression + " + " + b.Expression);
+            }
+
+            return ret;
+        }
+
+        public static PSymbol operator *(PSymbol a, PSymbol b)
+        {
+            PSymbol ret = null;
+            if (a.Expression == b.Expression)
+            {
+                ret = new PSymbol(a.Expression + "^2");
+            }
+            else
+            {
+                ret = new PSymbol(a.Expression + "*" + b.Expression);
+            }
+
+            return ret;
+        }
+
+        public static PSymbol operator ^(PSymbol a, PSymbol b)
+        {
+            PSymbol ret = new PSymbol(a.Expression + "^" + b.Expression);
+
+            if(a.Expression.IndexOf(" + ") != -1)
+            {
+                ret = new PSymbol("(" + a.Expression + ")^" + b.Expression);
             }
             return ret;
         }
+
     }
 }
