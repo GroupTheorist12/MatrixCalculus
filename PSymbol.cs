@@ -22,10 +22,17 @@ namespace MatrixCalculus
         private List<Rational> lstLiterals = new List<Rational>();
         private List<PSymbol> lstSymbols = new List<PSymbol>();
 
+        public PSymbolFactory parent = null;
         public string Expression
         {
             get; protected set;
         }
+
+        public string Variable
+        {
+            get; set;
+        }
+
         public PSymbol()
         {
 
