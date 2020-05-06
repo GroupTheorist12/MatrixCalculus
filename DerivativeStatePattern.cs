@@ -86,6 +86,12 @@ namespace MatrixCalculus
             }
             return CleanUpEnds(sb.ToString());
         }
+
+        public static string DF(PSymbol psym)
+        {
+            string exp = psym.Expression.Replace("*", "");
+            return DF(new Symbol(exp), true);
+        }
         public static string DF(Symbol sym, bool SkipPoly = false)
         {
             SymbolList symList = new SymbolList(sym.Tokens);

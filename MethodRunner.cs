@@ -664,9 +664,9 @@ namespace MatrixCalculus
 
             Sin sin = new Sin();
 
-            PSymbol r = x + 5;
+            PSymbol r = 2*x^2*sin[x];
             //PSymbol r2 = r^3;
-            Console.WriteLine("{0}", r.Expression);
+            Console.WriteLine("{0}", DerivativeStatePattern.DF(r));
             return 0;
         }
 
