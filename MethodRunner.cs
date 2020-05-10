@@ -784,6 +784,88 @@ namespace MatrixCalculus
 
             return 0;
         }
+
+        public static int Test_FaddevasMethod()
+        {
+            RationalFactory rf = new RationalFactory();
+
+            RationalSquareMatrix A = rf[3, 3,
+            "1", "0", "-2",
+            "4", "1", "0",
+            "0", "2", "1"
+            ];
+
+            Rational test = 1/2;
+            
+            RationalVector rv = new RationalVector();
+            RationalSquareMatrix AInv = RationalSquareMatrix.FaddevasMethod(A, out rv);
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"A^{-1} = " + AInv.ToLatex());
+
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(AInv.ToString("F"), "Test_FaddevasMethod_Determinant.html"); //display Latex via mathjax
+            
+
+            /*
+            RationalSquareMatrix A1 = A.Clone();
+            StringBuilder sb = new StringBuilder();//Start building latex
+            sb.Append(@"\begin{aligned}");
+            sb.AppendFormat(@"&A1 = {0} \\ \\", A1.ToLatex());
+
+            Rational b1 = -A1.Trace();
+            sb.AppendFormat(@"&b1 = {0} \\ \\", b1.ToLatex());
+            RationalSquareMatrix I = RationalSquareMatrix.IdentityMatrix(A.Rows);
+
+            RationalSquareMatrix B1 = A1 + (b1 * I);
+            sb.AppendFormat(@"&B1 = {0} \\ \\", B1.ToLatex());
+
+            RationalSquareMatrix A2 = A * B1;
+            sb.AppendFormat(@"&A2 = {0} \\ \\", A2.ToLatex());
+
+            Rational b2 = A2.Trace() / -2;
+            sb.AppendFormat(@"&b2 = {0} \\ \\", b2.ToLatex());
+            
+            I = RationalSquareMatrix.IdentityMatrix(A.Rows);
+            RationalSquareMatrix B2 = A2 + b2 * I;
+            sb.AppendFormat(@"&B2 = {0} \\ \\", B2.ToLatex());
+
+            RationalSquareMatrix A3 = A * B2;
+            sb.AppendFormat(@"&A3 = {0} \\ \\", A3.ToLatex());
+
+            Rational b3 = A3.Trace() / -3;
+            sb.AppendFormat(@"&b3 = {0} \\ \\", b3.ToLatex());
+
+            RationalSquareMatrix AInv = 1/b3 * B2;
+            sb.Append(@"&A^{-1} = " + AInv.ToLatex() + @" \\ \\");
+
+
+            RationalSquareMatrix A_n = A;
+            Rational b_n = 1;
+            RationalSquareMatrix B_n = null;
+            int i = 0;
+            for(i = 0; i < A.Rows - 1; i++)
+            {
+                b_n = -A_n.Trace() / (i + 1);
+                I = RationalSquareMatrix.IdentityMatrix(A.Rows);
+                
+                B_n = A_n + b_n * I;
+                sb.Append(@"&Bn = " + B_n.ToLatex() + @" \\ \\");
+
+                A_n = A * B_n;
+                sb.Append(@"&An = " + A_n.ToLatex() + @" \\ \\");
+            }
+
+            b_n = -A_n.Trace() / (i + 1);
+            sb.Append(@"&bn = " + b_n.ToLatex() + @" \\ \\");
+
+            AInv = 1/b_n * B_n;
+            sb.Append(@"&A^{-1} = " + AInv.ToLatex() + @" \\ \\");
+
+            sb.Append(@"\end{aligned}");
+            HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_FaddevasMethod_Determinant.html"); //display Latex via mathjax
+            */
+
+            return 0;
+        }
         public static int Test_Rational_Determinant()
         {
             RationalFactory rf = new RationalFactory();
@@ -794,6 +876,8 @@ namespace MatrixCalculus
             "2", "-1", "2"
             ];
 
+            
+
                  RationalSquareMatrix ACopy3 = rf[4, 4,
                 "4", "7", "2", "3",
                 "1", "3", "1", "2",
@@ -801,6 +885,11 @@ namespace MatrixCalculus
                 "1", "4", "2", "3"
                 ];
 
+            RationalSquareMatrix ACopy3_2 = rf[3, 3,
+            1,  2,  3,
+            4,  1,  6,
+            7,  8,  1            
+            ];
             List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetAllMatrixCoFactors(ACopy3);
             
             StringBuilder sb = new StringBuilder();//Start building latex
@@ -826,7 +915,7 @@ namespace MatrixCalculus
 
                 }
             }
-            sb.Append(@"&Det = " + RationalSquareMatrix.Det(ACopy3));
+            sb.Append(@"&Det = " + RationalSquareMatrix.Det(ACopy3_2));
             sb.Append(@"\end{aligned}");
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(sb.ToString(), "Test_Rational_Determinant.html"); //display Latex via mathjax

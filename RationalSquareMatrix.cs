@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Text;
+using System.Collections;
 
 namespace MatrixCalculus
 {
@@ -177,6 +178,21 @@ namespace MatrixCalculus
             }
 
             return sb.ToString();
+        }
+
+        public string ToString(string Format)
+        {
+            switch (Format.ToUpper())
+            {
+                case "N": // natural
+                    return ToString();
+                case "L": // Tex
+                    return ToLatex();
+                case "F": // Full Representation
+                    return FullRep;
+            };
+
+            return ToString();
         }
 
         public static List<int[]> LowerEchelonIndexes(RationalSquareMatrix A)
@@ -375,11 +391,43 @@ namespace MatrixCalculus
             return retVal;
         }
 
+        public RationalSquareMatrix Inverse()
+        {
+            RationalSquareMatrix Inv = null;
+            RationalVector rv = new RationalVector();
+
+            Inv = FaddevasMethod(this, out rv);
+
+            return Inv;
+        }
         public static RationalSquareMatrix FaddevasMethod(RationalSquareMatrix AIn, out RationalVector CharacteristicEquation)
         {
             RationalSquareMatrix A = AIn.Clone();
             CharacteristicEquation = new RationalVector();
-            return A;
+
+            RationalSquareMatrix A_n = A;
+            Rational b_n = 1;
+            RationalSquareMatrix B_n = null;
+            RationalSquareMatrix I = null;
+            RationalSquareMatrix AInv = null;
+            int i = 0;
+            for(i = 1; i < A.Rows; i++)
+            {
+                b_n = -A_n.Trace() / (i);
+                CharacteristicEquation.Add(b_n);
+                I = RationalSquareMatrix.IdentityMatrix(A.Rows);
+                
+                B_n = A_n + b_n * I;
+
+                A_n = A * B_n;
+            }
+            b_n = -A_n.Trace() / (i);
+           CharacteristicEquation.Add(b_n);
+
+            AInv = 1/b_n * B_n;
+            AInv.FullRep = A.ToLatex() + "^{-1} = " + AInv.ToLatex();
+
+            return AInv;
         }
         public RationalVector CramersRule(RationalVector VectorToSolve)
         {
@@ -425,6 +473,150 @@ namespace MatrixCalculus
         }
 
 
+        public static RationalSquareMatrix operator +(RationalSquareMatrix a, RationalSquareMatrix b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a.InternalRep[i, j] + b.InternalRep[i, j];
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(" + ");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator +(Rational a, RationalSquareMatrix b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(b.Rows, b.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a + b.InternalRep[i, j];
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(" + ");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator +(RationalSquareMatrix a, Rational b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a.InternalRep[i, j] + b;
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(" + ");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator -(RationalSquareMatrix a, RationalSquareMatrix b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a.InternalRep[i, j] - b.InternalRep[i, j];
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(" + ");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator -(Rational a, RationalSquareMatrix b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(b.Rows, b.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a - b.InternalRep[i, j];
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(" + ");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator -(RationalSquareMatrix a, Rational b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a.InternalRep[i, j] - b;
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(" + ");
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+            return retVal;
+        }
+
         public static RationalSquareMatrix operator *(RationalSquareMatrix a, RationalSquareMatrix b)
         {
             RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
@@ -444,6 +636,54 @@ namespace MatrixCalculus
 
             sb.Append(a.ToLatex());
             sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator *(Rational a, RationalSquareMatrix b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(b.Rows, b.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a * b.InternalRep[i, j];
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(a.ToLatex());
+            sb.Append(b.ToLatex());
+            sb.Append(" = ");
+            sb.Append(retVal.ToLatex());
+
+            retVal.FullRep = sb.ToString();
+
+            return retVal;
+        }
+
+        public static RationalSquareMatrix operator *(RationalSquareMatrix a, Rational b)
+        {
+            RationalSquareMatrix retVal = new RationalSquareMatrix(a.Rows, a.Columns);
+
+            for (int i = 0; i < retVal.Rows; i++)
+            {
+                for (int j = 0; j < retVal.Columns; j++)
+                {
+                    retVal.InternalRep[i, j] = a.InternalRep[i, j] * b;
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(b.ToLatex());
+            sb.Append(a.ToLatex());
             sb.Append(" = ");
             sb.Append(retVal.ToLatex());
 

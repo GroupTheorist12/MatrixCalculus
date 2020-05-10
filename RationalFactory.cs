@@ -25,7 +25,29 @@ namespace MatrixCalculus
 
             }
         }
-        
+
+        public RationalSquareMatrix this[int Rows, int Columns, params int[] exps]
+        {
+            get
+            {
+                RationalSquareMatrix ret = new RationalSquareMatrix(Rows, Columns);
+                ret.Parent = this;
+
+                int cnt = 0;
+
+                for (int i = 0; i < Rows; i++)
+                {
+                    for (int j = 0; j < Columns; j++)
+                    {
+                        ret[i, j] = exps[cnt++];
+                    }
+                }
+
+                return ret;
+
+            }
+        }
+
         public RationalVector this[params string[] exps]
         {
             get

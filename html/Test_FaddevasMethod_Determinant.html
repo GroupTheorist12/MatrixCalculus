@@ -1,0 +1,23 @@
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Equation</title>
+        <meta charset="utf-8" />
+        <script type='text/javascript' async src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+        <script type='text/x-mathjax-config'>
+            MathJax.Hub.Register.StartupHook('End', function()
+            {
+                var x = document.getElementById('pLatex');
+                x.style.display = 'block';
+            });
+        </script>
+    </head>
+    <body>
+        <p id='pLatex' style='height: 300px; width: 300px; display:none;'>
+            \begin{equation}      
+            \begin{bmatrix}1 &0 &-2\\4 &1 &0\\0 &2 &1\\ \end{bmatrix}^{-1} = \begin{bmatrix}\dfrac{1}{15} &\dfrac{-4}{15} &\dfrac{2}{15}\\\dfrac{-4}{15} &\dfrac{1}{15} &\dfrac{-8}{15}\\\dfrac{8}{15} &\dfrac{-2}{15} &\dfrac{1}{15}\\ \end{bmatrix}
+            \end{equation}      
+        </p>
+    </body>
+</html>
