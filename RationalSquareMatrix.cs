@@ -424,7 +424,7 @@ namespace MatrixCalculus
             b_n = -A_n.Trace() / (i);
            CharacteristicEquation.Add(b_n);
 
-            AInv = 1/b_n * B_n;
+            AInv = -1/b_n * B_n;
             AInv.FullRep = A.ToLatex() + "^{-1} = " + AInv.ToLatex();
 
             return AInv;

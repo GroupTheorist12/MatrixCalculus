@@ -795,7 +795,6 @@ namespace MatrixCalculus
             "0", "2", "1"
             ];
 
-            Rational test = 1/2;
             
             RationalVector rv = new RationalVector();
             RationalSquareMatrix AInv = RationalSquareMatrix.FaddevasMethod(A, out rv);
