@@ -1,13 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "r+a/44CHU3cdL1iaImlnGkpBXhJd+PW5wiLKLakc38CU78/BRmQKqzR+uDOJciiFSifzFmY/UiiaagadCrMWqw==",
+  "dgSpecHash": "o0VAKZum5Xz3ane3f2V5SLMW0vbHZRQQxF6aFdn3vAtQpAcysyEA55S5MNPxMxxF+80PSx2qgX+UkYR1+PU1Xw==",
   "success": true,
   "projectFilePath": "C:\\Math\\MatrixCalculus\\MatrixCalculus.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Owner\\.nuget\\packages\\awssdk.core\\3.3.104.27\\awssdk.core.3.3.104.27.nupkg.sha512",
     "C:\\Users\\Owner\\.nuget\\packages\\awssdk.dynamodbv2\\3.3.105.1\\awssdk.dynamodbv2.3.3.105.1.nupkg.sha512",
+    "C:\\Users\\Owner\\.nuget\\packages\\ibm.data.db2.core\\1.3.0.100\\ibm.data.db2.core.1.3.0.100.nupkg.sha512",
     "C:\\Users\\Owner\\.nuget\\packages\\litedb\\5.0.5\\litedb.5.0.5.nupkg.sha512",
-    "C:\\Users\\Owner\\.nuget\\packages\\system.codedom\\4.7.0\\system.codedom.4.7.0.nupkg.sha512"
+    "C:\\Users\\Owner\\.nuget\\packages\\system.codedom\\4.7.0\\system.codedom.4.7.0.nupkg.sha512",
+    "C:\\Users\\Owner\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
   "logs": []
 }

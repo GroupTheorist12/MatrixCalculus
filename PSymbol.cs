@@ -43,6 +43,7 @@ namespace MatrixCalculus
             htSymbols[id] = sym;
         }
         public PSymbolFactory parent = null;
+        public TokenFactory tokenFactory = new TokenFactory();
         public string Expression
         {
             get; protected set;
@@ -94,6 +95,30 @@ namespace MatrixCalculus
             }
             return ret;
         }
+
+        public static PSymbol SymbolToPSymbol(Symbol sym)
+        {
+            PSymbol ret = new PSymbol();
+
+            for(int i = 0; i < sym.Tokens.Count; i++)
+            {
+                Token t = sym.Tokens[i];
+                if(t.Type == "Literal")
+                {
+                    ret+= new PSymbol(Rational.Parse(t.Value));
+                }
+                else if(t.Type == "Variable")
+                {
+                    if(i > 0 && sym.Tokens[ i - 1].Type == "Literal")
+                    {
+                        
+                    }
+                }
+            }
+
+            return ret;
+        }
+
         static public implicit operator PSymbol(Rational value)
         {
             PSymbol psym = new PSymbol(value);

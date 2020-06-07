@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
+using IBM.Data.DB2;
+
 namespace MatrixCalculus
 {
     public class MethodRunner
@@ -407,7 +409,7 @@ namespace MatrixCalculus
             List<ITensor> lstT = es.ExpandToList("a_{ij}x_ix_j");
 
             string s = es.FormatQuadratic(lstT);
-            
+
             //HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(s.NakedTokenString, "Test_ES.html"); //display Latex via mathjax
             //Console.WriteLine(s);
 
@@ -605,7 +607,7 @@ namespace MatrixCalculus
             "2", "-1", "2"
             ];
 
-            RationalVector rv = new RationalVector{-7, 3, 8}; //values to solve for
+            RationalVector rv = new RationalVector { -7, 3, 8 }; //values to solve for
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
 
@@ -642,7 +644,7 @@ namespace MatrixCalculus
             "8", "-1", "2"
             ];
 
-                 RationalSquareMatrix ACopy3 = rf[4, 4,
+            RationalSquareMatrix ACopy3 = rf[4, 4,
 
 "4", "7", "2", "3",
 "1", "3", "1", "2",
@@ -664,7 +666,7 @@ namespace MatrixCalculus
 
             Sin sin = new Sin();
 
-            PSymbol r = 2*x^2*sin[x];
+            PSymbol r = 2 * x ^ 2 * sin[x];
             //PSymbol r2 = r^3;
             Console.WriteLine("{0}", DerivativeStatePattern.DF(r));
             return 0;
@@ -682,89 +684,89 @@ namespace MatrixCalculus
             sg.DisplayMatrix = true;
 
             PermutationList ps2 = new PermutationList(4);
-            ps2.DisplayMatrix = true;            
+            ps2.DisplayMatrix = true;
 
             PermutationList ps = new PermutationList();
             ps.Order = 4;
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {1,2,3,4}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 1, 2, 3, 4 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {4,1,2,3}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 4, 1, 2, 3 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {3,4,1,2}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 3, 4, 1, 2 }
                     )
             );
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {2,3,4,1}
-                    )
-            );
-
-            ps.Add(
-                new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {1,2,3,4}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 2, 3, 4, 1 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {2,1,4,3}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 1, 2, 3, 4 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {4,3,1,2}
-                    )
-            );
-            ps.Add(
-                new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {3,4,2,1}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 2, 1, 4, 3 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {1,2,3,4}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 4, 3, 1, 2 }
+                    )
+            );
+            ps.Add(
+                new Permutation(
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 3, 4, 2, 1 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {3,1,4,2}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 1, 2, 3, 4 }
                     )
             );
 
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {2,4,1,3}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 3, 1, 4, 2 }
+                    )
+            );
+
+            ps.Add(
+                new Permutation(
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 2, 4, 1, 3 }
                     )
             );
             ps.Add(
                 new Permutation(
-                    new int[] {1,2,3,4}, 
-                    new int[] {4,3,2,1}
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 4, 3, 2, 1 }
                     )
             );
 
@@ -795,14 +797,14 @@ namespace MatrixCalculus
             "0", "2", "1"
             ];
 
-            
+
             RationalVector rv = new RationalVector();
             RationalSquareMatrix AInv = RationalSquareMatrix.FaddevasMethod(A, out rv);
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"A^{-1} = " + AInv.ToLatex());
 
             HtmlOutputMethods.WriteLatexEqToHtmlAndLaunch(AInv.ToString("F"), "Test_FaddevasMethod_Determinant.html"); //display Latex via mathjax
-            
+
 
             /*
             RationalSquareMatrix A1 = A.Clone();
@@ -875,22 +877,22 @@ namespace MatrixCalculus
             "2", "-1", "2"
             ];
 
-            
 
-                 RationalSquareMatrix ACopy3 = rf[4, 4,
-                "4", "7", "2", "3",
-                "1", "3", "1", "2",
-                "2", "5", "3", "4",
-                "1", "4", "2", "3"
-                ];
+
+            RationalSquareMatrix ACopy3 = rf[4, 4,
+           "4", "7", "2", "3",
+           "1", "3", "1", "2",
+           "2", "5", "3", "4",
+           "1", "4", "2", "3"
+           ];
 
             RationalSquareMatrix ACopy3_2 = rf[3, 3,
-            1,  2,  3,
-            4,  1,  6,
-            7,  8,  1            
+            1, 2, 3,
+            4, 1, 6,
+            7, 8, 1
             ];
             List<RationalCoFactorInfo> cfList = RationalSquareMatrix.GetAllMatrixCoFactors(ACopy3);
-            
+
             StringBuilder sb = new StringBuilder();//Start building latex
             sb.Append(@"\begin{aligned}");
             sb.AppendFormat(@"&{0} \\ \\", ACopy3.ToLatex());
@@ -1028,6 +1030,50 @@ namespace MatrixCalculus
 
             RowColumnExpression ret = rc1 * rc2;
             Console.WriteLine("{0}", ret.Expression);
+            return 0;
+        }
+
+        public static int Test_Tokens()
+        {
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
+            int cnt = 0;
+
+            TokenFactory tf = new TokenFactory();
+            tf.ParseExpression("(2x^2 + 4x + 7)^2");
+
+            foreach (Symbol sym in tf.symbolList)
+            {
+                Console.WriteLine("{0}", sym.HashTokenString);
+                Console.WriteLine("{0}", sym.NakedTokenString);
+            }
+
+            using (IBM.Data.DB2.Core.DB2Connection con = new IBM.Data.DB2.Core.DB2Connection("Server=localhost:50000;Database=books;UID=db2admin;PWD=redeye1"))
+            {
+                try
+                {
+                    con.Open();
+                    IBM.Data.DB2.Core.DB2Command comm = con.CreateCommand();
+                    comm.CommandText = "select title from books fetch first 10 rows only";
+                    IBM.Data.DB2.Core.DB2DataReader reader = comm.ExecuteReader();
+
+                    while(reader.Read())
+                    {
+                        Console.WriteLine(reader.GetString(0));
+                    }
+
+                    reader.Close();
+                    comm.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                
+                
+                con.Close();
+            }
+
             return 0;
         }
         public static int Test_Symbols_Tokens()
